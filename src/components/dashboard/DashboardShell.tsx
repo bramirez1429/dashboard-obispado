@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   CalendarOutlined,
@@ -52,15 +52,65 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobileSidebar, setIsMobileSidebar] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 480px)");
+
+    const handleViewportChange = (event: MediaQueryList | MediaQueryListEvent) => {
+      console.log(event.matches);
+      setIsMobileSidebar(event.matches);
+
+      if (event.matches) {
+        setCollapsed(true);
+      }
+    }
+
+    handleViewportChange(mediaQuery);
+    mediaQuery.addEventListener("change", handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleViewportChange);
+    };
+  }, []);
 
   return (
     <Layout className="dashboard-shell">
+      {isMobileSidebar ? (
+        <>
+          <button
+            className="dashboard-mobile-menu-button"
+            type="button"
+            aria-label={collapsed ? "Abrir menu" : "Cerrar menu"}
+            aria-expanded={!collapsed}
+            onClick={() => setCollapsed((value) => !value)}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </button>
+
+          <button
+            className={`dashboard-mobile-overlay ${
+              collapsed ? "" : "dashboard-mobile-overlay-open"
+            }`}
+            type="button"
+            aria-label="Cerrar menu"
+            onClick={() => setCollapsed(true)}
+          />
+        </>
+      ) : null}
+
       <Sider
         width={264}
         collapsedWidth={80}
         collapsed={collapsed}
         collapsible
-        className="dashboard-sider"
+        className={`dashboard-sider ${
+          isMobileSidebar
+            ? collapsed
+              ? "dashboard-sider-mobile-closed"
+              : "dashboard-sider-mobile-open"
+            : ""
+        }`}
         breakpoint="lg"
         theme="light"
         trigger={null}
@@ -107,16 +157,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <Content className="dashboard-content">
           <div className="dashboard-content-actions">
             <Space orientation="horizontal">
-              <Button href="/dashboard/minuta" icon={<CalendarOutlined />}>
-                Minuta
-              </Button>
-              <Button
-                type="primary"
-                href="/dashboard/discursos/nuevo"
-                icon={<PlusOutlined />}
-              >
-                Nuevo discurso
-              </Button>
+           {/* aca vamos a poner  user */}
             </Space>
           </div>
           {children}
