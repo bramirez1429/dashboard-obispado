@@ -1,37 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dashboard Obispado
 
-## Getting Started
+Dashboard para organizar minuta sacramental, discursos y pantallas publicas de mensajes por ID.
 
-First, run the development server:
+## Stack
+
+- Next.js 16
+- React
+- TypeScript
+- Ant Design
+- @ant-design/icons
+- @ant-design/nextjs-registry
+- CSS global
+- GitHub
+- Vercel futuro
+
+## Estado actual
+
+- El proyecto no usa Tailwind.
+- Supabase todavia no esta integrado.
+- Actualmente los datos son mock o visuales.
+- La base de datos se agregara en una etapa posterior.
+
+## Rutas actuales
+
+- `/`
+- `/dashboard`
+- `/dashboard/minuta`
+- `/dashboard/discursos`
+- `/dashboard/discursos/nuevo`
+- `/m/[id]`
+
+## Funcionalidades actuales
+
+- Sidebar responsive y colapsable.
+- Dashboard inicial.
+- Minuta sacramental editable e imprimible.
+- Exportar PDF con `window.print()`.
+- Pagina de discursos.
+- Formulario visual de nuevo discurso.
+- Link publico mock por ID.
+- Pantalla publica solo lectura `/m/[id]`.
+
+## Instalacion
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Dependencias importantes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `antd`
+- `@ant-design/icons`
+- `@ant-design/nextjs-registry`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estructura del proyecto
 
-## Learn More
+```text
+src/
+  app/
+    page.tsx
+    layout.tsx
+    globals.css
+    dashboard/
+      layout.tsx
+      page.tsx
+      minuta/
+        page.tsx
+      discursos/
+        page.tsx
+        nuevo/
+          page.tsx
+    m/
+      [id]/
+        page.tsx
+  components/
+    dashboard/
+      DashboardShell.tsx
+    discursos/
+      MessagePreviewCard.tsx
+    minuta/
+      SacramentalMinuteSheet.tsx
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Convencion de commits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ejemplos:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `feat(dashboard): add sidebar pages and discourse form`
+- `style(dashboard): improve responsive sidebar`
+- `feat(minute): add printable sacramental sheet`
 
-## Deploy on Vercel
+## Proximas etapas
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# dashboard-obispado
+- Integrar Supabase.
+- Agregar autenticacion.
+- Guardar discursos reales.
+- Generar IDs reales.
+- Proteger rutas privadas.
+- Deploy en Vercel.
