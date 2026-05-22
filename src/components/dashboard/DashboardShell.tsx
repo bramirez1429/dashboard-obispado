@@ -3,16 +3,14 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  CalendarOutlined,
   FileTextOutlined,
   HomeOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PlusOutlined,
   ReadOutlined,
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, Space } from "antd";
+import {  Layout, Menu, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 
@@ -58,7 +56,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     const mediaQuery = window.matchMedia("(max-width: 480px)");
 
     const handleViewportChange = (event: MediaQueryList | MediaQueryListEvent) => {
-      console.log(event.matches);
       setIsMobileSidebar(event.matches);
 
       if (event.matches) {

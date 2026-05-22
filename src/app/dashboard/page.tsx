@@ -50,7 +50,7 @@ const cards = [
   },
 ];
 
-export default function DashboardPage() {
+const DashboardPage = () => {
   return (
     <div className="page-stack">
       <Card className="welcome-card">
@@ -119,3 +119,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+export default DashboardPage;
