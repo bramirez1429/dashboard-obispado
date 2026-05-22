@@ -98,10 +98,10 @@ export function SacramentalMinuteSheet() {
       </div>
 
       <section className="minute-sheet" aria-label="Reunion Sacramental">
-        <header className="minute-top">
+        <header className="minute-top minute-top-row">
           <h1>Reunión Sacramental</h1>
 
-          <table className="minute-summary-table" aria-label="Fecha y asistencia">
+          <table className="minute-summary-table minute-meta-box" aria-label="Fecha y asistencia">
             <thead>
               <tr>
                 <th>Fecha</th>
