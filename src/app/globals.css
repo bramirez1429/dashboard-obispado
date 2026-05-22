@@ -380,232 +380,406 @@ a {
   background: var(--church-blue-soft);
 }
 
+.minute-page {
+  min-width: 0;
+}
+
 .minute-workspace {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   padding-bottom: 24px;
 }
 
 .minute-toolbar {
   width: min(100%, 210mm);
-}
-
-.minute-toolbar .ant-card-body {
-  padding: 12px 14px;
   display: flex;
   justify-content: flex-end;
 }
 
 .minute-sheet {
-  box-sizing: border-box;
+  --minute-ink: #1f2933;
+  --minute-muted: #526170;
+  --minute-header: #d7e3ec;
+  --minute-header-border: #a9bac8;
+  --minute-line: #aebbc7;
+  --minute-line-soft: #c7d1da;
+  --minute-focus: #eaf2f7;
+  --minute-focus-border: #87a1b4;
   width: 210mm;
+  min-height: 297mm;
   height: 297mm;
-  max-height: 297mm;
   padding: 8mm 9mm;
-  color: #111827;
+  color: var(--minute-ink);
   background: #ffffff;
-  border: 1px solid #cfd7e2;
-  border-radius: 5px;
-  box-shadow: 0 28px 80px rgba(16, 24, 40, 0.14);
-  font-size: 9.6px;
+  border: 1px solid var(--minute-line-soft);
+  border-radius: 2px;
+  box-shadow: 0 26px 70px rgba(15, 23, 42, 0.16);
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 10px;
+  line-height: 1.22;
   overflow: hidden;
   page-break-inside: avoid;
   break-inside: avoid;
 }
 
-.minute-doc-header {
+.minute-sheet input,
+.minute-sheet textarea,
+.minute-sheet .ant-picker-input > input,
+.minute-sheet .ant-input-number-input {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.minute-top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 54mm;
-  gap: 9mm;
+  grid-template-columns: minmax(0, 1fr) 67mm;
+  gap: 8mm;
   align-items: start;
-  padding-bottom: 4.2mm;
-  margin-bottom: 3.6mm;
-  border-bottom: 1.5px solid #334155;
+  margin-bottom: 4mm;
 }
 
-.minute-doc-header h1 {
+.minute-top h1 {
   margin: 0;
-  color: #0f172a;
-  font-size: 23px;
-  line-height: 1.1;
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
-.minute-doc-header p {
-  margin-top: 1.4mm;
-  color: #64748b;
-  font-size: 10px;
+  padding-top: 2mm;
+  color: var(--minute-ink);
+  font-size: 27px;
   font-weight: 700;
-}
-
-.minute-summary-box {
-  padding: 2.4mm;
-  border: 1px solid #94a3b8;
-  border-radius: 3px;
-  background: #f8fafc;
-}
-
-.minute-summary-box .minute-line-field + .minute-line-field {
-  margin-top: 2mm;
-}
-
-.minute-doc-block {
-  display: grid;
-  gap: 2.4mm;
-  margin-bottom: 3mm;
-}
-
-.minute-basic-block {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.minute-basic-block .minute-line-field:last-child {
-  grid-column: 1 / -1;
-}
-
-.minute-music-block {
-  grid-template-columns: 1.25fr 1fr 1fr;
-}
-
-.minute-first-hymn-line {
-  grid-column: 1 / -1;
-}
-
-.minute-prayer-line {
-  grid-column: 2 / -1;
-}
-
-.minute-final-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 2.8mm;
-  margin-bottom: 0;
-}
-
-.minute-line-field {
-  display: flex;
-  align-items: flex-end;
-  gap: 2mm;
-  min-height: 5.6mm;
-  border-bottom: 1px solid #94a3b8;
-}
-
-.minute-line-field span {
-  flex: 0 0 auto;
-  color: #24364b;
-  font-size: 8.8px;
-  font-weight: 800;
+  line-height: 1;
   letter-spacing: 0;
-  text-transform: uppercase;
 }
 
-.minute-line-field .ant-input {
-  flex: 1;
-  min-width: 0;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-  font-size: 9.8px;
-  line-height: 1.2;
-}
-
-.minute-doc-section {
-  margin-bottom: 2.8mm;
-}
-
-.minute-doc-section-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 4mm;
-  margin-bottom: 1.1mm;
-  color: #24364b;
-}
-
-.minute-doc-section-heading strong {
-  font-size: 9.2px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.minute-doc-section-heading small {
-  color: #64748b;
-  font-size: 8.1px;
-  font-style: italic;
-}
-
-.minute-lined-area.ant-input {
-  background: transparent;
-  border-radius: 0;
-  line-height: 5mm;
-  padding: 0;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent calc(5mm - 1px),
-    #cbd5e1 calc(5mm - 1px),
-    #cbd5e1 5mm
-  );
-  resize: none;
-}
-
-.minute-doc-table {
+.minute-summary-table,
+.minute-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  border: 1px solid #94a3b8;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
-.minute-doc-table th {
-  height: 5.8mm;
-  padding: 1mm 1.6mm;
-  color: #ffffff;
-  background: #3d566f;
-  border: 1px solid #64748b;
-  font-size: 8.6px;
-  font-weight: 800;
-  text-align: left;
+.minute-summary-table {
+  border: 1px solid var(--minute-header-border);
+}
+
+.minute-summary-table th,
+.minute-table th {
+  color: #26394f;
+  background: var(--minute-header);
+  border: 1px solid var(--minute-header-border);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 8.7px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
   text-transform: uppercase;
+  letter-spacing: 0;
 }
 
-.minute-doc-table td {
-  height: 6.8mm;
-  padding: 0 1.2mm;
-  border: 1px solid #cbd5e1;
+.minute-summary-table th {
+  height: 6mm;
+}
+
+.minute-summary-table td {
+  height: 9mm;
+  border: 1px solid var(--minute-line);
   background: #ffffff;
 }
 
-.minute-doc-table td .ant-input {
+.minute-summary-table input,
+.minute-table input {
+  width: 100%;
   height: 100%;
+  min-height: 100%;
+  padding: 1mm 1.4mm;
+  color: var(--minute-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  font: inherit;
+}
+
+.minute-date-picker.ant-picker,
+.minute-number-input.ant-input-number {
+  width: 100%;
+  height: 100%;
+  min-height: 9mm;
   padding: 0;
   background: transparent;
+  border: 0;
   border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  overflow: hidden;
+}
+
+.minute-date-picker.ant-picker:hover,
+.minute-number-input.ant-input-number:hover,
+.minute-date-picker.ant-picker-focused,
+.minute-number-input.ant-input-number-focused {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.minute-date-picker .ant-picker-input {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.minute-date-picker .ant-picker-input > input,
+.minute-number-input .ant-input-number-input {
+  height: 100%;
+  padding: 1mm 1.4mm;
+  color: var(--minute-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.minute-number-input .ant-input-number-input-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.minute-date-picker .ant-picker-input > input,
+.minute-attendance-input .ant-input-number-input,
+.minute-hymn-number .ant-input-number-input,
+.hymn-number-input .ant-input-number-input {
+  text-align: center;
+}
+
+.minute-attendance-input .ant-input-number-input {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.minute-section {
+  margin-bottom: 3mm;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.minute-two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6mm;
+}
+
+.minute-basic {
+  margin-bottom: 3.1mm;
+}
+
+.minute-field {
+  min-height: 6.4mm;
+  display: flex;
+  align-items: flex-end;
+  gap: 2.2mm;
+  border-bottom: 1px solid var(--minute-line);
+  cursor: text;
+}
+
+.minute-field span {
+  flex: 0 0 auto;
+  padding-bottom: 0.9mm;
+  color: #31475a;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.minute-doc-table th:nth-child(1) {
-  width: 32%;
+.minute-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 6.2mm;
+  padding: 0.8mm 1mm 0.4mm;
+  color: var(--minute-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  font: inherit;
 }
 
-.minute-doc-table th:nth-child(2) {
-  width: 30%;
+.minute-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2mm;
+  margin-bottom: 1.2mm;
+  color: #31475a;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.minute-section-title strong {
+  font-size: 9.2px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.minute-section-title span {
+  color: var(--minute-muted);
+  font-size: 8.3px;
+  line-height: 1.15;
+}
+
+.minute-title-with-copy {
+  justify-content: flex-start;
+}
+
+.minute-lined-text {
+  width: 100%;
+  min-height: calc(var(--minute-rows, 1) * 5.1mm);
+  padding: 0 1mm;
+  color: var(--minute-ink);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(5.1mm - 1px),
+      var(--minute-line) calc(5.1mm - 1px),
+      var(--minute-line) 5.1mm
+    );
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  resize: none;
+  font: inherit;
+  line-height: 5.1mm;
+  overflow: hidden;
+}
+
+.minute-lined-text[rows="2"] {
+  --minute-rows: 2;
+}
+
+.minute-lined-text[rows="5"] {
+  --minute-rows: 5;
+}
+
+.minute-announcements {
+  margin-bottom: 3.2mm;
+}
+
+.minute-music {
+  display: grid;
+  gap: 2.5mm;
+}
+
+.minute-full-line,
+.minute-prayer-field {
+  width: 100%;
+}
+
+.minute-hymn-field {
+  align-items: flex-end;
+}
+
+.minute-hymn-number.ant-input-number {
+  flex: 0 0 18mm;
+  width: 18mm;
+  min-height: 6.2mm;
+  height: 6.2mm;
+}
+
+.minute-hymn-number .ant-input-number-input {
+  text-align: center;
+}
+
+.minute-prayer-field {
+  min-height: 7.4mm;
+}
+
+.minute-table {
+  border: 1px solid var(--minute-line);
+}
+
+.minute-table th {
+  height: 5.7mm;
+  padding: 1mm 1.6mm;
+  text-align: left;
+}
+
+.minute-table td {
+  height: 7.05mm;
+  padding: 0;
+  border: 1px solid var(--minute-line-soft);
+  background: #ffffff;
+}
+
+.minute-table th:nth-child(1) {
+  width: 31%;
+}
+
+.minute-table th:nth-child(2) {
+  width: 29%;
 }
 
 .minute-message-table th:nth-child(1) {
-  width: 40%;
+  width: 38%;
 }
 
 .minute-message-table th:nth-child(2) {
-  width: 18%;
+  width: 16%;
 }
 
-.minute-sacrament-line {
-  padding: 2mm 2.5mm;
-  margin-bottom: 2.8mm;
-  border: 1px solid #94a3b8;
+.minute-sacrament {
+  padding: 1.8mm 2.2mm;
+  border: 1px solid var(--minute-line);
   background: #f8fafc;
+}
+
+.minute-closing {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.8mm;
+  margin-bottom: 0;
+}
+
+.minute-field:focus-within,
+.minute-summary-table td:focus-within,
+.minute-table td:focus-within,
+.minute-lined-text:focus,
+.minute-lined-text:focus-visible {
+  background: var(--minute-focus);
+  outline: 1.5px solid var(--minute-focus-border);
+  outline-offset: -1px;
+}
+
+.minute-field:focus-within {
+  border-bottom-color: var(--minute-focus-border);
+}
+
+.minute-sheet input,
+.minute-sheet textarea,
+.minute-sheet .ant-picker-input > input,
+.minute-sheet .ant-input-number-input {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.minute-date-picker .ant-picker-input > input,
+.minute-attendance-input .ant-input-number-input,
+.minute-hymn-number .ant-input-number-input,
+.hymn-number-input .ant-input-number-input {
+  text-align: center;
+}
+
+.minute-attendance-input .ant-input-number-input {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .public-message-page {
@@ -751,6 +925,8 @@ a {
     padding: 22px 18px;
   }
 
+  .minute-top,
+  .minute-two-columns,
   .minute-doc-header,
   .minute-basic-block,
   .minute-music-block,
@@ -882,12 +1058,13 @@ a {
   .minute-sheet,
   .minute-sheet * {
     visibility: visible !important;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
   }
 
   .dashboard-sider,
   .dashboard-header,
   .minute-toolbar,
-  .page-heading,
   .no-print {
     display: none !important;
   }
@@ -916,21 +1093,82 @@ a {
     box-sizing: border-box !important;
     position: absolute !important;
     top: 0 !important;
-    left: 50% !important;
-    width: 210mm !important;
-    height: 297mm !important;
-    min-height: 297mm !important;
-    max-height: 297mm !important;
+    left: 0 !important;
+    width: 198mm !important;
+    height: 285mm !important;
+    min-height: 285mm !important;
+    max-height: 285mm !important;
     margin: 0 !important;
-    padding: 7mm 8mm !important;
+    padding: 5.5mm 6mm !important;
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
     overflow: hidden !important;
-    transform: translateX(-50%) scale(0.94) !important;
+    transform: none !important;
     transform-origin: top center !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     page-break-after: avoid !important;
+  }
+
+  .minute-top {
+    margin-bottom: 3.2mm !important;
+  }
+
+  .minute-section {
+    margin-bottom: 2.35mm !important;
+  }
+
+  .minute-table td {
+    height: 6.35mm !important;
+  }
+
+  .minute-date-picker.ant-picker,
+  .minute-number-input.ant-input-number {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  .minute-date-picker .ant-picker-input,
+  .minute-number-input .ant-input-number-input-wrap {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .minute-date-picker .ant-picker-input > input,
+  .minute-attendance-input .ant-input-number-input,
+  .minute-hymn-number .ant-input-number-input {
+    text-align: center !important;
+  }
+
+  .minute-lined-text {
+    line-height: 4.75mm !important;
+    min-height: calc(var(--minute-rows, 1) * 4.75mm) !important;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(4.75mm - 1px),
+        #9faabc calc(4.75mm - 1px),
+        #9faabc 4.75mm
+      ) !important;
+  }
+
+  .minute-field:focus-within,
+  .minute-summary-table td:focus-within,
+  .minute-table td:focus-within,
+  .minute-lined-text:focus,
+  .minute-lined-text:focus-visible {
+    background: transparent !important;
+    outline: 0 !important;
   }
 }

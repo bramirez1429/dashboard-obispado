@@ -1,50 +1,83 @@
 "use client";
 
 import { PrinterOutlined } from "@ant-design/icons";
-import { Button, Card, Input, Space } from "antd";
-import Text from "antd/es/typography/Text";
+import { Button, DatePicker, InputNumber } from "antd";
+import { useState } from "react";
+import hymnsByNumberData from "@/data/hymns-by-number.json";
 
-const { TextArea } = Input;
+const hymnsByNumber = hymnsByNumberData as Record<string, string>;
 
-function LineInput({ label }: { label: string }) {
-  return (
-    <div className="minute-line-field">
-      <span>{label}</span>
-      <Input variant="borderless" />
-    </div>
-  );
-}
+type LineFieldProps = {
+  label: string;
+  className?: string;
+};
 
-function LinedArea({
-  label,
-  note,
-  rows,
-}: {
+type LinedTextProps = {
   label: string;
   note?: string;
   rows: number;
-}) {
+  className?: string;
+};
+
+function LineField({ label, className = "" }: LineFieldProps) {
   return (
-    <section className="minute-doc-section">
-      <div className="minute-doc-section-heading">
-        <strong>{label}</strong>
-        {note ? <small>{note}</small> : null}
-      </div>
-      <TextArea
-        variant="borderless"
-        className="minute-lined-area"
-        autoSize={{ minRows: rows, maxRows: rows }}
+    <label className={`minute-field ${className}`}>
+      <span>{label}</span>
+      <input type="text" />
+    </label>
+  );
+}
+
+function HymnField({ label, className = "" }: LineFieldProps) {
+  const [hymnTitle, setHymnTitle] = useState("");
+
+  const handleHymnNumberChange = (value: number | string | null) => {
+    if (value === null || value === "") {
+      setHymnTitle("");
+      return;
+    }
+
+    setHymnTitle(hymnsByNumber[String(value)] ?? "");
+  };
+
+  return (
+    <label className={`minute-field minute-hymn-field ${className}`}>
+      <span>{label}</span>
+      <InputNumber
+        className="minute-number-input minute-hymn-number hymn-number-input"
+        controls={false}
+        min={0}
+        onChange={handleHymnNumberChange}
+        aria-label={`${label} numero`}
       />
+      <input
+        type="text"
+        value={hymnTitle}
+        onChange={(event) => setHymnTitle(event.target.value)}
+        aria-label={`${label} nombre`}
+      />
+    </label>
+  );
+}
+
+function LinedText({ label, note, rows, className = "" }: LinedTextProps) {
+  return (
+    <section className={`minute-section ${className}`}>
+      <div className="minute-section-title">
+        <strong>{label}</strong>
+        {note ? <span>{note}</span> : null}
+      </div>
+      <textarea className="minute-lined-text" rows={rows} />
     </section>
   );
 }
 
-function EmptyRows({ count, cells }: { count: number; cells: number }) {
+function TableRows({ count, cells }: { count: number; cells: number }) {
   return Array.from({ length: count }, (_, rowIndex) => (
     <tr key={rowIndex}>
       {Array.from({ length: cells }, (_, cellIndex) => (
         <td key={cellIndex}>
-          <Input variant="borderless" />
+          <input type="text" aria-label={`Fila ${rowIndex + 1}, columna ${cellIndex + 1}`} />
         </td>
       ))}
     </tr>
@@ -54,65 +87,81 @@ function EmptyRows({ count, cells }: { count: number; cells: number }) {
 export function SacramentalMinuteSheet() {
   return (
     <div className="minute-workspace">
-      <Card className="minute-toolbar no-print">
-        <Space>
-          <Text strong>Minuta sacramental</Text>
-          <Button
-            type="primary"
-            icon={<PrinterOutlined />}
-            onClick={() => window.print()}
-          >
-            Exportar PDF
-          </Button>
-        </Space>
-      </Card>
+      <div className="minute-toolbar no-print">
+        <Button
+          type="primary"
+          icon={<PrinterOutlined />}
+          onClick={() => window.print()}
+        >
+          Exportar PDF
+        </Button>
+      </div>
 
-      <section className="minute-sheet" aria-label="Minuta sacramental">
-        <header className="minute-doc-header">
-          <div>
-            <h1>Reunión Sacramental</h1>
-            <p>Minuta de reunión</p>
-          </div>
+      <section className="minute-sheet" aria-label="Reunion Sacramental">
+        <header className="minute-top">
+          <h1>Reunión Sacramental</h1>
 
-          <div className="minute-summary-box">
-            <LineInput label="Fecha" />
-            <LineInput label="Asistencia" />
-          </div>
+          <table className="minute-summary-table" aria-label="Fecha y asistencia">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Asistencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <DatePicker
+                    className="minute-date-picker"
+                    format="DD-MM-YYYY"
+                    inputReadOnly={false}
+                    placeholder=""
+                    suffixIcon={null}
+                    aria-label="Fecha"
+                  />
+                </td>
+                <td>
+                  <InputNumber
+                    className="minute-number-input minute-attendance-input"
+                    controls={false}
+                    min={0}
+                    aria-label="Asistencia"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </header>
 
-        <section className="minute-doc-block minute-basic-block">
-          <LineInput label="Preside" />
-          <LineInput label="Dirige" />
+        <section className="minute-two-columns minute-basic">
+          <LineField label="Preside" />
+          <LineField label="Dirige" />
         </section>
 
-        <LinedArea
-          label="Bienvenida y reconocimiento de autoridades"
-          rows={2}
+        <LinedText label="Bienvenida y reconocimiento de autoridades" rows={2} />
+
+        <LinedText
+          label="Anuncios:"
+          note="(deben reducirse al mínimo)"
+          rows={5}
+          className="minute-announcements"
         />
 
-        <LinedArea
-          label="Anuncios"
-          note="deben reducirse al mínimo"
-          rows={4}
-        />
-
-        <section className="minute-doc-block minute-music-block">
-          <div className="minute-first-hymn-line">
-            <LineInput label="Primer himno" />
+        <section className="minute-section minute-music">
+          <HymnField label="Primer himno" className="minute-full-line" />
+          <div className="minute-two-columns">
+            <LineField label="Directora" />
+            <LineField label="Pianista" />
           </div>
-          <LineInput label="Directora" />
-          <LineInput label="Pianista" />
-          <div className="minute-prayer-line">
-            <LineInput label="Primera oración" />
-          </div>
+          <LineField label="Primera oración" className="minute-prayer-field" />
         </section>
 
-        <section className="minute-doc-section">
-          <div className="minute-doc-section-heading">
+        <section className="minute-section minute-business">
+          <div className="minute-section-title minute-title-with-copy">
             <strong>Asuntos de barrio y estaca</strong>
-            <small>Ordenanzas, sostenimientos, relevos y otros asuntos.</small>
+            <span>Ordenanzas, sostenimientos, relevos, presentaciones y otros asuntos.</span>
           </div>
-          <table className="minute-doc-table">
+          <table className="minute-table">
             <thead>
               <tr>
                 <th>Asunto</th>
@@ -121,21 +170,23 @@ export function SacramentalMinuteSheet() {
               </tr>
             </thead>
             <tbody>
-              <EmptyRows count={5} cells={3} />
+              <TableRows count={5} cells={3} />
             </tbody>
           </table>
         </section>
 
-        <section className="minute-sacrament-line">
-          <LineInput label="Himno sacramental" />
+        <section className="minute-section minute-sacrament">
+          <HymnField label="Himno sacramental" />
         </section>
 
-        <section className="minute-doc-section">
-          <div className="minute-doc-section-heading">
-            <strong>Tiempo de mensajes</strong>
-            <small>Discursos asignados y tiempo sugerido.</small>
+        <section className="minute-section minute-messages">
+          <div className="minute-section-title minute-title-with-copy">
+            <strong>Tiempo de mensajes:</strong>
+            <span>
+              (mensajes del Evangelio, Testimonios, cantos de la congregación u otra música)
+            </span>
           </div>
-          <table className="minute-doc-table minute-message-table">
+          <table className="minute-table minute-message-table">
             <thead>
               <tr>
                 <th>Nombre</th>
@@ -144,14 +195,14 @@ export function SacramentalMinuteSheet() {
               </tr>
             </thead>
             <tbody>
-              <EmptyRows count={4} cells={3} />
+              <TableRows count={5} cells={3} />
             </tbody>
           </table>
         </section>
 
-        <section className="minute-doc-block minute-final-grid">
-          <LineInput label="Último himno" />
-          <LineInput label="Última oración" />
+        <section className="minute-section minute-closing">
+          <HymnField label="Último himno" />
+          <LineField label="Última oración" />
         </section>
       </section>
     </div>

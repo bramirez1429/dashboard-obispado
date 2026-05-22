@@ -4,7 +4,7 @@ export async function GET() {
 
     const { data, error, count } = await supabase
       .from('Users')
-      .select('id, name, lastname', { count: 'exact' })
+      .select('id, name, lastname,callings,user_type', { count: 'exact' })
       .limit(5);
 
     if (error) {
