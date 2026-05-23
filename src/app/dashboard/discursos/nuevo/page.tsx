@@ -261,7 +261,7 @@ export default function NewSpeechPage() {
       return;
     }
 
-    const publicLink = `${window.location.origin.includes("localhost") ? "http://localhost:3000" : "https://dashboard-obispado.vercel.app"}/m/${result.data.id}`;
+    const publicLink = `${window.location.origin}/m/${result.data.id}`;
 
     setSavedSpeech(result.data);
     setGeneratedLink(publicLink);
