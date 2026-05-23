@@ -437,6 +437,7 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  width: 100%;
   gap: 8mm;
   margin-bottom: 4mm;
 }
@@ -445,6 +446,11 @@ a {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  width: 100%;
+}
+
+.minute-title {
+  flex: 1 1 auto;
 }
 
 .minute-top h1 {
@@ -472,8 +478,22 @@ a {
 
 .minute-meta-box {
   width: 270px;
-  max-width: 290px;
-  flex-shrink: 0;
+  min-width: 270px;
+  max-width: 270px;
+  flex: 0 0 270px;
+  margin-left: auto;
+}
+
+.minute-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+}
+
+.minute-meta-grid thead,
+.minute-meta-grid tbody,
+.minute-meta-grid tr {
+  display: contents;
 }
 
 .minute-summary-table th,
@@ -492,6 +512,13 @@ a {
 
 .minute-summary-table th {
   height: 6mm;
+}
+
+.minute-meta-header-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .minute-summary-table td {
@@ -573,9 +600,8 @@ a {
 }
 
 .minute-attendance-input .ant-input-number-input {
-  text-align: center !important;
-  font-size: 16px !important;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .minute-section {
@@ -699,6 +725,19 @@ a {
   align-items: flex-end;
 }
 
+.hymn-select-wrapper {
+  flex: 0 0 46mm;
+  width: 46mm;
+  min-height: 6.2mm;
+  height: 6.2mm;
+  display: inline-flex;
+  align-items: flex-end;
+}
+
+.hymn-print-value {
+  display: none;
+}
+
 .minute-hymn-number.ant-input-number {
   flex: 0 0 18mm;
   width: 18mm;
@@ -708,6 +747,43 @@ a {
 
 .minute-hymn-number .ant-input-number-input {
   text-align: center;
+}
+
+.minute-hymn-select.ant-select {
+  flex: 0 0 46mm;
+  width: 46mm;
+  min-height: 6.2mm;
+  height: 6.2mm;
+}
+
+.minute-hymn-select .ant-select-selector {
+  height: 6.2mm !important;
+  min-height: 6.2mm;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.minute-hymn-select .ant-select-selection-search,
+.minute-hymn-select .ant-select-selection-item,
+.minute-hymn-select .ant-select-selection-placeholder {
+  inset-inline-start: 0 !important;
+  inset-inline-end: 0 !important;
+  height: 6.2mm !important;
+  line-height: 6.2mm !important;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.minute-hymn-select .ant-select-selection-search-input {
+  height: 6.2mm !important;
+  text-align: center;
+}
+
+.minute-hymn-select.ant-select-focused .ant-select-selector {
+  box-shadow: none !important;
 }
 
 .minute-prayer-field {
@@ -791,9 +867,8 @@ a {
 }
 
 .minute-attendance-input .ant-input-number-input {
-  text-align: center !important;
-  font-size: 16px !important;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .public-message-page {
@@ -946,15 +1021,6 @@ a {
   .minute-music-block,
   .minute-final-grid {
     grid-template-columns: 1fr;
-  }
-
-  .minute-top {
-    flex-direction: column;
-  }
-
-  .minute-meta-box {
-    width: 100%;
-    max-width: none;
   }
 
   .minute-first-hymn-line,
@@ -1139,13 +1205,41 @@ a {
     flex-direction: row !important;
     align-items: flex-start !important;
     justify-content: space-between !important;
+    width: 100% !important;
     margin-bottom: 3.2mm !important;
+  }
+
+  .minute-top-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .minute-title {
+    flex: 1 1 auto !important;
   }
 
   .minute-meta-box {
     width: 270px !important;
-    max-width: 290px !important;
-    flex-shrink: 0 !important;
+    min-width: 270px !important;
+    max-width: 270px !important;
+    flex: 0 0 270px !important;
+    margin-left: auto !important;
+  }
+
+  .minute-meta-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+  }
+
+  .minute-meta-header-cell {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
   }
 
   .minute-section {
@@ -1183,9 +1277,42 @@ a {
     text-align: center !important;
   }
 
-  .minute-attendance-input .ant-input-number-input {
-    font-size: 16px !important;
-    font-weight: 500 !important;
+  .minute-sheet .ant-select-selector {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .minute-sheet .ant-select-arrow,
+  .minute-sheet .ant-select-clear {
+    display: none !important;
+  }
+
+  .minute-sheet .ant-select-selection-item {
+    color: #111827 !important;
+  }
+
+  .hymn-select-wrapper .ant-select,
+  .hymn-title-input,
+  .hymn-title-input input {
+    display: none !important;
+  }
+
+  .hymn-select-wrapper {
+    display: none !important;
+  }
+
+  .hymn-print-value {
+    display: inline-block !important;
+    font-size: 11px !important;
+    font-weight: 500;
+    color: #111827 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-left: 4px !important;
+    white-space: nowrap;
   }
 
   .minute-lined-text {

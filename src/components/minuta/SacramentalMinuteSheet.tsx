@@ -1,11 +1,17 @@
 "use client";
 
 import { PrinterOutlined } from "@ant-design/icons";
-import { Button, DatePicker, InputNumber } from "antd";
+import { Button, DatePicker, InputNumber, Select } from "antd";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
 
 const hymnsByNumber = hymnsByNumberData as Record<string, string>;
+const hymnOptions = Object.entries(hymnsByNumber)
+  .sort(([firstNumber], [secondNumber]) => Number(firstNumber) - Number(secondNumber))
+  .map(([number, title]) => ({
+    value: number,
+    label: `${number} - ${title}`,
+  }));
 
 type LineFieldProps = {
   label: string;
@@ -29,28 +35,54 @@ function LineField({ label, className = "" }: LineFieldProps) {
 }
 
 function HymnField({ label, className = "" }: LineFieldProps) {
+  const [hymnNumber, setHymnNumber] = useState<string>();
   const [hymnTitle, setHymnTitle] = useState("");
 
-  const handleHymnNumberChange = (value: number | string | null) => {
-    if (value === null || value === "") {
+  const updateHymn = (value?: string) => {
+    if (!value) {
+      setHymnNumber(undefined);
       setHymnTitle("");
       return;
     }
 
-    setHymnTitle(hymnsByNumber[String(value)] ?? "");
+    setHymnNumber(value);
+    setHymnTitle(hymnsByNumber[value] ?? "");
+  };
+
+  const handleHymnSearch = (value: string) => {
+    if (/^\d*$/.test(value)) {
+      updateHymn(value || undefined);
+    }
   };
 
   return (
     <label className={`minute-field minute-hymn-field ${className}`}>
       <span>{label}</span>
-      <InputNumber
-        className="minute-number-input minute-hymn-number hymn-number-input"
-        controls={false}
-        min={0}
-        onChange={handleHymnNumberChange}
-        aria-label={`${label} numero`}
-      />
+      <span className="hymn-select-wrapper">
+        <Select
+          className="minute-hymn-select hymn-number-input"
+          value={hymnNumber}
+          options={hymnOptions}
+          showSearch
+          suffixIcon={null}
+          placeholder=""
+          optionFilterProp="label"
+          optionLabelProp="value"
+          popupMatchSelectWidth={false}
+          dropdownStyle={{ minWidth: 320 }}
+          filterOption={(input, option) =>
+            String(option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+          onChange={(value) => updateHymn(value)}
+          onSearch={handleHymnSearch}
+          aria-label={`${label} numero`}
+        />
+      </span>
+      <span className="hymn-print-value">
+        {hymnNumber ? `${hymnNumber} - ${hymnTitle}` : ""}
+      </span>
       <input
+        className="hymn-title-input"
         type="text"
         value={hymnTitle}
         onChange={(event) => setHymnTitle(event.target.value)}
@@ -99,13 +131,16 @@ export function SacramentalMinuteSheet() {
 
       <section className="minute-sheet" aria-label="Reunion Sacramental">
         <header className="minute-top minute-top-row">
-          <h1>Reunión Sacramental</h1>
+          <h1 className="minute-title">Reunión Sacramental</h1>
 
-          <table className="minute-summary-table minute-meta-box" aria-label="Fecha y asistencia">
+          <table
+            className="minute-summary-table minute-meta-box minute-meta-grid"
+            aria-label="Fecha y asistencia"
+          >
             <thead>
               <tr>
-                <th>Fecha</th>
-                <th>Asistencia</th>
+                <th className="minute-meta-header-cell">Fecha</th>
+                <th className="minute-meta-header-cell">Asistencia</th>
               </tr>
             </thead>
             <tbody>
