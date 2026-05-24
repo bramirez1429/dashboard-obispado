@@ -6,7 +6,7 @@ export default async function DashboardPage() {
   const fullName =
     `${session?.user?.name || ""} ${session?.user?.lastname || ""}`.trim() ||
     "Usuario";
-  const calling = session?.user?.callings || "Sin llamamiento asignado";
+  // const calling = session?.user?.callings || "Sin llamamiento asignado";
 
-  return <DashboardHome fullName={fullName} calling={calling} />;
+  return <DashboardHome fullName={fullName} /* calling={calling}  *//>;
 }

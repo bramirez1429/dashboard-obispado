@@ -55,7 +55,7 @@ export function DashboardHome({
   calling,
 }: {
   fullName: string;
-  calling: string;
+  calling?: string;
 }) {
   return (
     <div className="page-stack">
