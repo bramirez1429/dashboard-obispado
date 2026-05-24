@@ -59,8 +59,6 @@ function selectedKey(pathname: string) {
 
 export function DashboardShell({
   children,
-  userFullName,
-  userCalling,
 }: {
   children: React.ReactNode;
   userFullName: string;
