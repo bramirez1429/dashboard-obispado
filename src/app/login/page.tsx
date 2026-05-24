@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Typography, message } from "antd";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 type LoginValues = {
@@ -11,7 +12,18 @@ type LoginValues = {
 export default function LoginPage() {
   const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async (values: LoginValues) => {
+    const result = await signIn("credentials", {
+      identifier: values.identifier,
+      password: values.password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      message.error("Usuario o contraseña incorrectos");
+      return;
+    }
+
     router.push("/dashboard");
   };
 
