@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import LogoutButton from "@/components/auth/LogoutButton";
 import {
   FileTextOutlined,
   HomeOutlined,
@@ -9,8 +10,9 @@ import {
   MenuUnfoldOutlined,
   ReadOutlined,
   SafetyCertificateOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
-import {  Layout, Menu, Space } from "antd";
+import { Layout, Menu, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 
@@ -32,6 +34,11 @@ const menuItems = [
     icon: <ReadOutlined />,
     label: "Discursos",
   },
+  {
+    key: "/dashboard/usuarios/nuevo",
+    icon: <UserAddOutlined />,
+    label: "Agregar usuario",
+  },
 ];
 
 function selectedKey(pathname: string) {
@@ -43,10 +50,22 @@ function selectedKey(pathname: string) {
     return "/dashboard/discursos";
   }
 
+  if (pathname.startsWith("/dashboard/usuarios")) {
+    return "/dashboard/usuarios/nuevo";
+  }
+
   return "/dashboard";
 }
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({
+  children,
+  userFullName,
+  userCalling,
+}: {
+  children: React.ReactNode;
+  userFullName: string;
+  userCalling: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
@@ -154,7 +173,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <Content className="dashboard-content">
           <div className="dashboard-content-actions">
             <Space orientation="horizontal">
-           {/* aca vamos a poner  user */}
+              <div className="dashboard-user-header">
+                <div className="dashboard-user-name">{userFullName}</div>
+                <div className="dashboard-user-calling">{userCalling}</div>
+                <LogoutButton />
+              </div>
             </Space>
           </div>
           {children}

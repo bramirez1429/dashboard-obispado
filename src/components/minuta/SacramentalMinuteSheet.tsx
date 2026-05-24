@@ -69,7 +69,11 @@ function HymnField({ label, className = "" }: LineFieldProps) {
           optionFilterProp="label"
           optionLabelProp="value"
           popupMatchSelectWidth={false}
-          dropdownStyle={{ minWidth: 320 }}
+          styles={{
+            popup: {
+              root: { minWidth: 320 },
+            },
+          }}
           filterOption={(input, option) =>
             String(option?.label ?? "").toLowerCase().includes(input.toLowerCase())
           }
