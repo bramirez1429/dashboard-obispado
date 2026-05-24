@@ -174,8 +174,7 @@ export function DashboardShell({
           <div className="dashboard-content-actions">
             <Space orientation="horizontal">
               <div className="dashboard-user-header">
-                <div className="dashboard-user-name">{userFullName}</div>
-                <div className="dashboard-user-calling">{userCalling}</div>
+             
                 <LogoutButton />
               </div>
             </Space>

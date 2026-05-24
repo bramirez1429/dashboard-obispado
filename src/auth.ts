@@ -32,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const userSelect =
-          "id, user_uuid, name, lastname, username, phone, password_hash, role, active";
+          "id, user_uuid, name, lastname, callings, username, phone, password_hash, role, active";
 
         const { data: usernameUser, error: usernameError } = await supabaseAdmin
           .from("Users")
@@ -140,10 +140,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         return {
           id: String(user.user_uuid),
-          name:
-            `${user.name || ""} ${user.lastname || ""}`.trim() ||
-            user.username ||
-            user.phone,
+          name: user.name || "",
+          lastname: user.lastname || "",
+          callings: user.callings || "",
           username: user.username,
           phone: user.phone,
           role: user.role || "leader",
@@ -155,6 +154,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         const authUser = user as typeof user & {
+          lastname?: string | null;
+          callings?: string | null;
           username?: string | null;
           phone?: string | null;
           role?: string | null;
@@ -162,6 +163,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         token.id = authUser.id;
         token.name = authUser.name;
+        token.lastname = authUser.lastname;
+        token.callings = authUser.callings;
         token.username = authUser.username;
         token.phone = authUser.phone;
         token.role = authUser.role;
@@ -169,6 +172,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         console.log("JWT CALLBACK - DATOS GUARDADOS EN TOKEN", {
           id: token.id,
           name: token.name,
+          lastname: token.lastname,
+          callings: token.callings,
           username: token.username,
           phone: token.phone,
           role: token.role,
@@ -181,6 +186,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         const sessionUser = session.user as typeof session.user & {
           id: string;
+          lastname: string;
+          callings: string;
           username: string;
           phone: string;
           role: string;
@@ -188,6 +195,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         sessionUser.id = token.id as string;
         sessionUser.name = token.name as string;
+        sessionUser.lastname = token.lastname as string;
+        sessionUser.callings = token.callings as string;
         sessionUser.username = token.username as string;
         sessionUser.phone = token.phone as string;
         sessionUser.role = token.role as string;
@@ -195,6 +204,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         console.log("SESSION CALLBACK - DATOS DISPONIBLES EN SESSION", {
           id: sessionUser.id,
           name: sessionUser.name,
+          lastname: sessionUser.lastname,
+          callings: sessionUser.callings,
           username: sessionUser.username,
           phone: sessionUser.phone,
           role: sessionUser.role,
