@@ -231,7 +231,8 @@ a {
 }
 
 .dashboard-content-actions .ant-btn {
-  border-radius: 16px;
+  border-radius: 8px;
+  padding: 14px;
 }
 
 .dashboard-content-actions .ant-btn:not(.ant-btn-primary) {
@@ -245,8 +246,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 16px;
-  align-items: flex-end;
 }
 
 .dashboard-user-name {
@@ -1222,9 +1221,7 @@ a {
     padding: 20px;
   }
 
-  .dashboard-content-actions {
-    justify-content: flex-start;
-  }
+  
 
   .welcome-content,
   .section-toolbar {
@@ -1362,6 +1359,127 @@ a {
   .dashboard-main {
     width: 100%;
     min-width: 0;
+  }
+
+  .minute-top,
+  .minute-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .minute-title {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .minute-top h1,
+  .minute-title {
+    font-size: 24px;
+    line-height: 1.05;
+  }
+
+  .minute-meta-box {
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
+    flex: 0 0 112px;
+    margin-left: 0;
+  }
+
+  .minute-meta-grid {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    width: 112px;
+    border: 0;
+    background: transparent;
+  }
+
+  .minute-meta-grid thead,
+  .minute-meta-grid tbody,
+  .minute-meta-grid tr {
+    display: contents;
+  }
+
+  .minute-meta-grid th:nth-child(1) {
+    order: 1;
+  }
+
+  .minute-meta-grid td:nth-child(1) {
+    order: 2;
+  }
+
+  .minute-meta-grid th:nth-child(2) {
+    order: 3;
+  }
+
+  .minute-meta-grid td:nth-child(2) {
+    order: 4;
+  }
+
+  .minute-summary-table th,
+  .minute-meta-header-cell {
+    min-height: 17px;
+    height: 17px;
+    padding: 3px 5px;
+    border: 1px solid var(--minute-header-border);
+    font-size: 7px;
+    line-height: 1;
+  }
+
+  .minute-summary-table td {
+    min-height: 26px;
+    height: 26px;
+    border: 1px solid var(--minute-line);
+  }
+
+  .minute-date-picker.ant-picker,
+  .minute-number-input.ant-input-number {
+    min-height: 26px;
+  }
+
+  .minute-date-picker .ant-picker-input > input,
+  .minute-attendance-input .ant-input-number-input {
+    padding: 4px 5px;
+    font-size: 9px;
+    line-height: 1.15;
+  }
+}
+
+@media (max-width: 390px) {
+  .minute-top h1,
+  .minute-title {
+    font-size: 22px;
+  }
+
+  .minute-meta-box,
+  .minute-meta-grid {
+    width: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    flex-basis: 96px;
+  }
+
+  .minute-summary-table th,
+  .minute-meta-header-cell {
+    font-size: 6.5px;
+  }
+
+  .minute-summary-table td {
+    min-height: 24px;
+    height: 24px;
+  }
+
+  .minute-date-picker.ant-picker,
+  .minute-number-input.ant-input-number {
+    min-height: 24px;
+  }
+
+  .minute-date-picker .ant-picker-input > input,
+  .minute-attendance-input .ant-input-number-input {
+    font-size: 8px;
   }
 }
 
