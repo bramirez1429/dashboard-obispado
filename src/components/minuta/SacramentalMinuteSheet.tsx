@@ -4,6 +4,7 @@ import { PrinterOutlined } from "@ant-design/icons";
 import { Button, DatePicker, InputNumber, Modal, Select, message } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
 import type {
@@ -439,6 +440,12 @@ export function SacramentalMinuteSheet() {
 
   return (
     <div className="minute-workspace">
+      <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <Link href="/minuta/ver">
+          <Button type="primary">Ver minuta</Button>
+        </Link>
+      </div>
+
       <div className="minute-toolbar no-print">
         <Button onClick={handleSaveMinute} loading={isSaving}>
           Guardar minuta
