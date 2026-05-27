@@ -417,10 +417,25 @@ export function SacramentalMinuteSheet() {
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
+      const responseText = await response.text();
+
+      let result;
+
+      try {
+        result = responseText
+          ? JSON.parse(responseText)
+          : { success: false, error: "La API no devolvió respuesta" };
+      } catch {
+        console.error("La API no devolvió JSON válido:", responseText);
+
+        result = {
+          success: false,
+          error: responseText || "La API devolvió una respuesta inválida",
+        };
+      }
 
       if (!response.ok || !result.success) {
-        console.error("Error saving Meeting_minutes", result.error);
+        console.error("Error saving Meeting_minutes", result);
         message.error(result.error || "No se pudo guardar la minuta");
         return;
       }
@@ -441,7 +456,7 @@ export function SacramentalMinuteSheet() {
   return (
     <div className="minute-workspace">
       <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <Link href="/minuta/ver">
+        <Link href="/reunion-sacramental" prefetch={false}>
           <Button type="primary">Ver minuta</Button>
         </Link>
       </div>

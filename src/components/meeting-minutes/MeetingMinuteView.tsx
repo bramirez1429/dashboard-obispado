@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { Empty } from "antd";
 
@@ -42,6 +41,7 @@ export type MeetingMinute = {
 
 type MeetingMinuteViewProps = {
   minute?: MeetingMinute | null;
+  targetDate?: string;
 };
 
 const getText = (value?: string) => {
@@ -109,12 +109,6 @@ const PublicMinuteStyles = () => (
       margin: 0 auto;
     }
 
-    .public-minute-back {
-      color: var(--public-minute-blue, #31475a);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
     .public-minute-sheet {
       margin-top: 18px;
       background: #FFFFFF;
@@ -156,7 +150,7 @@ const PublicMinuteStyles = () => (
       margin-top: 18px;
       padding: 20px;
       background: #F7FAFC;
-      border: 1px solid var(--minute-border-soft, #e8ded0);
+      border: 1px solid var(--minute-border-soft, #D7E1EA);
       border-radius: 16px;
     }
 
@@ -188,8 +182,14 @@ const PublicMinuteStyles = () => (
       line-height: 1.2;
     }
 
-    .public-minute-value {
+    .public-minute-value,
+    .public-minute-paragraph,
+    .public-minute-feature-value,
+    .public-minute-message-topic {
       color: #2f2a25;
+    }
+
+    .public-minute-value {
       font-size: 16px;
       line-height: 1.5;
       overflow-wrap: anywhere;
@@ -197,7 +197,6 @@ const PublicMinuteStyles = () => (
 
     .public-minute-paragraph {
       margin: 0;
-      color: #2f2a25;
       font-size: 16px;
       line-height: 1.75;
       white-space: pre-wrap;
@@ -220,7 +219,6 @@ const PublicMinuteStyles = () => (
 
     .public-minute-feature-value {
       margin: 0;
-      color: #2f2a25;
       font-size: 18px;
       font-weight: 600;
       line-height: 1.6;
@@ -234,7 +232,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-message {
       padding: 14px 0;
-      border-bottom: 1px solid var(--minute-border-soft, #e8ded0);
+      border-bottom: 1px solid var(--minute-border-soft, #D7E1EA);
     }
 
     .public-minute-message:last-child {
@@ -251,7 +249,6 @@ const PublicMinuteStyles = () => (
 
     .public-minute-message-topic {
       margin: 0;
-      color: #2f2a25;
       font-size: 16px;
       line-height: 1.65;
     }
@@ -283,19 +280,24 @@ const PublicMinuteStyles = () => (
   `}</style>
 );
 
-export const MeetingMinuteView = ({ minute }: MeetingMinuteViewProps) => {
+export const MeetingMinuteView = ({
+  minute,
+  targetDate,
+}: MeetingMinuteViewProps) => {
   if (!minute) {
     return (
       <main className="public-minute-page">
         <PublicMinuteStyles />
         <div className="public-minute-container">
-          <Link href="/minuta" className="public-minute-back">
-            ← Volver
-          </Link>
-
           <div className="public-minute-sheet">
             <div className="public-minute-empty">
-              <Empty description="Todavía no hay una minuta guardada." />
+              <Empty
+                description={
+                  targetDate
+                    ? `Todavía no hay una minuta guardada para el domingo ${targetDate}.`
+                    : "Todavía no hay una minuta guardada."
+                }
+              />
             </div>
           </div>
         </div>
@@ -309,10 +311,6 @@ export const MeetingMinuteView = ({ minute }: MeetingMinuteViewProps) => {
     <main className="public-minute-page">
       <PublicMinuteStyles />
       <div className="public-minute-container">
-        <Link href="/minuta" className="public-minute-back">
-          ← Volver
-        </Link>
-
         <article className="public-minute-sheet">
           <header className="public-minute-header">
             <h1>Reunión Sacramental</h1>
