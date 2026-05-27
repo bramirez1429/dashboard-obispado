@@ -77,8 +77,20 @@ const selectMeetingMinuteByDate = (minutes: MeetingMinute[]) => {
   return minutes.find((minute) => minute.date === previousSunday) ?? null;
 };
 
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return "http://localhost:3000";
+};
+
 const getMeetingMinutes = async (): Promise<MeetingMinutesResponse> => {
-  const response = await fetch("http://localhost:3000/api/meeting-minutes", {
+  const response = await fetch(`${getBaseUrl()}/api/meeting-minutes`, {
     method: "GET",
     cache: "no-store",
   });
