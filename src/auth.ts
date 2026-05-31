@@ -3,12 +3,18 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
+const twelveHoursInSeconds = 12 * 60 * 60;
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
   },
   session: {
     strategy: "jwt",
+    maxAge: twelveHoursInSeconds,
+  },
+  jwt: {
+    maxAge: twelveHoursInSeconds,
   },
   providers: [
     Credentials({
