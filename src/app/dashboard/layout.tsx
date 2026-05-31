@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -7,7 +8,11 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  console.log("Session in layout:", session);
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   const fullName =
     `${session?.user?.name || ""} ${session?.user?.lastname || ""}`.trim() ||
     "Usuario";

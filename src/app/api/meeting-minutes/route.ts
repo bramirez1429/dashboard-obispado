@@ -1,3 +1,6 @@
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+
 export async function GET(request: Request) {
   try {
     const { supabase } = await import("@/lib/supabase/client");
@@ -50,6 +53,15 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false, error: "No autorizado" },
+      { status: 401 }
+    );
+  }
+
   try {
     const { supabase } = await import("@/lib/supabase/client");
 

@@ -27,8 +27,8 @@ function cleanOptionalText(value: unknown) {
 
 export async function POST(request: Request) {
   const session = await auth();
-
-  if (!session?.user) {
+  console.log("Session:", session);
+  if (!session?.user?.id) {
     return NextResponse.json(
       { success: false, error: "No autorizado" },
       { status: 401 }
