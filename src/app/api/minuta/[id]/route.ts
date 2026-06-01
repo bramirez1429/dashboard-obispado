@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -33,6 +34,8 @@ export async function PUT(
       { status: 500 }
     );
   }
+
+  revalidatePath("/reunion-sacramental");
 
   return NextResponse.json({ success: true, data });
 }

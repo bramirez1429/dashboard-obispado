@@ -1,3 +1,5 @@
+import { connection } from "next/server";
+import MinuteRealtimeRefresh from "./MinuteRealtimeRefresh";
 import { MeetingMinuteView } from "@/components/meeting-minutes/MeetingMinuteView";
 import type { MeetingMinute } from "@/components/meeting-minutes/MeetingMinuteView";
 
@@ -107,6 +109,8 @@ const getMeetingMinutes = async (): Promise<MeetingMinutesResponse> => {
 };
 
 const SacramentalMeetingPage = async () => {
+  await connection();
+
   const result = await getMeetingMinutes();
 
   console.log("Resultado GET /api/meeting-minutes:", result);
@@ -117,7 +121,12 @@ const SacramentalMeetingPage = async () => {
   console.log("Minutas recibidas:", minutes);
   console.log("Minuta seleccionada:", minute);
 
-  return <MeetingMinuteView minute={minute} />;
+  return (
+    <>
+      <MinuteRealtimeRefresh minuteId={minute?.id ? String(minute.id) : undefined} />
+      <MeetingMinuteView minute={minute} />
+    </>
+  );
 };
 
 export default SacramentalMeetingPage;

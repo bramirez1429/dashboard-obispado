@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import AutoRefreshMinute from "../../components/AutoRefreshMinute";
 import MinuteEditForms from "../../components/MinuteEditForms";
 import type { MeetingMinute } from "@/types/meeting-minute";
 
@@ -65,7 +64,6 @@ export default async function EditMinutePage({
 
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", paddingBottom: 32 }}>
-      <AutoRefreshMinute />
       <div style={{ marginBottom: 12 }}>
         <h1
           style={{

@@ -12,7 +12,6 @@ import {
   Space,
   message,
 } from "antd";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { MeetingMinute } from "@/types/meeting-minute";
 
@@ -21,6 +20,7 @@ type MinuteEditFormsProps = {
 };
 
 function notifyEditing() {
+   console.log("El usuario está editando la minuta");
   window.dispatchEvent(new Event("minute-form-editing"));
 }
 
@@ -38,7 +38,6 @@ async function updateMinute(minuteId: string | number | undefined, values: objec
 }
 
 function useModuleSave(successMessage: string) {
-  const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
 
   const save = async (
@@ -50,7 +49,6 @@ function useModuleSave(successMessage: string) {
     try {
       await updateMinute(minuteId, values);
       message.success(successMessage);
-      router.refresh();
     } catch (error) {
       message.error(error instanceof Error ? error.message : "No se pudo guardar");
     } finally {
@@ -71,7 +69,7 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
   const closingSave = useModuleSave("Cierre guardado");
 
   return (
-    <Space direction="vertical" size={12} style={{ width: "100%" }}>
+    <Space orientation="vertical" size={12} style={{ width: "100%" }}>
       <Card size="small" title="Datos principales">
         <Form
           layout="vertical"
