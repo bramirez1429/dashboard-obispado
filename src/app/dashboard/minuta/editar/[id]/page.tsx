@@ -7,6 +7,7 @@ export const revalidate = 120;
 const emptyHymn = {
   number: "",
   title: "",
+  url: "",
 };
 
 const emptyBusiness = {

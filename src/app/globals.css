@@ -418,8 +418,8 @@ a {
 .minute-sheet {
   --minute-ink: #1f2933;
   --minute-muted: #526170;
-  --minute-header: #d7e3ec;
-  --minute-header-border: #a9bac8;
+  --minute-header: #3880C7;
+  --minute-header-border: #3880C7;
   --minute-line: #aebbc7;
   --minute-line-soft: #c7d1da;
   --minute-focus: #eaf2f7;
@@ -473,7 +473,7 @@ a {
 .minute-top h1 {
   margin: 0;
   padding-top: 2mm;
-  color: var(--minute-ink);
+  color: #3880C7;
   font-size: 27px;
   font-weight: 700;
   line-height: 1;
@@ -515,7 +515,7 @@ a {
 
 .minute-summary-table th,
 .minute-table th {
-  color: #26394f;
+  color: #ffffff;
   background: var(--minute-header);
   border: 1px solid var(--minute-header-border);
   font-family: Arial, Helvetica, sans-serif;
@@ -674,7 +674,7 @@ a {
   align-items: baseline;
   gap: 1.2mm;
   margin-bottom: 1.2mm;
-  color: #31475a;
+  color: var(--minute-ink);
   font-family: Arial, Helvetica, sans-serif;
 }
 

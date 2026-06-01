@@ -1,6 +1,7 @@
 export type MeetingMinuteHymn = {
-  number: string;
+  number: string | number;
   title: string;
+  url?: string;
 };
 
 export type MeetingMinuteWardAndStakeBusiness = {

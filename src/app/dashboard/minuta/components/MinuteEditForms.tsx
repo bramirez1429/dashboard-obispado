@@ -9,19 +9,46 @@ import {
   InputNumber,
   Row,
   Col,
+  Select,
   Space,
   message,
 } from "antd";
 import { useState } from "react";
-import type { MeetingMinute } from "@/types/meeting-minute";
+import hymnsByNumberData from "@/data/hymns-by-number.json";
+import type { MeetingMinute, MeetingMinuteHymn } from "@/types/meeting-minute";
 
 type MinuteEditFormsProps = {
   minute: MeetingMinute;
 };
 
+type HymnCatalogEntry = {
+  number: string | number;
+  title: string;
+  url?: string;
+};
+
+const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
+const hymnOptions = Object.entries(hymnsByNumber)
+  .sort(([firstNumber], [secondNumber]) => Number(firstNumber) - Number(secondNumber))
+  .map(([number, hymn]) => ({
+    value: number,
+    label: `${hymn.number} - ${hymn.title}`,
+  }));
+
 function notifyEditing() {
    console.log("El usuario está editando la minuta");
   window.dispatchEvent(new Event("minute-form-editing"));
+}
+
+function withCatalogHymnData(hymn?: MeetingMinuteHymn): MeetingMinuteHymn {
+  const number = String(hymn?.number ?? "");
+  const catalogHymn = hymnsByNumber[number];
+
+  return {
+    number,
+    title: hymn?.title || catalogHymn?.title || "",
+    url: hymn?.url || catalogHymn?.url || "",
+  };
 }
 
 async function updateMinute(minuteId: string | number | undefined, values: object) {
@@ -62,18 +89,36 @@ function useModuleSave(successMessage: string) {
 const formItemStyle = { marginBottom: 10 };
 
 export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
+  const minuteWithHymnUrls = {
+    ...minute,
+    firstHymn: withCatalogHymnData(minute.firstHymn),
+    sacramentalHymn: withCatalogHymnData(minute.sacramentalHymn),
+    lastHymn: withCatalogHymnData(minute.lastHymn),
+  };
   const mainSave = useModuleSave("Datos principales guardados");
   const hymnsSave = useModuleSave("Himnos y oraciones guardados");
   const businessSave = useModuleSave("Asuntos guardados");
   const messagesSave = useModuleSave("Mensajes guardados");
   const closingSave = useModuleSave("Cierre guardado");
+  const [hymnsForm] = Form.useForm();
+
+  const handleHymnChange = (
+    fieldName: "firstHymn" | "sacramentalHymn" | "lastHymn",
+    hymnNumber: string
+  ) => {
+    const hymn = hymnsByNumber[hymnNumber];
+
+    hymnsForm.setFieldValue([fieldName, "number"], String(hymn?.number ?? hymnNumber));
+    hymnsForm.setFieldValue([fieldName, "title"], hymn?.title ?? "");
+    hymnsForm.setFieldValue([fieldName, "url"], hymn?.url ?? "");
+  };
 
   return (
     <Space orientation="vertical" size={12} style={{ width: "100%" }}>
       <Card size="small" title="Datos principales">
         <Form
           layout="vertical"
-          initialValues={minute}
+          initialValues={minuteWithHymnUrls}
           onValuesChange={notifyEditing}
           onFinish={(values) => mainSave.save(minute.id, values)}
         >
@@ -116,19 +161,35 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
 
       <Card size="small" title="Himnos y oraciones">
         <Form
+          form={hymnsForm}
           layout="vertical"
-          initialValues={minute}
+          initialValues={minuteWithHymnUrls}
           onValuesChange={notifyEditing}
-          onFinish={(values) => hymnsSave.save(minute.id, values)}
+          onFinish={(values) =>
+            hymnsSave.save(minute.id, {
+              ...values,
+              firstHymn: withCatalogHymnData(values.firstHymn),
+              sacramentalHymn: withCatalogHymnData(values.sacramentalHymn),
+              lastHymn: withCatalogHymnData(values.lastHymn),
+            })
+          }
         >
           <Row gutter={12}>
             <Col xs={24} md={12}>
-              <Form.Item label="Primer himno numero" name={["firstHymn", "number"]} style={formItemStyle}>
+              <Form.Item label="Primer himno" name={["firstHymn", "number"]} style={formItemStyle}>
+                <Select
+                  size="small"
+                  showSearch
+                  options={hymnOptions}
+                  optionFilterProp="label"
+                  placeholder="Seleccionar himno"
+                  onChange={(value) => handleHymnChange("firstHymn", value)}
+                />
+              </Form.Item>
+              <Form.Item name={["firstHymn", "title"]} hidden>
                 <Input size="small" />
               </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Primer himno titulo" name={["firstHymn", "title"]} style={formItemStyle}>
+              <Form.Item name={["firstHymn", "url"]} hidden>
                 <Input size="small" />
               </Form.Item>
             </Col>
@@ -148,22 +209,38 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item label="Himno sacramental numero" name={["sacramentalHymn", "number"]} style={formItemStyle}>
+              <Form.Item label="Himno sacramental" name={["sacramentalHymn", "number"]} style={formItemStyle}>
+                <Select
+                  size="small"
+                  showSearch
+                  options={hymnOptions}
+                  optionFilterProp="label"
+                  placeholder="Seleccionar himno"
+                  onChange={(value) => handleHymnChange("sacramentalHymn", value)}
+                />
+              </Form.Item>
+              <Form.Item name={["sacramentalHymn", "title"]} hidden>
+                <Input size="small" />
+              </Form.Item>
+              <Form.Item name={["sacramentalHymn", "url"]} hidden>
                 <Input size="small" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
-              <Form.Item label="Himno sacramental titulo" name={["sacramentalHymn", "title"]} style={formItemStyle}>
+              <Form.Item label="Ultimo himno" name={["lastHymn", "number"]} style={formItemStyle}>
+                <Select
+                  size="small"
+                  showSearch
+                  options={hymnOptions}
+                  optionFilterProp="label"
+                  placeholder="Seleccionar himno"
+                  onChange={(value) => handleHymnChange("lastHymn", value)}
+                />
+              </Form.Item>
+              <Form.Item name={["lastHymn", "title"]} hidden>
                 <Input size="small" />
               </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Ultimo himno numero" name={["lastHymn", "number"]} style={formItemStyle}>
-                <Input size="small" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Ultimo himno titulo" name={["lastHymn", "title"]} style={formItemStyle}>
+              <Form.Item name={["lastHymn", "url"]} hidden>
                 <Input size="small" />
               </Form.Item>
             </Col>
@@ -182,7 +259,7 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
       <Card size="small" title="Asuntos del barrio/estaca">
         <Form
           layout="vertical"
-          initialValues={minute}
+          initialValues={minuteWithHymnUrls}
           onValuesChange={notifyEditing}
           onFinish={(values) => businessSave.save(minute.id, values)}
         >
@@ -269,7 +346,7 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
       <Card size="small" title="Cierre/asistencia">
         <Form
           layout="vertical"
-          initialValues={minute}
+          initialValues={minuteWithHymnUrls}
           onValuesChange={notifyEditing}
           onFinish={(values) => closingSave.save(minute.id, values)}
         >

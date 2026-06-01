@@ -1,11 +1,13 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ExportOutlined } from "@ant-design/icons";
 import { Empty } from "antd";
 
 type Hymn = {
-  number?: string;
+  number?: string | number;
   title?: string;
+  url?: string;
 };
 
 type WardAndStakeBusiness = {
@@ -54,6 +56,26 @@ const getHymnText = (hymn?: Hymn) => {
   return hymn.number || hymn.title || "—";
 };
 
+const PublicHymnLink = ({ hymn }: { hymn?: Hymn }) => {
+  const text = getHymnText(hymn);
+
+  if (!hymn?.url || (!hymn.number && !hymn.title)) {
+    return <>{text}</>;
+  }
+
+  return (
+    <a
+      className="public-hymn-link"
+      href={hymn.url}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {text}
+      <ExportOutlined className="public-hymn-link-icon" aria-hidden="true" />
+    </a>
+  );
+};
+
 const getWardAndStakeBusinessText = (business?: WardAndStakeBusiness) => {
   const subject = business?.subject?.trim();
   const name = business?.name?.trim();
@@ -75,7 +97,7 @@ const FieldLine = ({
   value,
 }: {
   label: string;
-  value: string | number;
+  value: ReactNode;
 }) => (
   <div className="public-minute-field-line">
     <span className="public-minute-label">{label}</span>
@@ -116,9 +138,9 @@ const PublicMinuteStyles = () => (
       border-radius: 22px;
       padding: clamp(24px, 4vw, 44px);
       box-shadow: 0 10px 28px rgba(47, 42, 37, 0.06);
-      color: #2f2a25;
+      color: #111827;
       font-family: Arial, Helvetica, sans-serif;
-      --public-minute-blue: #31475a;
+      --public-minute-blue: #3880C7;
       --minute-border-soft: #D7E1EA;
     }
 
@@ -129,7 +151,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-header h1 {
       margin: 0;
-      color: var(--public-minute-blue, #31475a);
+      color: var(--public-minute-blue, #3880C7);
       font-size: clamp(32px, 5vw, 48px);
       font-weight: 700;
       line-height: 1.1;
@@ -156,7 +178,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-module h2 {
       margin: 0 0 16px;
-      color: var(--public-minute-blue, #31475a);
+      color: #111827;
       font-size: 18px;
       font-weight: 700;
       line-height: 1.2;
@@ -176,7 +198,7 @@ const PublicMinuteStyles = () => (
     }
 
     .public-minute-label {
-      color: var(--public-minute-blue, #31475a);
+      color: #111827;
       font-size: 13px;
       font-weight: 700;
       line-height: 1.2;
@@ -186,13 +208,25 @@ const PublicMinuteStyles = () => (
     .public-minute-paragraph,
     .public-minute-feature-value,
     .public-minute-message-topic {
-      color: #2f2a25;
+      color: #111827;
     }
 
     .public-minute-value {
       font-size: 16px;
       line-height: 1.5;
       overflow-wrap: anywhere;
+    }
+
+    .public-hymn-link {
+      color: #2E69A3;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .public-hymn-link-icon {
+      margin-left: 6px;
+      font-size: 0.85em;
     }
 
     .public-minute-paragraph {
@@ -204,7 +238,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-business-title {
       margin: 0 0 6px;
-      color: #2f2a25;
+      color: #111827;
       font-size: 17px;
       font-weight: 700;
       line-height: 1.6;
@@ -212,7 +246,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-business-detail {
       margin: 0;
-      color: #6f6257;
+      color: #111827;
       font-size: 16px;
       line-height: 1.6;
     }
@@ -241,7 +275,7 @@ const PublicMinuteStyles = () => (
 
     .public-minute-message-name {
       margin: 0 0 4px;
-      color: var(--public-minute-blue, #31475a);
+      color: #111827;
       font-size: 15px;
       font-weight: 700;
       line-height: 1.4;
@@ -334,14 +368,14 @@ export const MeetingMinuteView = ({
 
           <PublicModule title="Inicio de la reunión">
             <div className="public-minute-grid">
-              <FieldLine label="Primer himno" value={getHymnText(minute.firstHymn)} />
+              <FieldLine label="Primer himno" value={<PublicHymnLink hymn={minute.firstHymn} />} />
               <FieldLine label="Directora" value={getText(minute.director)} />
               <FieldLine label="Pianista" value={getText(minute.pianist)} />
               <FieldLine label="Primera oración" value={getText(minute.openingPrayer)} />
             </div>
           </PublicModule>
 
-          <PublicModule title="Asuntos de barrio y estaca">
+          <PublicModule title="Asuntos del barrio y estaca">
             <p className="public-minute-business-title">{business.title}</p>
             {business.details ? (
               <p className="public-minute-business-detail">{business.details}</p>
@@ -350,7 +384,7 @@ export const MeetingMinuteView = ({
 
           <PublicModule title="Himno sacramental">
             <p className="public-minute-feature-value">
-              {getHymnText(minute.sacramentalHymn)}
+              <PublicHymnLink hymn={minute.sacramentalHymn} />
             </p>
           </PublicModule>
 
@@ -375,7 +409,7 @@ export const MeetingMinuteView = ({
 
           <PublicModule title="Final de la reunión">
             <div className="public-minute-grid">
-              <FieldLine label="Último himno" value={getHymnText(minute.lastHymn)} />
+              <FieldLine label="Último himno" value={<PublicHymnLink hymn={minute.lastHymn} />} />
               <FieldLine label="Última oración" value={getText(minute.closingPrayer)} />
             </div>
           </PublicModule>

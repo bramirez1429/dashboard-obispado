@@ -16,12 +16,18 @@ import type {
 
 dayjs.extend(customParseFormat);
 
-const hymnsByNumber = hymnsByNumberData as Record<string, string>;
+type HymnCatalogEntry = {
+  number: string | number;
+  title: string;
+  url?: string;
+};
+
+const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
 const hymnOptions = Object.entries(hymnsByNumber)
   .sort(([firstNumber], [secondNumber]) => Number(firstNumber) - Number(secondNumber))
-  .map(([number, title]) => ({
+  .map(([number, hymn]) => ({
     value: number,
-    label: `${number} - ${title}`,
+    label: `${hymn.number} - ${hymn.title}`,
   }));
 
 type LineFieldProps = {
@@ -53,6 +59,7 @@ const emptyMessageRows = Array.from({ length: 5 }, () => ["", "", ""]);
 const emptyHymn: MeetingMinuteHymn = {
   number: "",
   title: "",
+  url: "",
 };
 
 const emptyWardAndStakeBusiness: MeetingMinuteWardAndStakeBusiness = {
@@ -60,6 +67,17 @@ const emptyWardAndStakeBusiness: MeetingMinuteWardAndStakeBusiness = {
   name: "",
   details: "",
 };
+
+function withCatalogHymnData(hymn: MeetingMinuteHymn): MeetingMinuteHymn {
+  const number = String(hymn.number ?? "");
+  const catalogHymn = hymnsByNumber[number];
+
+  return {
+    number,
+    title: hymn.title || catalogHymn?.title || "",
+    url: hymn.url || catalogHymn?.url || "",
+  };
+}
 
 function LineField({ label, className = "", value = "", onChange }: LineFieldProps) {
   return (
@@ -86,7 +104,13 @@ function HymnField({
       return;
     }
 
-    onChange({ number: value, title: hymnsByNumber[value] ?? "" });
+    const hymn = hymnsByNumber[value];
+
+    onChange({
+      number: String(hymn?.number ?? value),
+      title: hymn?.title ?? "",
+      url: hymn?.url ?? "",
+    });
   };
 
   const handleHymnSearch = (value: string) => {
@@ -101,7 +125,7 @@ function HymnField({
       <span className="hymn-select-wrapper">
         <Select
           className="minute-hymn-select hymn-number-input"
-          value={value.number || undefined}
+          value={value.number ? String(value.number) : undefined}
           options={hymnOptions}
           showSearch
           suffixIcon={null}
@@ -243,21 +267,21 @@ function validateMeetingMinuteBeforeSave(formValues: MeetingMinute) {
   if (!formValues.presides?.trim()) missingFields.push("Preside");
   if (!formValues.leads?.trim()) missingFields.push("Dirige");
 
-  if (!formValues.firstHymn?.number?.trim()) {
+  if (!String(formValues.firstHymn?.number ?? "").trim()) {
     missingFields.push("Número del primer himno");
   }
   if (!formValues.firstHymn?.title?.trim()) {
     missingFields.push("Título del primer himno");
   }
 
-  if (!formValues.sacramentalHymn?.number?.trim()) {
+  if (!String(formValues.sacramentalHymn?.number ?? "").trim()) {
     missingFields.push("Número del himno sacramental");
   }
   if (!formValues.sacramentalHymn?.title?.trim()) {
     missingFields.push("Título del himno sacramental");
   }
 
-  if (!formValues.lastHymn?.number?.trim()) {
+  if (!String(formValues.lastHymn?.number ?? "").trim()) {
     missingFields.push("Número del último himno");
   }
   if (!formValues.lastHymn?.title?.trim()) {
@@ -372,16 +396,16 @@ export function SacramentalMinuteSheet() {
       leads,
       welcomeAndAcknowledgmentsOfAuthorities,
       announcements,
-      firstHymn,
+      firstHymn: withCatalogHymnData(firstHymn),
       director,
       pianist,
       openingPrayer,
       wardAndStakeBusiness: rowsToWardAndStakeBusiness(
         wardAndStakeBusinessRows
       ),
-      sacramentalHymn,
+      sacramentalHymn: withCatalogHymnData(sacramentalHymn),
       messages: rowsToMessages(messageRows),
-      lastHymn,
+      lastHymn: withCatalogHymnData(lastHymn),
       closingPrayer,
     };
 
