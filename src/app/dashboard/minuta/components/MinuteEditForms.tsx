@@ -297,7 +297,7 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
         >
           <Form.List name="messages">
             {(fields, { add, remove }) => (
-              <Space direction="vertical" size={8} style={{ width: "100%" }}>
+              <Space orientation="vertical" size={8} style={{ width: "100%" }}>
                 {fields.map((field) => (
                   <Row gutter={8} key={field.key} align="middle">
                     <Col xs={24} md={8}>
