@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import MinuteRealtimeRefresh from "./MinuteRealtimeRefresh";
+import { auth } from "@/auth";
 import { MeetingMinuteView } from "@/components/meeting-minutes/MeetingMinuteView";
 import type { MeetingMinute } from "@/components/meeting-minutes/MeetingMinuteView";
 
@@ -111,6 +112,8 @@ const getMeetingMinutes = async (): Promise<MeetingMinutesResponse> => {
 const SacramentalMeetingPage = async () => {
   await connection();
 
+  const session = await auth();
+  const showDashboardBackButton = session?.user?.role === "Admin";
   const result = await getMeetingMinutes();
 
   console.log("Resultado GET /api/meeting-minutes:", result);
@@ -124,7 +127,10 @@ const SacramentalMeetingPage = async () => {
   return (
     <>
       <MinuteRealtimeRefresh minuteId={minute?.id ? String(minute.id) : undefined} />
-      <MeetingMinuteView minute={minute} />
+      <MeetingMinuteView
+        minute={minute}
+        showDashboardBackButton={showDashboardBackButton}
+      />
     </>
   );
 };

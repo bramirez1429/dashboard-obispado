@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ExportOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons";
 import { Empty } from "antd";
+import Link from "next/link";
 
 type Hymn = {
   number?: string | number;
@@ -44,6 +45,7 @@ export type MeetingMinute = {
 type MeetingMinuteViewProps = {
   minute?: MeetingMinute | null;
   targetDate?: string;
+  showDashboardBackButton?: boolean;
 };
 
 const getText = (value?: string) => {
@@ -129,6 +131,22 @@ const PublicMinuteStyles = () => (
     .public-minute-container {
       max-width: 980px;
       margin: 0 auto;
+    }
+
+    .public-minute-back-row {
+      margin-bottom: 12px;
+    }
+
+    .public-minute-back-button {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      color: #3880C7;
+      border: 1px solid #C9D6E2;
+      border-radius: 999px;
+      background: #FFFFFF;
+      box-shadow: 0 8px 18px rgba(47, 42, 37, 0.08);
     }
 
     .public-minute-sheet {
@@ -317,12 +335,24 @@ const PublicMinuteStyles = () => (
 export const MeetingMinuteView = ({
   minute,
   targetDate,
+  showDashboardBackButton = false,
 }: MeetingMinuteViewProps) => {
   if (!minute) {
     return (
       <main className="public-minute-page">
         <PublicMinuteStyles />
         <div className="public-minute-container">
+          {showDashboardBackButton ? (
+            <div className="public-minute-back-row">
+              <Link
+                className="public-minute-back-button"
+                href="/dashboard/minuta"
+                aria-label="Volver a minuta"
+              >
+                <ArrowLeftOutlined />
+              </Link>
+            </div>
+          ) : null}
           <div className="public-minute-sheet">
             <div className="public-minute-empty">
               <Empty
@@ -345,6 +375,17 @@ export const MeetingMinuteView = ({
     <main className="public-minute-page">
       <PublicMinuteStyles />
       <div className="public-minute-container">
+        {showDashboardBackButton ? (
+          <div className="public-minute-back-row">
+            <Link
+              className="public-minute-back-button"
+              href="/dashboard/minuta"
+              aria-label="Volver a minuta"
+            >
+              <ArrowLeftOutlined />
+            </Link>
+          </div>
+        ) : null}
         <article className="public-minute-sheet">
           <header className="public-minute-header">
             <h1>Reunión Sacramental</h1>

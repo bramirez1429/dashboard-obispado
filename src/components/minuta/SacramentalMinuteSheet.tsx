@@ -35,6 +35,7 @@ type LineFieldProps = {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
+  readOnly?: boolean;
 };
 
 type LinedTextProps = {
@@ -44,6 +45,7 @@ type LinedTextProps = {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
+  readOnly?: boolean;
 };
 
 type HymnFieldProps = {
@@ -51,10 +53,8 @@ type HymnFieldProps = {
   className?: string;
   value: MeetingMinuteHymn;
   onChange: (value: MeetingMinuteHymn) => void;
+  readOnly?: boolean;
 };
-
-const emptyBusinessRows = Array.from({ length: 5 }, () => ["", "", ""]);
-const emptyMessageRows = Array.from({ length: 5 }, () => ["", "", ""]);
 
 const emptyHymn: MeetingMinuteHymn = {
   number: "",
@@ -79,13 +79,20 @@ function withCatalogHymnData(hymn: MeetingMinuteHymn): MeetingMinuteHymn {
   };
 }
 
-function LineField({ label, className = "", value = "", onChange }: LineFieldProps) {
+function LineField({
+  label,
+  className = "",
+  value = "",
+  onChange,
+  readOnly = false,
+}: LineFieldProps) {
   return (
     <label className={`minute-field ${className}`}>
       <span>{label}</span>
       <input
         type="text"
         value={value}
+        readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
       />
     </label>
@@ -97,6 +104,7 @@ function HymnField({
   className = "",
   value,
   onChange,
+  readOnly = false,
 }: HymnFieldProps) {
   const updateHymn = (value?: string) => {
     if (!value) {
@@ -127,6 +135,7 @@ function HymnField({
           className="minute-hymn-select hymn-number-input"
           value={value.number ? String(value.number) : undefined}
           options={hymnOptions}
+          disabled={readOnly}
           showSearch
           suffixIcon={null}
           placeholder=""
@@ -153,6 +162,7 @@ function HymnField({
         className="hymn-title-input"
         type="text"
         value={value.title}
+        readOnly={readOnly}
         onChange={(event) => onChange({ ...value, title: event.target.value })}
         aria-label={`${label} nombre`}
       />
@@ -167,6 +177,7 @@ function LinedText({
   className = "",
   value = "",
   onChange,
+  readOnly = false,
 }: LinedTextProps) {
   return (
     <section className={`minute-section ${className}`}>
@@ -178,6 +189,7 @@ function LinedText({
         className="minute-lined-text"
         rows={rows}
         value={value}
+        readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
       />
     </section>
@@ -188,10 +200,12 @@ function TableRows({
   rows,
   labels,
   onCellChange,
+  readOnly = false,
 }: {
   rows: string[][];
   labels: string[];
   onCellChange: (rowIndex: number, cellIndex: number, value: string) => void;
+  readOnly?: boolean;
 }) {
   return rows.map((row, rowIndex) => (
     <tr key={rowIndex}>
@@ -200,6 +214,7 @@ function TableRows({
           <input
             type="text"
             value={cellValue}
+            readOnly={readOnly}
             aria-label={`Fila ${rowIndex + 1}, ${labels[cellIndex]}`}
             onChange={(event) =>
               onCellChange(rowIndex, cellIndex, event.target.value)
@@ -298,31 +313,65 @@ function validateMeetingMinuteBeforeSave(formValues: MeetingMinute) {
   return missingFields;
 }
 
-export function SacramentalMinuteSheet() {
-  const [minuteId, setMinuteId] = useState<string | number | undefined>();
-  const [attendance, setAttendance] = useState(0);
-  const [date, setDate] = useState("");
-  const [presides, setPresides] = useState("");
-  const [leads, setLeads] = useState("");
+type SacramentalMinuteSheetProps = {
+  initialDate?: string;
+  initialMinute?: MeetingMinute;
+  readOnly?: boolean;
+};
+
+export function SacramentalMinuteSheet({
+  initialDate,
+  initialMinute,
+  readOnly = false,
+}: SacramentalMinuteSheetProps) {
+  const [minuteId, setMinuteId] = useState<string | number | undefined>(
+    initialMinute?.id
+  );
+  const [attendance, setAttendance] = useState(initialMinute?.attendance || 0);
+  const [date, setDate] = useState(initialMinute?.date || initialDate || "");
+  const [presides, setPresides] = useState(initialMinute?.presides || "");
+  const [leads, setLeads] = useState(initialMinute?.leads || "");
   const [
     welcomeAndAcknowledgmentsOfAuthorities,
     setWelcomeAndAcknowledgmentsOfAuthorities,
-  ] = useState("");
-  const [announcements, setAnnouncements] = useState("");
-  const [firstHymn, setFirstHymn] = useState<MeetingMinuteHymn>(emptyHymn);
-  const [director, setDirector] = useState("");
-  const [pianist, setPianist] = useState("");
-  const [openingPrayer, setOpeningPrayer] = useState("");
+  ] = useState(initialMinute?.welcomeAndAcknowledgmentsOfAuthorities || "");
+  const [announcements, setAnnouncements] = useState(
+    initialMinute?.announcements || ""
+  );
+  const [firstHymn, setFirstHymn] = useState<MeetingMinuteHymn>(
+    initialMinute?.firstHymn || emptyHymn
+  );
+  const [director, setDirector] = useState(initialMinute?.director || "");
+  const [pianist, setPianist] = useState(initialMinute?.pianist || "");
+  const [openingPrayer, setOpeningPrayer] = useState(
+    initialMinute?.openingPrayer || ""
+  );
   const [wardAndStakeBusinessRows, setWardAndStakeBusinessRows] =
-    useState(emptyBusinessRows);
+    useState(
+      wardAndStakeBusinessToRows(
+        initialMinute?.wardAndStakeBusiness || emptyWardAndStakeBusiness
+      )
+    );
   const [sacramentalHymn, setSacramentalHymn] =
-    useState<MeetingMinuteHymn>(emptyHymn);
-  const [messageRows, setMessageRows] = useState(emptyMessageRows);
-  const [lastHymn, setLastHymn] = useState<MeetingMinuteHymn>(emptyHymn);
-  const [closingPrayer, setClosingPrayer] = useState("");
+    useState<MeetingMinuteHymn>(
+      initialMinute?.sacramentalHymn || emptyHymn
+    );
+  const [messageRows, setMessageRows] = useState(
+    messagesToRows(initialMinute?.messages || [])
+  );
+  const [lastHymn, setLastHymn] = useState<MeetingMinuteHymn>(
+    initialMinute?.lastHymn || emptyHymn
+  );
+  const [closingPrayer, setClosingPrayer] = useState(
+    initialMinute?.closingPrayer || ""
+  );
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
+    if (initialDate || initialMinute) {
+      return;
+    }
+
     const loadMinute = async () => {
       try {
         const response = await fetch("/api/meeting-minutes");
@@ -367,7 +416,7 @@ export function SacramentalMinuteSheet() {
     };
 
     void loadMinute();
-  }, []);
+  }, [initialDate, initialMinute]);
 
   const updateTableCell = (
     rows: string[][],
@@ -388,6 +437,10 @@ export function SacramentalMinuteSheet() {
   };
 
   const handleSaveMinute = async () => {
+    if (readOnly) {
+      return;
+    }
+
     const payload: MeetingMinute = {
       ...(minuteId ? { id: minuteId } : {}),
       attendance,
@@ -479,24 +532,28 @@ export function SacramentalMinuteSheet() {
 
   return (
     <div className="minute-workspace">
-      <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <Link href="/reunion-sacramental" prefetch={false}>
-          <Button type="primary">Ver minuta</Button>
-        </Link>
-      </div>
+      {!readOnly ? (
+        <>
+          <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+            <Link href="/reunion-sacramental" prefetch={false}>
+              <Button type="primary">Ver minuta</Button>
+            </Link>
+          </div>
 
-      <div className="minute-toolbar no-print">
-        <Button onClick={handleSaveMinute} loading={isSaving}>
-          Guardar minuta
-        </Button>
-        <Button
-          type="primary"
-          icon={<PrinterOutlined />}
-          onClick={() => window.print()}
-        >
-          Exportar PDF
-        </Button>
-      </div>
+          <div className="minute-toolbar no-print">
+            <Button onClick={handleSaveMinute} loading={isSaving}>
+              Guardar minuta
+            </Button>
+            <Button
+              type="primary"
+              icon={<PrinterOutlined />}
+              onClick={() => window.print()}
+            >
+              Exportar PDF
+            </Button>
+          </div>
+        </>
+      ) : null}
 
       <section className="minute-sheet" aria-label="Reunion Sacramental">
         <header className="minute-top minute-top-row">
@@ -518,7 +575,8 @@ export function SacramentalMinuteSheet() {
                   <DatePicker
                     className="minute-date-picker"
                     format="DD-MM-YYYY"
-                    inputReadOnly={false}
+                    inputReadOnly={readOnly}
+                    disabled={readOnly}
                     placeholder=""
                     suffixIcon={null}
                     aria-label="Fecha"
@@ -533,6 +591,7 @@ export function SacramentalMinuteSheet() {
                     className="minute-number-input minute-attendance-input"
                     controls={false}
                     min={0}
+                    disabled={readOnly}
                     aria-label="Asistencia"
                     value={attendance}
                     onChange={(value) =>
@@ -546,8 +605,18 @@ export function SacramentalMinuteSheet() {
         </header>
 
         <section className="minute-two-columns minute-basic">
-          <LineField label="Preside" value={presides} onChange={setPresides} />
-          <LineField label="Dirige" value={leads} onChange={setLeads} />
+          <LineField
+            label="Preside"
+            value={presides}
+            onChange={setPresides}
+            readOnly={readOnly}
+          />
+          <LineField
+            label="Dirige"
+            value={leads}
+            onChange={setLeads}
+            readOnly={readOnly}
+          />
         </section>
 
         <LinedText
@@ -555,6 +624,7 @@ export function SacramentalMinuteSheet() {
           rows={2}
           value={welcomeAndAcknowledgmentsOfAuthorities}
           onChange={setWelcomeAndAcknowledgmentsOfAuthorities}
+          readOnly={readOnly}
         />
 
         <LinedText
@@ -564,6 +634,7 @@ export function SacramentalMinuteSheet() {
           className="minute-announcements"
           value={announcements}
           onChange={setAnnouncements}
+          readOnly={readOnly}
         />
 
         <section className="minute-section minute-music">
@@ -572,16 +643,28 @@ export function SacramentalMinuteSheet() {
             className="minute-full-line"
             value={firstHymn}
             onChange={setFirstHymn}
+            readOnly={readOnly}
           />
           <div className="minute-two-columns">
-            <LineField label="Directora" value={director} onChange={setDirector} />
-            <LineField label="Pianista" value={pianist} onChange={setPianist} />
+            <LineField
+              label="Directora"
+              value={director}
+              onChange={setDirector}
+              readOnly={readOnly}
+            />
+            <LineField
+              label="Pianista"
+              value={pianist}
+              onChange={setPianist}
+              readOnly={readOnly}
+            />
           </div>
           <LineField
             label="Primera oración"
             className="minute-prayer-field"
             value={openingPrayer}
             onChange={setOpeningPrayer}
+            readOnly={readOnly}
           />
         </section>
 
@@ -602,6 +685,7 @@ export function SacramentalMinuteSheet() {
               <TableRows
                 rows={wardAndStakeBusinessRows}
                 labels={["Asunto", "Nombre", "Detalle"]}
+                readOnly={readOnly}
                 onCellChange={(rowIndex, cellIndex, value) =>
                   updateTableCell(
                     wardAndStakeBusinessRows,
@@ -621,6 +705,7 @@ export function SacramentalMinuteSheet() {
             label="Himno sacramental"
             value={sacramentalHymn}
             onChange={setSacramentalHymn}
+            readOnly={readOnly}
           />
         </section>
 
@@ -643,6 +728,7 @@ export function SacramentalMinuteSheet() {
               <TableRows
                 rows={messageRows}
                 labels={["Nombre", "Tiempo", "Tema"]}
+                readOnly={readOnly}
                 onCellChange={(rowIndex, cellIndex, value) =>
                   updateTableCell(
                     messageRows,
@@ -662,11 +748,13 @@ export function SacramentalMinuteSheet() {
             label="Último himno"
             value={lastHymn}
             onChange={setLastHymn}
+            readOnly={readOnly}
           />
           <LineField
             label="Última oración"
             value={closingPrayer}
             onChange={setClosingPrayer}
+            readOnly={readOnly}
           />
         </section>
       </section>

@@ -470,6 +470,38 @@ a {
   flex: 1 1 auto;
 }
 
+.existing-minute-title {
+  margin: 0 0 16px;
+  color: #111827;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.existing-minute-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.previous-minutes-select {
+  margin-top: 16px;
+}
+
+.previous-minutes-select .ant-select {
+  width: min(100%, 280px);
+}
+
+.previous-minute-modal .ant-modal-body {
+  max-height: 78vh;
+  overflow: auto;
+}
+
+.previous-minute-print-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 .minute-top h1 {
   margin: 0;
   padding-top: 2mm;
@@ -1501,7 +1533,11 @@ a {
     overflow: hidden !important;
   }
 
-  body * {
+  body:not(.printing-previous-minute) * {
+    visibility: hidden !important;
+  }
+
+  body.printing-previous-minute * {
     visibility: hidden !important;
   }
 
@@ -1696,5 +1732,46 @@ a {
   .minute-lined-text:focus-visible {
     background: transparent !important;
     outline: 0 !important;
+  }
+
+  body.printing-previous-minute .ant-modal-root,
+  body.printing-previous-minute .ant-modal-wrap,
+  body.printing-previous-minute .ant-modal,
+  body.printing-previous-minute .ant-modal-content,
+  body.printing-previous-minute .ant-modal-body,
+  body.printing-previous-minute .previous-minute-print-area,
+  body.printing-previous-minute .previous-minute-print-area * {
+    visibility: visible !important;
+  }
+
+  body.printing-previous-minute .ant-modal-mask,
+  body.printing-previous-minute .ant-modal-header,
+  body.printing-previous-minute .ant-modal-close,
+  body.printing-previous-minute .previous-minute-print-actions {
+    display: none !important;
+  }
+
+  body.printing-previous-minute .ant-modal-root,
+  body.printing-previous-minute .ant-modal-wrap,
+  body.printing-previous-minute .ant-modal,
+  body.printing-previous-minute .ant-modal-content,
+  body.printing-previous-minute .ant-modal-body,
+  body.printing-previous-minute .previous-minute-print-area {
+    position: fixed !important;
+    inset: auto !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 198mm !important;
+    max-width: 198mm !important;
+    height: 285mm !important;
+    max-height: 285mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    transform: none !important;
+    background: #ffffff !important;
   }
 }

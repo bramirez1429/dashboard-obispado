@@ -6,7 +6,36 @@ export async function GET(request: Request) {
     const { supabase } = await import("@/lib/supabase/client");
 
     const { searchParams } = new URL(request.url);
+    const targetId = searchParams.get("id");
     const targetDate = searchParams.get("date");
+
+    if (targetId) {
+      const { data, error } = await supabase
+        .from("Meeting_minutes")
+        .select("*")
+        .eq("id", targetId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error trayendo Meeting_minutes", error);
+
+        return Response.json(
+          {
+            success: false,
+            error: error.message,
+            details: error,
+          },
+          { status: 500 }
+        );
+      }
+
+      return Response.json({
+        success: true,
+        table: "Meeting_minutes",
+        targetId,
+        data,
+      });
+    }
 
     let query = supabase
       .from("Meeting_minutes")
