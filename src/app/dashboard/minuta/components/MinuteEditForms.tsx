@@ -15,7 +15,12 @@ import {
 } from "antd";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
-import type { MeetingMinute, MeetingMinuteHymn } from "@/types/meeting-minute";
+import type {
+  MeetingMinute,
+  MeetingMinuteHymn,
+  MeetingMinuteWardAndStakeBusiness,
+  MeetingMinuteWardAndStakeBusinessValue,
+} from "@/types/meeting-minute";
 
 type MinuteEditFormsProps = {
   minute: MeetingMinute;
@@ -88,12 +93,36 @@ function useModuleSave(successMessage: string) {
 
 const formItemStyle = { marginBottom: 10 };
 
+const emptyBusiness: MeetingMinuteWardAndStakeBusiness = {
+  subject: "",
+  name: "",
+  details: "",
+};
+
+function normalizeWardAndStakeBusinessList(
+  business: MeetingMinuteWardAndStakeBusinessValue
+) {
+  const businesses = Array.isArray(business) ? business : [business];
+  const normalizedBusinesses = businesses.map((item) => ({
+    subject: item?.subject || "",
+    name: item?.name || "",
+    details: item?.details || "",
+  }));
+
+  return normalizedBusinesses.length ? normalizedBusinesses : [emptyBusiness];
+}
+
 export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
   const minuteWithHymnUrls = {
     ...minute,
     firstHymn: withCatalogHymnData(minute.firstHymn),
     sacramentalHymn: withCatalogHymnData(minute.sacramentalHymn),
     lastHymn: withCatalogHymnData(minute.lastHymn),
+  };
+  const businessInitialValues = {
+    wardAndStakeBusiness: normalizeWardAndStakeBusinessList(
+      minute.wardAndStakeBusiness
+    ),
   };
   const mainSave = useModuleSave("Datos principales guardados");
   const hymnsSave = useModuleSave("Himnos y oraciones guardados");
@@ -259,28 +288,76 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
       <Card size="small" title="Asuntos del barrio/estaca">
         <Form
           layout="vertical"
-          initialValues={minuteWithHymnUrls}
+          initialValues={businessInitialValues}
           onValuesChange={notifyEditing}
-          onFinish={(values) => businessSave.save(minute.id, values)}
+          onFinish={(values) =>
+            businessSave.save(minute.id, {
+              wardAndStakeBusiness: values.wardAndStakeBusiness || [
+                emptyBusiness,
+              ],
+            })
+          }
         >
-          <Row gutter={12}>
-            <Col xs={24} md={12}>
-              <Form.Item label="Asunto" name={["wardAndStakeBusiness", "subject"]} style={formItemStyle}>
-                <Input size="small" />
-              </Form.Item>
-            </Col>
-            <Col xs={24} md={12}>
-              <Form.Item label="Nombre" name={["wardAndStakeBusiness", "name"]} style={formItemStyle}>
-                <Input size="small" />
-              </Form.Item>
-            </Col>
-            <Col xs={24}>
-              <Form.Item label="Detalle" name={["wardAndStakeBusiness", "details"]} style={formItemStyle}>
-                <Input.TextArea rows={2} size="small" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Button size="small" type="primary" htmlType="submit" loading={businessSave.isSaving}>
+          <Form.List name="wardAndStakeBusiness">
+            {(fields, { add, remove }) => (
+              <Space orientation="vertical" size={8} style={{ width: "100%" }}>
+                {fields.map((field, index) => (
+                  <Row gutter={8} key={field.key} align="middle">
+                    <Col xs={24} md={7}>
+                      <Form.Item
+                        label={index === 0 ? "Asunto" : "Asunto adicional"}
+                        name={[field.name, "subject"]}
+                        style={formItemStyle}
+                      >
+                        <Input size="small" />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} md={7}>
+                      <Form.Item
+                        label="Nombre"
+                        name={[field.name, "name"]}
+                        style={formItemStyle}
+                      >
+                        <Input size="small" />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={20} md={8}>
+                      <Form.Item
+                        label="Detalle"
+                        name={[field.name, "details"]}
+                        style={formItemStyle}
+                      >
+                        <Input.TextArea rows={2} size="small" />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={4} md={2}>
+                      <Button
+                        size="small"
+                        aria-label="Quitar asunto"
+                        disabled={fields.length <= 1}
+                        icon={<MinusCircleOutlined />}
+                        onClick={() => remove(field.name)}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+                <Button
+                  size="small"
+                  icon={<PlusOutlined />}
+                  onClick={() => add(emptyBusiness)}
+                >
+                  Agregar asunto
+                </Button>
+              </Space>
+            )}
+          </Form.List>
+          <Button
+            size="small"
+            type="primary"
+            htmlType="submit"
+            loading={businessSave.isSaving}
+            style={{ marginTop: 10 }}
+          >
             Guardar
           </Button>
         </Form>

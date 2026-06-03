@@ -1,5 +1,6 @@
 'use client'
 import { Fragment, ReactNode } from "react";
+import { ExportOutlined } from "@ant-design/icons";
 import { Card, Col, Divider, Row, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -9,6 +10,7 @@ dayjs.locale("es");
 export type PublicSpeech = {
   id: string | number;
   name: string | null;
+  gender: "masculine" | "feminine" | null;
   date: string | null;
   speech: string | null;
   time: number | null;
@@ -25,6 +27,10 @@ function displayValue(value: string | null) {
   return value?.trim() || "Sin completar";
 }
 
+function treatment(gender: PublicSpeech["gender"]) {
+  return gender === "feminine" ? "Hermana" : "Hermano";
+}
+
 function renderTextWithLinks(text: string) {
   if (!text.trim()) return "Sin completar";
 
@@ -36,12 +42,14 @@ function renderTextWithLinks(text: string) {
       {line.split(urlRegex).map((part, partIndex) =>
         /^https?:\/\//.test(part) ? (
           <a
+            className="speech-reference-link"
             key={`${part}-${partIndex}`}
             href={part}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {part}
+            <span>{part}</span>
+            <ExportOutlined aria-hidden="true" />
           </a>
         ) : (
           <Fragment key={`${part}-${partIndex}`}>{part}</Fragment>
@@ -126,7 +134,9 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
 
           <Row gutter={[16, 16]} className="public-assignment-grid">
             <Col xs={24} md={8}>
-              <DetailCard label="Hermano/a">{displayValue(speech.name)}</DetailCard>
+              <DetailCard label={treatment(speech.gender)}>
+                {displayValue(speech.name)}
+              </DetailCard>
             </Col>
             <Col xs={24} md={8}>
               <DetailCard label="Tiempo asignado">
@@ -147,6 +157,18 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
           </Row>
 
           <GuidanceBlock />
+
+          <div className="public-message-closing-note">
+            <Typography.Paragraph>
+              Muchas gracias por su disposición para participar y servir en la
+              reunión sacramental.
+            </Typography.Paragraph>
+            <Typography.Paragraph>
+              Atentamente,
+              <br />
+              el obispado.
+            </Typography.Paragraph>
+          </div>
         </Card>
       </div>
     </main>

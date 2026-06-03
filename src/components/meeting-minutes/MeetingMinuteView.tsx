@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons";
+import { ExportOutlined } from "@ant-design/icons";
 import { Empty } from "antd";
 import Link from "next/link";
 
@@ -35,7 +35,7 @@ export type MeetingMinute = {
   director?: string;
   pianist?: string;
   openingPrayer?: string;
-  wardAndStakeBusiness?: WardAndStakeBusiness;
+  wardAndStakeBusiness?: WardAndStakeBusiness | WardAndStakeBusiness[];
   sacramentalHymn?: Hymn;
   messages?: Message[];
   lastHymn?: Hymn;
@@ -78,20 +78,28 @@ const PublicHymnLink = ({ hymn }: { hymn?: Hymn }) => {
   );
 };
 
-const getWardAndStakeBusinessText = (business?: WardAndStakeBusiness) => {
-  const subject = business?.subject?.trim();
-  const name = business?.name?.trim();
-  const details = business?.details?.trim();
+const getWardAndStakeBusinesses = (
+  business?: WardAndStakeBusiness | WardAndStakeBusiness[]
+) => {
+  const businesses = Array.isArray(business) ? business : [business];
 
-  const title =
-    subject && name
-      ? `${subject} de la Hna./Hno. ${name}`
-      : subject || name || "—";
+  return businesses
+    .filter(Boolean)
+    .map((item) => {
+      const subject = item?.subject?.trim();
+      const name = item?.name?.trim();
+      const details = item?.details?.trim();
 
-  return {
-    title,
-    details: details || "",
-  };
+      const title =
+        subject && name
+          ? `${subject} de ${name}`
+          : subject || name || "—";
+
+      return {
+        title,
+        details: details || "",
+      };
+    });
 };
 
 const FieldLine = ({
@@ -116,6 +124,7 @@ const PublicModule = ({
 }) => (
   <section className="public-minute-module">
     <h2>{title}</h2>
+    <div className="public-card-title-divider" />
     <div>{children}</div>
   </section>
 );
@@ -135,18 +144,6 @@ const PublicMinuteStyles = () => (
 
     .public-minute-back-row {
       margin-bottom: 12px;
-    }
-
-    .public-minute-back-button {
-      width: 36px;
-      height: 36px;
-      display: inline-grid;
-      place-items: center;
-      color: #3880C7;
-      border: 1px solid #C9D6E2;
-      border-radius: 999px;
-      background: #FFFFFF;
-      box-shadow: 0 8px 18px rgba(47, 42, 37, 0.08);
     }
 
     .public-minute-sheet {
@@ -195,11 +192,17 @@ const PublicMinuteStyles = () => (
     }
 
     .public-minute-module h2 {
-      margin: 0 0 16px;
+      margin: 0;
       color: #111827;
       font-size: 18px;
       font-weight: 700;
       line-height: 1.2;
+    }
+
+    .public-card-title-divider {
+      height: 1px;
+      margin: 10px -20px 16px;
+      background: var(--minute-border-soft, #D7E1EA);
     }
 
     .public-minute-grid {
@@ -328,6 +331,11 @@ const PublicMinuteStyles = () => (
       .public-minute-module {
         padding: 16px;
       }
+
+      .public-card-title-divider {
+        margin-left: -16px;
+        margin-right: -16px;
+      }
     }
   `}</style>
 );
@@ -349,7 +357,7 @@ export const MeetingMinuteView = ({
                 href="/dashboard/minuta"
                 aria-label="Volver a minuta"
               >
-                <ArrowLeftOutlined />
+                ←
               </Link>
             </div>
           ) : null}
@@ -369,7 +377,7 @@ export const MeetingMinuteView = ({
     );
   }
 
-  const business = getWardAndStakeBusinessText(minute.wardAndStakeBusiness);
+  const businesses = getWardAndStakeBusinesses(minute.wardAndStakeBusiness);
 
   return (
     <main className="public-minute-page">
@@ -382,7 +390,7 @@ export const MeetingMinuteView = ({
               href="/dashboard/minuta"
               aria-label="Volver a minuta"
             >
-              <ArrowLeftOutlined />
+              ←
             </Link>
           </div>
         ) : null}
@@ -417,10 +425,20 @@ export const MeetingMinuteView = ({
           </PublicModule>
 
           <PublicModule title="Asuntos del barrio y estaca">
-            <p className="public-minute-business-title">{business.title}</p>
-            {business.details ? (
-              <p className="public-minute-business-detail">{business.details}</p>
-            ) : null}
+            {businesses.length ? (
+              businesses.map((business, index) => (
+                <div key={`${business.title}-${index}`}>
+                  <p className="public-minute-business-title">{business.title}</p>
+                  {business.details ? (
+                    <p className="public-minute-business-detail">
+                      {business.details}
+                    </p>
+                  ) : null}
+                </div>
+              ))
+            ) : (
+              <p className="public-minute-business-title">—</p>
+            )}
           </PublicModule>
 
           <PublicModule title="Himno sacramental">

@@ -125,7 +125,7 @@ async function getPreviousMinutes(activeSundayDate: string) {
 export default async function MinutaPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ date?: string }>;
+  searchParams?: Promise<{ createNext?: string; date?: string }>;
 }) {
   const params = await searchParams;
   const activeMinute = await getActiveMinute();
@@ -135,7 +135,9 @@ export default async function MinutaPage({
     ? await getPreviousMinutes(activeSundayDate)
     : [];
   const creationDate =
-    params?.date === nextSundayDate ? nextSundayDate : undefined;
+    params?.createNext === "true" || params?.date === nextSundayDate
+      ? nextSundayDate
+      : undefined;
 
   if (activeMinute && !creationDate) {
     return (
@@ -155,7 +157,13 @@ export default async function MinutaPage({
               <Button>Editar minuta</Button>
             </Link>
             <Link
-              href={`/dashboard/minuta?date=${encodeURIComponent(nextSundayDate)}`}
+              href={`/dashboard/minuta/pdf/${activeMinute.id}`}
+              prefetch={false}
+            >
+              <Button>Ver minuta para PDF</Button>
+            </Link>
+            <Link
+              href="/dashboard/minuta?createNext=true"
               prefetch={false}
             >
               <Button>Crear minuta siguiente</Button>
@@ -169,6 +177,16 @@ export default async function MinutaPage({
 
   return (
     <div className="minute-page">
+      {creationDate ? (
+        <Link
+          className="public-minute-back-button"
+          href="/dashboard/minuta"
+          prefetch={false}
+          aria-label="Volver a minuta"
+        >
+          ←
+        </Link>
+      ) : null}
       <EditActiveMinuteButton minuteId={undefined} />
       <SacramentalMinuteSheet
         key={creationDate ?? "active-minute-form"}

@@ -1,7 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import MinuteEditForms from "../../components/MinuteEditForms";
+import Link from "next/link";
+import { SacramentalMinuteSheet } from "@/components/minuta/SacramentalMinuteSheet";
 import type { MeetingMinute } from "@/types/meeting-minute";
+import PrintMinuteButton from "./PrintMinuteButton";
 
 export const revalidate = 120;
 
@@ -17,20 +18,7 @@ const emptyBusiness = {
   details: "",
 };
 
-async function getMinuteById(id: string) {
-  const { supabase } = await import("@/lib/supabase/client");
-  const { data, error } = await supabase
-    .from("Meeting_minutes")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) {
-    return null;
-  }
-
-  const minute = data as MeetingMinute;
-
+function normalizeMinute(minute: MeetingMinute): MeetingMinute {
   return {
     ...minute,
     attendance: minute.attendance || 0,
@@ -52,7 +40,26 @@ async function getMinuteById(id: string) {
   };
 }
 
-export default async function EditMinutePage({
+async function getMinuteById(id: string) {
+  const { supabase } = await import("@/lib/supabase/client");
+  const { data, error } = await supabase
+    .from("Meeting_minutes")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return normalizeMinute(data as MeetingMinute);
+}
+
+export default async function MinutePdfPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -65,29 +72,21 @@ export default async function EditMinutePage({
   }
 
   return (
-    <main style={{ maxWidth: 980, margin: "0 auto", paddingBottom: 32 }}>
-      <Link
-        className="public-minute-back-button"
-        href="/dashboard/minuta"
-        prefetch={false}
-        aria-label="Volver a minuta"
-      >
-        ←
-      </Link>
-      <div style={{ marginBottom: 12 }}>
-        <h1
-          style={{
-            margin: 0,
-            color: "#263746",
-            fontSize: 24,
-            lineHeight: 1.2,
-            letterSpacing: 0,
-          }}
+    <main className="minute-pdf-page">
+      <div className="minute-pdf-actions no-print">
+        <Link
+          className="minute-back-arrow"
+          href="/dashboard/minuta"
+          prefetch={false}
+          aria-label="Volver a minuta"
         >
-          Editar minuta
-        </h1>
+          ←
+        </Link>
+        <PrintMinuteButton />
       </div>
-      <MinuteEditForms minute={minute} />
+      <section className="minute-pdf-print-area">
+        <SacramentalMinuteSheet initialMinute={minute} readOnly />
+      </section>
     </main>
   );
 }

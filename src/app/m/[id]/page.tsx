@@ -27,6 +27,7 @@ const PublicMessagePage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
+  console.log("PUBLIC SPEECH PARAM ID:", id);
   const baseUrl = getBaseUrl();
 
   const response = await fetch(`${baseUrl}/api/speeches/${id}`, {

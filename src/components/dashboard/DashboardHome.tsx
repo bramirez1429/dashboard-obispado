@@ -1,62 +1,130 @@
 "use client";
 
 import {
-  CalendarOutlined,
   ClockCircleOutlined,
   FileTextOutlined,
   PlusOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Row, Space, Statistic } from "antd";
+import { Button, Card, Col, Empty, Row, Space, Tag } from "antd";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 
-const cards = [
-  {
-    title: "Minuta sacramental",
-    value: 1,
-    suffix: "en preparaciÃ³n",
-    description: "Hoja semanal lista para completar e imprimir.",
-    href: "/dashboard/minuta",
-    icon: <FileTextOutlined />,
-    color: "blue",
+type DashboardHomeSummary = {
+  minute?: {
+    status: string;
+    sunday: string;
+  };
+  speeches?: {
+    sunday: string;
+    items: Array<{
+      id: string;
+      name: string;
+      speech: string;
+      time?: number | null;
+      status?: "pending" | "shared";
+    }>;
+  };
+};
+
+const defaultDashboardSummary: Required<DashboardHomeSummary> = {
+  minute: {
+    status: "Minuta en preparación",
+    sunday: "Sin fecha",
   },
-  {
-    title: "Discursos asignados",
-    value: 3,
-    suffix: "activos",
-    description: "Mensajes con tema, fecha y link pÃºblico de referencia.",
-    href: "/dashboard/discursos",
-    icon: <ReadOutlined />,
-    color: "blue",
+  speeches: {
+    sunday: "Sin fecha",
+    items: [],
   },
-  {
-    title: "Mensajes temporales",
-    value: 2,
-    suffix: "borradores",
-    description: "Asignaciones listas para revisar y compartir.",
-    href: "/dashboard/discursos/nuevo",
-    icon: <ClockCircleOutlined />,
-    color: "blue",
-  },
-  {
-    title: "Historial anual",
-    value: 2026,
-    suffix: "",
-    description: "Base visual para consultar minutas y discursos por aÃ±o.",
-    href: "/dashboard",
-    icon: <CalendarOutlined />,
-    color: "blue",
-  },
-];
+};
 
 export function DashboardHome({
   fullName,
   calling,
+  summary,
 }: {
   fullName: string;
   calling?: string;
+  summary?: DashboardHomeSummary;
 }) {
+  const safeSummary = {
+    minute: summary?.minute ?? defaultDashboardSummary.minute,
+    speeches: {
+      sunday: summary?.speeches?.sunday ?? defaultDashboardSummary.speeches.sunday,
+      items: summary?.speeches?.items ?? defaultDashboardSummary.speeches.items,
+    },
+  };
+  const assignedSpeeches = safeSummary.speeches.items.map((speech) => ({
+    ...speech,
+    status: speech.status === "shared" ? ("shared" as const) : ("pending" as const),
+  }));
+  const totalSpeeches = assignedSpeeches.length;
+  const sharedSpeeches = assignedSpeeches.filter(
+    (speech) => speech.status === "shared",
+  ).length;
+  const pendingSpeeches = totalSpeeches - sharedSpeeches;
+
+  const cards = [
+    {
+      title: "Minuta sacramental",
+      href: "/dashboard/minuta",
+      icon: <FileTextOutlined />,
+      content: (
+        <>
+          <Title level={4} style={{ margin: 0 }}>
+            {safeSummary.minute.status}
+          </Title>
+          <Paragraph type="secondary" style={{ marginTop: 8, marginBottom: 0 }}>
+            Domingo: {safeSummary.minute.sunday}
+          </Paragraph>
+        </>
+      ),
+    },
+    {
+      title: "Discursos asignados",
+      href: "/dashboard/discursos",
+      icon: <ReadOutlined />,
+      content: (
+        <>
+          <Paragraph type="secondary" style={{ marginBottom: 12 }}>
+            Domingo: {safeSummary.speeches.sunday}
+          </Paragraph>
+          {assignedSpeeches.length ? (
+            <Space orientation="vertical" size={8} style={{ width: "100%" }}>
+              <div className="dashboard-speech-summary">
+                <span>Total: {totalSpeeches} discursos</span>
+                <span>
+                  Compartidos:{" "}
+                  <Tag color="success" style={{ marginInlineEnd: 0 }}>
+                    {sharedSpeeches}
+                  </Tag>
+                </span>
+                <span>
+                  Pendientes:{" "}
+                  <Tag color="warning" style={{ marginInlineEnd: 0 }}>
+                    {pendingSpeeches}
+                  </Tag>
+                </span>
+              </div>
+            </Space>
+          ) : (
+            <Empty description="Vacío" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          )}
+        </>
+      ),
+    },
+    {
+      title: "Mensajes temporales",
+      href: "/dashboard/discursos/nuevo",
+      icon: <ClockCircleOutlined />,
+      content: (
+        <Title level={4} style={{ margin: 0 }}>
+          Trabajando
+        </Title>
+      ),
+    },
+  ];
+
   return (
     <div className="page-stack">
       <Card className="welcome-card">
@@ -94,7 +162,7 @@ export function DashboardHome({
 
       <Row gutter={[18, 18]}>
         {cards.map((item) => (
-          <Col xs={24} sm={12} xl={6} key={item.title}>
+          <Col xs={24} md={8} key={item.title}>
             <Card
               className="dashboard-stat-card"
               title={item.title}
@@ -105,19 +173,10 @@ export function DashboardHome({
               }
               style={{ height: "100%" }}
             >
-              <div
-                className={`dashboard-card-icon dashboard-card-icon-${item.color}`}
-              >
+              <div className="dashboard-card-icon dashboard-card-icon-blue">
                 {item.icon}
               </div>
-              <Statistic value={item.value} suffix={item.suffix} />
-
-              <Paragraph
-                type="secondary"
-                style={{ marginTop: 16, marginBottom: 0 }}
-              >
-                {item.description}
-              </Paragraph>
+              <div className="dashboard-card-content">{item.content}</div>
             </Card>
           </Col>
         ))}

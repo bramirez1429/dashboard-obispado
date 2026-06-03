@@ -397,8 +397,80 @@ a {
   background: var(--church-blue-soft);
 }
 
+.dashboard-card-content {
+  margin-top: 16px;
+}
+
+.dashboard-speech-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #111827;
+}
+
+.dashboard-speech-summary span {
+  color: #526170;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .minute-page {
   min-width: 0;
+}
+
+.public-minute-back-button {
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  color: #3880C7;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid #C9D6E2;
+  border-radius: 999px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 18px rgba(47, 42, 37, 0.08);
+  margin-bottom: 12px;
+  text-decoration: none;
+}
+
+.public-minute-back-button:hover {
+  color: #3880C7;
+  text-decoration: none;
+}
+
+.minute-circle-back-link {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #d7e3ef;
+  color: #3880c7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.minute-back-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  color: #111827;
+  font-size: 24px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.minute-back-arrow:hover {
+  background: #f3f4f6;
+  color: #111827;
+  text-decoration: none;
 }
 
 .minute-workspace {
@@ -413,6 +485,22 @@ a {
   width: min(100%, 210mm);
   display: flex;
   justify-content: flex-end;
+}
+
+.minute-pdf-actions {
+  width: min(100%, 210mm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto 16px;
+}
+
+.minute-pdf-page {
+  min-width: 0;
+}
+
+.minute-pdf-print-area {
+  display: block;
 }
 
 .minute-sheet {
@@ -1029,6 +1117,40 @@ a {
   margin-bottom: 16px;
 }
 
+.speech-reference-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  color: #075985;
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.speech-reference-link span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.speech-reference-link:hover {
+  text-decoration: none;
+}
+
+.public-message-closing-note {
+  margin-top: 18px;
+}
+
+.public-message-closing-note .ant-typography {
+  margin-bottom: 8px;
+  color: #1f2933;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 .public-message-details span,
 .public-message-section span {
   display: block;
@@ -1078,6 +1200,28 @@ a {
   border-radius: 999px;
   font-weight: 700;
   padding-inline: 10px;
+}
+
+.speech-status-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.speech-status-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.speech-status-button .ant-tag {
+  margin: 0;
+}
+
+.speech-status-tag-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .new-message-grid {
@@ -1533,12 +1677,49 @@ a {
     overflow: hidden !important;
   }
 
-  body:not(.printing-previous-minute) * {
+  body:not(.printing-previous-minute):not(:has(.minute-pdf-page)) * {
     visibility: hidden !important;
   }
 
   body.printing-previous-minute * {
     visibility: hidden !important;
+  }
+
+  body:has(.minute-pdf-page) {
+    width: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  body:has(.minute-pdf-page) .minute-pdf-actions {
+    display: none !important;
+  }
+
+  body:has(.minute-pdf-page) .minute-pdf-page,
+  body:has(.minute-pdf-page) .minute-pdf-print-area {
+    display: block !important;
+    width: 198mm !important;
+    height: 285mm !important;
+    min-height: 0 !important;
+    max-height: 285mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+  }
+
+  body:has(.minute-pdf-page) .minute-pdf-print-area .minute-workspace {
+    display: block !important;
+    width: 198mm !important;
+    height: 285mm !important;
+    min-height: 0 !important;
+    max-height: 285mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
   }
 
   .minute-sheet,

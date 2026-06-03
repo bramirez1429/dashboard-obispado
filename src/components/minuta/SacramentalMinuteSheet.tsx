@@ -12,6 +12,7 @@ import type {
   MeetingMinuteHymn,
   MeetingMinuteMessage,
   MeetingMinuteWardAndStakeBusiness,
+  MeetingMinuteWardAndStakeBusinessValue,
 } from "@/types/meeting-minute";
 
 dayjs.extend(customParseFormat);
@@ -240,13 +241,16 @@ function rowsToWardAndStakeBusiness(
 }
 
 function wardAndStakeBusinessToRows(
-  wardAndStakeBusiness: MeetingMinuteWardAndStakeBusiness
+  wardAndStakeBusiness: MeetingMinuteWardAndStakeBusinessValue
 ) {
+  const firstWardAndStakeBusiness = Array.isArray(wardAndStakeBusiness)
+    ? wardAndStakeBusiness[0] || emptyWardAndStakeBusiness
+    : wardAndStakeBusiness;
   const rows = Array.from({ length: 5 }, () => ["", "", ""]);
   rows[0] = [
-    wardAndStakeBusiness.subject,
-    wardAndStakeBusiness.name,
-    wardAndStakeBusiness.details,
+    firstWardAndStakeBusiness.subject,
+    firstWardAndStakeBusiness.name,
+    firstWardAndStakeBusiness.details,
   ];
   return rows;
 }

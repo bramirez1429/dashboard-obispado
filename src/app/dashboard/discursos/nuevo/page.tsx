@@ -10,8 +10,8 @@ import {
   Form,
   Input,
   InputNumber,
-  Radio,
   Row,
+  Select,
   Space,
   Typography,
   message,
@@ -25,7 +25,7 @@ dayjs.locale("es");
 const { TextArea } = Input;
 const { Paragraph, Text, Title } = Typography;
 
-type Gender = "masculino" | "femenino";
+type Gender = "masculine" | "feminine";
 
 type MessageFormState = {
   brotherName: string;
@@ -43,6 +43,7 @@ type SavedSpeech = {
   speech: string | null;
   time: number | null;
   references: string | null;
+  gender: Gender | null;
 };
 
 type SpeechPostResponse = {
@@ -53,7 +54,7 @@ type SpeechPostResponse = {
 
 const initialFormState: MessageFormState = {
   brotherName: "",
-  gender: "masculino",
+  gender: "masculine",
   date: null,
   topic: "",
   time: 10,
@@ -61,7 +62,7 @@ const initialFormState: MessageFormState = {
 };
 
 function treatment(gender: Gender) {
-  return gender === "femenino" ? "Hermana" : "Hermano";
+  return gender === "feminine" ? "Hermana" : "Hermano";
 }
 
 function displayValue(value: string) {
@@ -241,6 +242,7 @@ export default function NewSpeechPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: formValues.brotherName.trim(),
+        gender: formValues.gender,
         date: formValues.date ? formValues.date.format("YYYY-MM-DD") : undefined,
         speech: formValues.topic.trim(),
         time: formValues.time,
@@ -290,19 +292,20 @@ export default function NewSpeechPage() {
         <Col xs={24} lg={10}>
           <Card className="form-card" title="Datos del discurso">
             <Form layout="vertical">
-              <Form.Item>
-                <Radio.Group
+              <Form.Item label="Género">
+                <Select
                   value={formValues.gender}
-                  onChange={(event) =>
+                  options={[
+                    { value: "masculine", label: "Masculino" },
+                    { value: "feminine", label: "Femenino" },
+                  ]}
+                  onChange={(value: Gender) =>
                     setFormValues((current) => ({
                       ...current,
-                      gender: event.target.value,
+                      gender: value,
                     }))
                   }
-                >
-                  <Radio value="masculino">Masculino</Radio>
-                  <Radio value="femenino">Femenino</Radio>
-                </Radio.Group>
+                />
               </Form.Item>
 
               <Form.Item label="Nombre del hermano/a">
@@ -393,7 +396,7 @@ export default function NewSpeechPage() {
                   <PublicMessageCard
                     title="Así lo verá el hermano/a"
                     name={savedSpeech.name}
-                    gender={formValues.gender}
+                    gender={savedSpeech.gender || formValues.gender}
                     date={savedSpeech.date}
                     topic={savedSpeech.speech}
                     time={savedSpeech.time}

@@ -10,6 +10,10 @@ export type MeetingMinuteWardAndStakeBusiness = {
   details: string;
 };
 
+export type MeetingMinuteWardAndStakeBusinessValue =
+  | MeetingMinuteWardAndStakeBusiness
+  | MeetingMinuteWardAndStakeBusiness[];
+
 export type MeetingMinuteMessage = {
   name: string;
   time: number;
@@ -28,7 +32,7 @@ export type MeetingMinute = {
   director: string;
   pianist: string;
   openingPrayer: string;
-  wardAndStakeBusiness: MeetingMinuteWardAndStakeBusiness;
+  wardAndStakeBusiness: MeetingMinuteWardAndStakeBusinessValue;
   sacramentalHymn: MeetingMinuteHymn;
   messages: MeetingMinuteMessage[];
   lastHymn: MeetingMinuteHymn;
