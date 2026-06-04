@@ -7,6 +7,7 @@ import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { getSpeechStatusLabel } from "@/lib/speeches";
 
 type SpeechStatus = "pending" | "shared";
 
@@ -158,7 +159,7 @@ export default function DiscursosPage() {
           >
             <Tag color={status === "shared" ? "success" : "warning"}>
               <span className="speech-status-tag-content">
-                {status === "shared" ? "Compartido" : "Pendiente"}
+                {getSpeechStatusLabel(status)}
                 {isUpdating ? <Spin size="small" /> : null}
               </span>
             </Tag>

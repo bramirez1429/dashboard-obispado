@@ -4,6 +4,7 @@ import { ExportOutlined } from "@ant-design/icons";
 import { Card, Col, Divider, Row, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
 
@@ -25,10 +26,6 @@ function formatLongDate(date: string | null) {
 
 function displayValue(value: string | null) {
   return value?.trim() || "Sin completar";
-}
-
-function treatment(gender: PublicSpeech["gender"]) {
-  return gender === "feminine" ? "Hermana" : "Hermano";
 }
 
 function renderTextWithLinks(text: string) {
@@ -134,7 +131,7 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
 
           <Row gutter={[16, 16]} className="public-assignment-grid">
             <Col xs={24} md={8}>
-              <DetailCard label={treatment(speech.gender)}>
+              <DetailCard label={getSpeechTreatment(speech.gender)}>
                 {displayValue(speech.name)}
               </DetailCard>
             </Col>

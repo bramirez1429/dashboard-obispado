@@ -9,6 +9,8 @@ import {
 import { Button, Card, Col, Empty, Row, Space, Tag } from "antd";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
+import { getDashboardSpeechSummary } from "@/lib/dashboard-summary";
+import { normalizeSpeechStatus } from "@/lib/speeches";
 
 type DashboardHomeSummary = {
   minute?: {
@@ -56,13 +58,9 @@ export function DashboardHome({
   };
   const assignedSpeeches = safeSummary.speeches.items.map((speech) => ({
     ...speech,
-    status: speech.status === "shared" ? ("shared" as const) : ("pending" as const),
+    status: normalizeSpeechStatus(speech.status),
   }));
-  const totalSpeeches = assignedSpeeches.length;
-  const sharedSpeeches = assignedSpeeches.filter(
-    (speech) => speech.status === "shared",
-  ).length;
-  const pendingSpeeches = totalSpeeches - sharedSpeeches;
+  const speechSummary = getDashboardSpeechSummary(assignedSpeeches);
 
   const cards = [
     {
@@ -92,17 +90,17 @@ export function DashboardHome({
           {assignedSpeeches.length ? (
             <Space orientation="vertical" size={8} style={{ width: "100%" }}>
               <div className="dashboard-speech-summary">
-                <span>Total: {totalSpeeches} discursos</span>
+                <span>Total: {speechSummary.total} discursos</span>
                 <span>
                   Compartidos:{" "}
                   <Tag color="success" style={{ marginInlineEnd: 0 }}>
-                    {sharedSpeeches}
+                    {speechSummary.shared}
                   </Tag>
                 </span>
                 <span>
                   Pendientes:{" "}
                   <Tag color="warning" style={{ marginInlineEnd: 0 }}>
-                    {pendingSpeeches}
+                    {speechSummary.pending}
                   </Tag>
                 </span>
               </div>

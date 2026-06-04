@@ -19,6 +19,7 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import type { Dayjs } from "dayjs";
+import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
 
@@ -60,10 +61,6 @@ const initialFormState: MessageFormState = {
   time: 10,
   references: "",
 };
-
-function treatment(gender: Gender) {
-  return gender === "feminine" ? "Hermana" : "Hermano";
-}
 
 function displayValue(value: string) {
   return value.trim() || "Sin completar";
@@ -191,7 +188,7 @@ function PublicMessageCard({
 
       <Row gutter={[16, 16]} className="public-assignment-grid">
         <Col xs={24} md={8}>
-          <DetailCard label={treatment(gender)}>{name?.trim() || "Sin completar"}</DetailCard>
+          <DetailCard label={getSpeechTreatment(gender)}>{name?.trim() || "Sin completar"}</DetailCard>
         </Col>
         <Col xs={24} md={8}>
           <DetailCard label="Tiempo asignado">
@@ -223,7 +220,7 @@ export default function NewSpeechPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
-  const currentTreatment = treatment(formValues.gender);
+  const currentTreatment = getSpeechTreatment(formValues.gender);
   const formattedDate = formatLongDate(formValues.date);
   const messageName = formValues.brotherName.trim() || "Completar nombre";
   const messageDate = formValues.date ? formatLongDate(formValues.date) : "Completar fecha";

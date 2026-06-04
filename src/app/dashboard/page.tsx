@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { DashboardHome } from "@/components/dashboard/DashboardHome";
+import { getNextSpeakingSundayFromActiveSunday } from "@/lib/dashboard-summary";
 
 const ARGENTINA_TIME_ZONE = "America/Argentina/Buenos_Aires";
 
@@ -72,19 +73,8 @@ function getActiveSundayDate() {
   return formatDateToDDMMYYYY(getActiveSundayUTCDate());
 }
 
-function isFirstSundayOfMonth(date: Date) {
-  return date.getUTCDay() === 0 && date.getUTCDate() <= 7;
-}
-
 function getNextSpeakingSundayUTCDate() {
-  const activeSunday = getActiveSundayUTCDate();
-  const nextSpeakingSunday = new Date(activeSunday);
-
-  if (isFirstSundayOfMonth(activeSunday)) {
-    nextSpeakingSunday.setUTCDate(activeSunday.getUTCDate() + 7);
-  }
-
-  return nextSpeakingSunday;
+  return getNextSpeakingSundayFromActiveSunday(getActiveSundayUTCDate());
 }
 
 async function getDashboardSummary() {
