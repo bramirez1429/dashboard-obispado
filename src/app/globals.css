@@ -1669,36 +1669,24 @@ a {
   body {
     margin: 0 !important;
     padding: 0 !important;
-    width: 198mm !important;
-    height: 285mm !important;
+    width: auto !important;
+    height: auto !important;
     min-height: 0 !important;
-    max-height: 285mm !important;
+    max-height: none !important;
     background: #ffffff !important;
-    overflow: hidden !important;
-  }
-
-  body:not(.printing-previous-minute):not(:has(.minute-pdf-page)) * {
-    visibility: hidden !important;
+    overflow: visible !important;
   }
 
   body.printing-previous-minute * {
     visibility: hidden !important;
   }
 
-  body:has(.minute-pdf-page) {
-    width: auto !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-    background: #ffffff !important;
-  }
-
-  body:has(.minute-pdf-page) .minute-pdf-actions {
+  .minute-pdf-actions {
     display: none !important;
   }
 
-  body:has(.minute-pdf-page) .minute-pdf-page,
-  body:has(.minute-pdf-page) .minute-pdf-print-area {
+  .minute-pdf-page,
+  .minute-pdf-print-area {
     display: block !important;
     width: 198mm !important;
     height: 285mm !important;
@@ -1710,7 +1698,7 @@ a {
     background: #ffffff !important;
   }
 
-  body:has(.minute-pdf-page) .minute-pdf-print-area .minute-workspace {
+  .minute-pdf-print-area .minute-workspace {
     display: block !important;
     width: 198mm !important;
     height: 285mm !important;
