@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SacramentalMinuteSheet } from "@/components/minuta/SacramentalMinuteSheet";
-import type { MeetingMinute } from "@/types/meeting-minute";
+import type {
+  MeetingMinute,
+  MeetingMinuteWardAndStakeBusinessValue,
+} from "@/types/meeting-minute";
 import PrintMinuteButton from "./PrintMinuteButton";
 
 export const revalidate = 120;
@@ -18,7 +21,35 @@ const emptyBusiness = {
   details: "",
 };
 
+function getBusinessSortRank(subject: string) {
+  const normalizedSubject = subject.toLowerCase();
+
+  if (normalizedSubject.includes("relevo")) return 0;
+  if (normalizedSubject.includes("sosten")) return 1;
+  return 2;
+}
+
+function sortWardAndStakeBusinessForPdf(
+  wardAndStakeBusiness: MeetingMinuteWardAndStakeBusinessValue
+): MeetingMinuteWardAndStakeBusinessValue {
+  if (!Array.isArray(wardAndStakeBusiness)) {
+    return wardAndStakeBusiness;
+  }
+
+  return wardAndStakeBusiness
+    .map((item, index) => ({ item, index }))
+    .sort((firstItem, secondItem) => {
+      const firstRank = getBusinessSortRank(firstItem.item.subject);
+      const secondRank = getBusinessSortRank(secondItem.item.subject);
+
+      return firstRank - secondRank || firstItem.index - secondItem.index;
+    })
+    .map(({ item }) => item);
+}
+
 function normalizeMinute(minute: MeetingMinute): MeetingMinute {
+  const wardAndStakeBusiness = minute.wardAndStakeBusiness || emptyBusiness;
+
   return {
     ...minute,
     attendance: minute.attendance || 0,
@@ -32,7 +63,7 @@ function normalizeMinute(minute: MeetingMinute): MeetingMinute {
     director: minute.director || "",
     pianist: minute.pianist || "",
     openingPrayer: minute.openingPrayer || "",
-    wardAndStakeBusiness: minute.wardAndStakeBusiness || emptyBusiness,
+    wardAndStakeBusiness: sortWardAndStakeBusinessForPdf(wardAndStakeBusiness),
     sacramentalHymn: minute.sacramentalHymn || emptyHymn,
     messages: minute.messages || [],
     lastHymn: minute.lastHymn || emptyHymn,
@@ -73,6 +104,39 @@ export default async function MinutePdfPage({
 
   return (
     <main className="minute-pdf-page">
+      <style>{`
+        .minute-pdf-page .minute-readonly-lines {
+          min-height: var(--minute-readonly-screen-height, 5.1mm);
+          padding: 1mm;
+          line-height: 5.1mm;
+        }
+
+        .minute-pdf-page .minute-hymn-readonly-value {
+          flex: 1 1 auto;
+          padding: 0.8mm 1mm 0.4mm;
+          color: #111827;
+          font: inherit;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 6.2mm;
+        }
+
+        @media print {
+          .minute-pdf-page .minute-readonly-lines {
+            min-height: var(--minute-readonly-print-height, 4.75mm) !important;
+            padding: 1mm !important;
+            line-height: 4.75mm !important;
+          }
+
+          .minute-pdf-page .minute-hymn-readonly-value {
+            color: #111827 !important;
+            font-size: 12px !important;
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+          }
+        }
+      `}</style>
       <div className="minute-pdf-actions no-print">
         <Link
           className="minute-back-arrow"

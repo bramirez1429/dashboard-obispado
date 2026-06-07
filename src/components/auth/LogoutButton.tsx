@@ -13,6 +13,7 @@ const LogoutButton = () => {
 
   return (
     <Button
+      className="no-print"
       danger
       size="small"
       icon={<LogoutOutlined />}

@@ -5,7 +5,7 @@ import { Button, DatePicker, InputNumber, Modal, Select, message } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
 import type {
   MeetingMinute,
@@ -47,6 +47,7 @@ type LinedTextProps = {
   value?: string;
   onChange?: (value: string) => void;
   readOnly?: boolean;
+  readOnlyDisplay?: "lines";
 };
 
 type HymnFieldProps = {
@@ -107,6 +108,17 @@ function HymnField({
   onChange,
   readOnly = false,
 }: HymnFieldProps) {
+  if (readOnly) {
+    return (
+      <label className={`minute-field minute-hymn-field ${className}`}>
+        <span>{label}</span>
+        <span className="minute-hymn-readonly-value">
+          {value.number ? `${value.number} ${value.title}` : ""}
+        </span>
+      </label>
+    );
+  }
+
   const updateHymn = (value?: string) => {
     if (!value) {
       onChange(emptyHymn);
@@ -179,20 +191,42 @@ function LinedText({
   value = "",
   onChange,
   readOnly = false,
+  readOnlyDisplay,
 }: LinedTextProps) {
+  const readOnlyItems = value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
   return (
     <section className={`minute-section ${className}`}>
       <div className="minute-section-title">
         <strong>{label}</strong>
         {note ? <span>{note}</span> : null}
       </div>
-      <textarea
-        className="minute-lined-text"
-        rows={rows}
-        value={value}
-        readOnly={readOnly}
-        onChange={(event) => onChange?.(event.target.value)}
-      />
+      {readOnly && readOnlyDisplay === "lines" ? (
+        <div
+          className="minute-lined-text minute-readonly-lines"
+          style={
+            {
+              "--minute-readonly-screen-height": `${rows * 5.1}mm`,
+              "--minute-readonly-print-height": `${rows * 4.75}mm`,
+            } as CSSProperties
+          }
+        >
+          {readOnlyItems.map((item, index) => (
+            <div key={`${item}-${index}`}>{item}</div>
+          ))}
+        </div>
+      ) : (
+        <textarea
+          className="minute-lined-text"
+          rows={rows}
+          value={value}
+          readOnly={readOnly}
+          onChange={(event) => onChange?.(event.target.value)}
+        />
+      )}
     </section>
   );
 }
@@ -243,16 +277,18 @@ function rowsToWardAndStakeBusiness(
 function wardAndStakeBusinessToRows(
   wardAndStakeBusiness: MeetingMinuteWardAndStakeBusinessValue
 ) {
-  const firstWardAndStakeBusiness = Array.isArray(wardAndStakeBusiness)
-    ? wardAndStakeBusiness[0] || emptyWardAndStakeBusiness
-    : wardAndStakeBusiness;
-  const rows = Array.from({ length: 5 }, () => ["", "", ""]);
-  rows[0] = [
-    firstWardAndStakeBusiness.subject,
-    firstWardAndStakeBusiness.name,
-    firstWardAndStakeBusiness.details,
-  ];
-  return rows;
+  const wardAndStakeBusinessItems = Array.isArray(wardAndStakeBusiness)
+    ? wardAndStakeBusiness
+    : [wardAndStakeBusiness];
+  const businessRows = wardAndStakeBusinessItems
+    .filter((item) => item.subject || item.name || item.details)
+    .map((item) => [item.subject, item.name, item.details]);
+  const fillerRows = Array.from(
+    { length: Math.max(5 - businessRows.length, 0) },
+    () => ["", "", ""]
+  );
+
+  return [...businessRows, ...fillerRows];
 }
 
 function rowsToMessages(rows: string[][]): MeetingMinuteMessage[] {
@@ -597,7 +633,7 @@ export function SacramentalMinuteSheet({
                     min={0}
                     disabled={readOnly}
                     aria-label="Asistencia"
-                    value={attendance}
+                    value={readOnly ? null : attendance}
                     onChange={(value) =>
                       setAttendance(typeof value === "number" ? value : 0)
                     }
@@ -629,6 +665,7 @@ export function SacramentalMinuteSheet({
           value={welcomeAndAcknowledgmentsOfAuthorities}
           onChange={setWelcomeAndAcknowledgmentsOfAuthorities}
           readOnly={readOnly}
+          readOnlyDisplay="lines"
         />
 
         <LinedText
@@ -639,6 +676,7 @@ export function SacramentalMinuteSheet({
           value={announcements}
           onChange={setAnnouncements}
           readOnly={readOnly}
+          readOnlyDisplay="lines"
         />
 
         <section className="minute-section minute-music">

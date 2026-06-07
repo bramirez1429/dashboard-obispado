@@ -93,6 +93,22 @@ const getWardAndStakeBusinesses = (
 
   return businesses
     .filter(Boolean)
+    .map((item, index) => ({ item, index }))
+    .sort((firstItem, secondItem) => {
+      const firstSubject = firstItem.item?.subject?.toLowerCase() ?? "";
+      const secondSubject = secondItem.item?.subject?.toLowerCase() ?? "";
+      const getRank = (subject: string) => {
+        if (subject.includes("relevo")) return 0;
+        if (subject.includes("sosten")) return 1;
+        return 2;
+      };
+
+      return (
+        getRank(firstSubject) - getRank(secondSubject) ||
+        firstItem.index - secondItem.index
+      );
+    })
+    .map(({ item }) => item)
     .map((item) => {
       const subject = item?.subject?.trim();
       const name = item?.name?.trim();
@@ -267,6 +283,18 @@ const PublicMinuteStyles = () => (
 
     .public-minute-announcements-list {
       padding-left: 22px;
+    }
+
+    .public-minute-business-item {
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--minute-border-soft, #D7E1EA);
+    }
+
+    .public-minute-business-item:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
     }
 
     .public-minute-business-title {
@@ -451,7 +479,10 @@ export const MeetingMinuteView = ({
             <PublicModule title="Asuntos del barrio y estaca">
               {businesses.length ? (
                 businesses.map((business, index) => (
-                  <div key={`${business.title}-${index}`}>
+                  <div
+                    className="public-minute-business-item"
+                    key={`${business.title}-${index}`}
+                  >
                     <p className="public-minute-business-title">{business.title}</p>
                     {business.details ? (
                       <p className="public-minute-business-detail">

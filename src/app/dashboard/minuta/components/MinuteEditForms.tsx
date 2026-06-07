@@ -99,15 +99,32 @@ const emptyBusiness: MeetingMinuteWardAndStakeBusiness = {
   details: "",
 };
 
+function getWardAndStakeBusinessSortRank(subject: string) {
+  const normalizedSubject = subject.toLowerCase();
+
+  if (normalizedSubject.includes("relevo")) return 0;
+  if (normalizedSubject.includes("sosten")) return 1;
+  return 2;
+}
+
 function normalizeWardAndStakeBusinessList(
   business: MeetingMinuteWardAndStakeBusinessValue
 ) {
   const businesses = Array.isArray(business) ? business : [business];
-  const normalizedBusinesses = businesses.map((item) => ({
-    subject: item?.subject || "",
-    name: item?.name || "",
-    details: item?.details || "",
-  }));
+  const normalizedBusinesses = businesses
+    .map((item) => ({
+      subject: item?.subject || "",
+      name: item?.name || "",
+      details: item?.details || "",
+    }))
+    .map((item, index) => ({ item, index }))
+    .sort((firstItem, secondItem) => {
+      const firstRank = getWardAndStakeBusinessSortRank(firstItem.item.subject);
+      const secondRank = getWardAndStakeBusinessSortRank(secondItem.item.subject);
+
+      return firstRank - secondRank || firstItem.index - secondItem.index;
+    })
+    .map(({ item }) => item);
 
   return normalizedBusinesses.length ? normalizedBusinesses : [emptyBusiness];
 }
