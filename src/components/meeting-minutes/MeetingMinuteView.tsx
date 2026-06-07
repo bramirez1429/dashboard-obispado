@@ -58,6 +58,14 @@ const getHymnText = (hymn?: Hymn) => {
   return hymn.number || hymn.title || "—";
 };
 
+const getAnnouncementItems = (announcements?: string) => {
+  return (
+    announcements
+      ?.split(/\r?\n/)
+      .filter((announcement) => announcement.trim()) ?? []
+  );
+};
+
 const PublicHymnLink = ({ hymn }: { hymn?: Hymn }) => {
   const text = getHymnText(hymn);
 
@@ -257,6 +265,10 @@ const PublicMinuteStyles = () => (
       white-space: pre-wrap;
     }
 
+    .public-minute-announcements-list {
+      padding-left: 22px;
+    }
+
     .public-minute-business-title {
       margin: 0 0 6px;
       color: #111827;
@@ -378,6 +390,7 @@ export const MeetingMinuteView = ({
   }
 
   const businesses = getWardAndStakeBusinesses(minute.wardAndStakeBusiness);
+  const announcementItems = getAnnouncementItems(minute.announcements);
 
   return (
     <main className="public-minute-page">
@@ -412,7 +425,17 @@ export const MeetingMinuteView = ({
           </PublicModule>
 
           <PublicModule title="Anuncios">
-            <p className="public-minute-paragraph">{getText(minute.announcements)}</p>
+            {announcementItems.length ? (
+              <ul className="public-minute-paragraph public-minute-announcements-list">
+                {announcementItems.map((announcement, index) => (
+                  <li key={`${announcement}-${index}`}>{announcement}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="public-minute-paragraph">
+                {getText(minute.announcements)}
+              </p>
+            )}
           </PublicModule>
 
           <PublicModule title="Inicio de la reunión">
