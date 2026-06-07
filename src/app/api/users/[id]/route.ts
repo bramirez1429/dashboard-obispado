@@ -1,17 +1,11 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { auth } from "@/auth";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
-type CreateUserRequestBody = {
+type UpdateUserRequestBody = {
   name?: string;
-  lastname?: string;
-  callings?: string;
   username?: string;
-  phone?: string;
-  password?: string;
   role?: string;
-  active?: boolean;
 };
 
 const allowedRoles = new Set(["Admin", "Bishopric", "Leader", "Viewer"]);
@@ -27,7 +21,15 @@ function cleanOptionalText(value: unknown) {
   return trimmedValue || null;
 }
 
-export async function GET() {
+async function getUserId(params: Promise<{ id: string }>) {
+  const { id } = await params;
+  return id;
+}
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -37,28 +39,32 @@ export async function GET() {
     );
   }
 
+  const id = await getUserId(params);
   const { data, error } = await supabaseAdmin
     .from("Users")
     .select(userSelect)
-    .order("name", { ascending: true });
+    .eq("id", id)
+    .single();
 
-  if (error) {
+  if (error || !data) {
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
+      { success: false, error: error?.message || "Usuario no encontrado" },
+      { status: 404 }
     );
   }
 
   return NextResponse.json({
     success: true,
-    data: data ?? [],
-    currentUserUuid: session.user.id,
+    data,
   });
 }
 
-export async function POST(request: Request) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const session = await auth();
-  console.log("Session:", session);
+
   if (!session?.user?.id) {
     return NextResponse.json(
       { success: false, error: "No autorizado" },
@@ -66,15 +72,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = (await request.json()) as CreateUserRequestBody;
+  const id = await getUserId(params);
+  const body = (await request.json()) as UpdateUserRequestBody;
   const name = cleanOptionalText(body.name);
-  const lastname = cleanOptionalText(body.lastname);
-  const callings = cleanOptionalText(body.callings);
   const username = cleanOptionalText(body.username);
-  const phone = cleanOptionalText(body.phone);
-  const password = typeof body.password === "string" ? body.password : "";
   const role = cleanOptionalText(body.role);
-  const active = typeof body.active === "boolean" ? body.active : true;
 
   if (!name) {
     return NextResponse.json(
@@ -83,26 +85,9 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!username && !phone) {
+  if (!username) {
     return NextResponse.json(
-      { success: false, error: "Ingrese usuario o teléfono" },
-      { status: 400 }
-    );
-  }
-
-  if (!password) {
-    return NextResponse.json(
-      { success: false, error: "La contraseña es requerida" },
-      { status: 400 }
-    );
-  }
-
-  if (password.length < 6) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "La contraseña debe tener al menos 6 caracteres",
-      },
+      { success: false, error: "El email es requerido" },
       { status: 400 }
     );
   }
@@ -114,21 +99,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-
   const { data, error } = await supabaseAdmin
     .from("Users")
-    .insert({
+    .update({
       name,
-      lastname,
-      callings,
       username,
-      phone,
-      password_hash: passwordHash,
       role,
-      active,
       updated_at: new Date().toISOString(),
     })
+    .eq("id", id)
     .select(userSelect)
     .single();
 
@@ -142,5 +121,53 @@ export async function POST(request: Request) {
   return NextResponse.json({
     success: true,
     data,
+  });
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { success: false, error: "No autorizado" },
+      { status: 401 }
+    );
+  }
+
+  const id = await getUserId(params);
+  const { data: user, error: lookupError } = await supabaseAdmin
+    .from("Users")
+    .select("id, user_uuid")
+    .eq("id", id)
+    .single();
+
+  if (lookupError || !user) {
+    return NextResponse.json(
+      { success: false, error: lookupError?.message || "Usuario no encontrado" },
+      { status: 404 }
+    );
+  }
+
+  if (String(user.user_uuid) === session.user.id) {
+    return NextResponse.json(
+      { success: false, error: "No podés borrar tu propio usuario" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabaseAdmin.from("Users").delete().eq("id", id);
+
+  if (error) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
   });
 }

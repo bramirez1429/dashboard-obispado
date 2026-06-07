@@ -35,9 +35,9 @@ const menuItems = [
     label: "Discursos",
   },
   {
-    key: "/dashboard/usuarios/nuevo",
+    key: "/dashboard/usuarios",
     icon: <UserAddOutlined />,
-    label: "Agregar usuario",
+    label: "Usuarios",
   },
 ];
 
@@ -51,7 +51,7 @@ function selectedKey(pathname: string) {
   }
 
   if (pathname.startsWith("/dashboard/usuarios")) {
-    return "/dashboard/usuarios/nuevo";
+    return "/dashboard/usuarios";
   }
 
   return "/dashboard";

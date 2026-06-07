@@ -6,7 +6,6 @@ import {
   Form,
   Input,
   Select,
-  Switch,
   Typography,
   message,
 } from "antd";
@@ -20,7 +19,6 @@ type CreateUserFormValues = {
   phone?: string;
   password: string;
   role: string;
-  active: boolean;
 };
 
 type CreateUserResponse = {
@@ -41,7 +39,7 @@ const AddUserPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, active: true }),
       });
 
       const result = (await response.json()) as CreateUserResponse;
@@ -77,7 +75,6 @@ const AddUserPage = () => {
           onFinish={handleSubmit}
           initialValues={{
             role: "Leader",
-            active: true,
           }}
         >
           <Form.Item
@@ -96,7 +93,7 @@ const AddUserPage = () => {
             <Input placeholder="Ej: Consejero, Secretario, Líder misional" />
           </Form.Item>
 
-          <Form.Item label="Usuario" name="username">
+          <Form.Item label="Username" name="username">
             <Input placeholder="Ej: consejero1" />
           </Form.Item>
 
@@ -126,19 +123,11 @@ const AddUserPage = () => {
             <Select
               options={[
                 { label: "Admin", value: "Admin" },
-                { label: "Obispado", value: "Bishopric" },
-                { label: "Líder", value: "Leader" },
-                { label: "Solo lectura", value: "Viewer" },
+                { label: "Gestion", value: "Bishopric" },
+                { label: "Colaborador", value: "Leader" },
+                { label: "Lectura", value: "Viewer" },
               ]}
             />
-          </Form.Item>
-
-          <Form.Item
-            label="Usuario activo"
-            name="active"
-            valuePropName="checked"
-          >
-            <Switch />
           </Form.Item>
 
           <Button type="primary" htmlType="submit" loading={isSaving}>
