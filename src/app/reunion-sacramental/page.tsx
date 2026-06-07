@@ -20,6 +20,8 @@ const getArgentinaDateParts = () => {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
   }).formatToParts(new Date());
 
   const getPart = (type: string) =>
@@ -29,6 +31,7 @@ const getArgentinaDateParts = () => {
     year: Number(getPart("year")),
     month: Number(getPart("month")),
     day: Number(getPart("day")),
+    hour: Number(getPart("hour")),
   };
 };
 
@@ -41,31 +44,37 @@ const formatDateToDDMMYYYY = (date: Date) => {
 };
 
 const getSundayDates = () => {
-  const { year, month, day } = getArgentinaDateParts();
+  const { year, month, day, hour } = getArgentinaDateParts();
 
   const today = new Date(Date.UTC(year, month - 1, day));
   const dayOfWeek = today.getUTCDay();
+  const isCurrentSundayActive = dayOfWeek === 0 && hour < 13;
 
   const previousSunday = new Date(today);
-  previousSunday.setUTCDate(today.getUTCDate() - dayOfWeek);
+  previousSunday.setUTCDate(
+    today.getUTCDate() - (dayOfWeek === 0 ? 7 : dayOfWeek)
+  );
 
   const nextSunday = new Date(today);
   nextSunday.setUTCDate(
-    today.getUTCDate() + (dayOfWeek === 0 ? 0 : 7 - dayOfWeek)
+    today.getUTCDate() + (dayOfWeek === 0 ? 7 : 7 - dayOfWeek)
   );
 
   return {
-    isSunday: dayOfWeek === 0,
+    isCurrentSundayActive,
     today: formatDateToDDMMYYYY(today),
     previousSunday: formatDateToDDMMYYYY(previousSunday),
-    nextSunday: formatDateToDDMMYYYY(nextSunday),
+    nextSunday: isCurrentSundayActive
+      ? formatDateToDDMMYYYY(today)
+      : formatDateToDDMMYYYY(nextSunday),
   };
 };
 
 const selectMeetingMinuteByDate = (minutes: MeetingMinute[]) => {
-  const { isSunday, today, previousSunday, nextSunday } = getSundayDates();
+  const { isCurrentSundayActive, today, previousSunday, nextSunday } =
+    getSundayDates();
 
-  if (isSunday) {
+  if (isCurrentSundayActive) {
     return minutes.find((minute) => minute.date === today) ?? null;
   }
 
