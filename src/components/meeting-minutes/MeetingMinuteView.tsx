@@ -424,22 +424,24 @@ export const MeetingMinuteView = ({
             </div>
           </PublicModule>
 
-          <PublicModule title="Asuntos del barrio y estaca">
-            {businesses.length ? (
-              businesses.map((business, index) => (
-                <div key={`${business.title}-${index}`}>
-                  <p className="public-minute-business-title">{business.title}</p>
-                  {business.details ? (
-                    <p className="public-minute-business-detail">
-                      {business.details}
-                    </p>
-                  ) : null}
-                </div>
-              ))
-            ) : (
-              <p className="public-minute-business-title">—</p>
-            )}
-          </PublicModule>
+          {showDashboardBackButton ? (
+            <PublicModule title="Asuntos del barrio y estaca">
+              {businesses.length ? (
+                businesses.map((business, index) => (
+                  <div key={`${business.title}-${index}`}>
+                    <p className="public-minute-business-title">{business.title}</p>
+                    {business.details ? (
+                      <p className="public-minute-business-detail">
+                        {business.details}
+                      </p>
+                    ) : null}
+                  </div>
+                ))
+              ) : (
+                <p className="public-minute-business-title">—</p>
+              )}
+            </PublicModule>
+          ) : null}
 
           <PublicModule title="Himno sacramental">
             <p className="public-minute-feature-value">
