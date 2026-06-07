@@ -95,6 +95,12 @@ export const PATCH = async (
   const valuesToUpdate: {
     status?: "pending" | "shared";
     did_speak?: boolean;
+    name?: string;
+    gender?: "masculine" | "feminine";
+    date?: string;
+    speech?: string;
+    time?: number;
+    references?: string;
   } = {};
 
   if (body.status === "pending" || body.status === "shared") {
@@ -103,6 +109,30 @@ export const PATCH = async (
 
   if (typeof body.did_speak === "boolean") {
     valuesToUpdate.did_speak = body.did_speak;
+  }
+
+  if (typeof body.name === "string") {
+    valuesToUpdate.name = body.name;
+  }
+
+  if (body.gender === "masculine" || body.gender === "feminine") {
+    valuesToUpdate.gender = body.gender;
+  }
+
+  if (typeof body.date === "string") {
+    valuesToUpdate.date = body.date;
+  }
+
+  if (typeof body.speech === "string") {
+    valuesToUpdate.speech = body.speech;
+  }
+
+  if (typeof body.time === "number") {
+    valuesToUpdate.time = body.time;
+  }
+
+  if (typeof body.references === "string") {
+    valuesToUpdate.references = body.references;
   }
 
   if (!Object.keys(valuesToUpdate).length) {
@@ -116,6 +146,25 @@ export const PATCH = async (
     .from("Speeches")
     .update(valuesToUpdate)
     .eq("id", id);
+
+  if (error) {
+    return Response.json(
+      { success: false, error: error.message },
+      { status: 500 },
+    );
+  }
+
+  return Response.json({
+    success: true,
+  });
+};
+
+export const DELETE = async (
+  _request: Request,
+  context: { params: Promise<{ id: string }> },
+) => {
+  const { id } = await context.params;
+  const { error } = await supabaseAdmin.from("Speeches").delete().eq("id", id);
 
   if (error) {
     return Response.json(

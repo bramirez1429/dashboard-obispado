@@ -1,8 +1,7 @@
-import { Button, Card } from "antd";
-import Link from "next/link";
+import BackCircleButton from "@/components/common/BackCircleButton";
 import { SacramentalMinuteSheet } from "@/components/minuta/SacramentalMinuteSheet";
 import EditActiveMinuteButton from "./components/EditActiveMinuteButton";
-import PreviousMinutesSelect from "./components/PreviousMinutesSelect";
+import ExistingMinuteCard from "./components/ExistingMinuteCard";
 
 export const revalidate = 120;
 
@@ -142,51 +141,17 @@ export default async function MinutaPage({
   if (activeMinute && !creationDate) {
     return (
       <div className="minute-page">
-        <Card>
-          <h2 className="existing-minute-title">
-            Ya está hecha una minuta. ¿Te gustaría poder verla?
-          </h2>
-          <div className="existing-minute-actions">
-            <Link href="/reunion-sacramental" prefetch={false}>
-              <Button type="primary">Ver minuta</Button>
-            </Link>
-            <Link
-              href={`/dashboard/minuta/editar/${activeMinute.id}`}
-              prefetch={false}
-            >
-              <Button>Editar minuta</Button>
-            </Link>
-            <Link
-              href={`/dashboard/minuta/pdf/${activeMinute.id}`}
-              prefetch={false}
-            >
-              <Button>Ver minuta para PDF</Button>
-            </Link>
-            <Link
-              href="/dashboard/minuta?createNext=true"
-              prefetch={false}
-            >
-              <Button>Crear minuta siguiente</Button>
-            </Link>
-          </div>
-          <PreviousMinutesSelect minutes={previousMinutes} />
-        </Card>
+        <ExistingMinuteCard
+          activeMinuteId={activeMinute.id}
+          previousMinutes={previousMinutes}
+        />
       </div>
     );
   }
 
   return (
     <div className="minute-page">
-      {creationDate ? (
-        <Link
-          className="public-minute-back-button"
-          href="/dashboard/minuta"
-          prefetch={false}
-          aria-label="Volver a minuta"
-        >
-          ←
-        </Link>
-      ) : null}
+      {creationDate ? <BackCircleButton href="/dashboard/minuta" /> : null}
       <EditActiveMinuteButton minuteId={undefined} />
       <SacramentalMinuteSheet
         key={creationDate ?? "active-minute-form"}

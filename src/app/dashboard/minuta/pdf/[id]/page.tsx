@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import BackCircleButton from "@/components/common/BackCircleButton";
 import { SacramentalMinuteSheet } from "@/components/minuta/SacramentalMinuteSheet";
 import type {
   MeetingMinute,
@@ -138,14 +138,7 @@ export default async function MinutePdfPage({
         }
       `}</style>
       <div className="minute-pdf-actions no-print">
-        <Link
-          className="minute-back-arrow"
-          href="/dashboard/minuta"
-          prefetch={false}
-          aria-label="Volver a minuta"
-        >
-          ←
-        </Link>
+        <BackCircleButton href="/dashboard/minuta" />
         <PrintMinuteButton />
       </div>
       <section className="minute-pdf-print-area">

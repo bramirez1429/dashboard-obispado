@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { ExportOutlined } from "@ant-design/icons";
 import { Empty } from "antd";
-import Link from "next/link";
+import BackCircleButton from "@/components/common/BackCircleButton";
 
 type Hymn = {
   number?: string | number;
@@ -392,13 +392,11 @@ export const MeetingMinuteView = ({
         <div className="public-minute-container">
           {showDashboardBackButton ? (
             <div className="public-minute-back-row">
-              <Link
+              <BackCircleButton
                 className="public-minute-back-button"
                 href="/dashboard/minuta"
                 aria-label="Volver a minuta"
-              >
-                ←
-              </Link>
+              />
             </div>
           ) : null}
           <div className="public-minute-sheet">
@@ -426,13 +424,11 @@ export const MeetingMinuteView = ({
       <div className="public-minute-container">
         {showDashboardBackButton ? (
           <div className="public-minute-back-row">
-            <Link
+            <BackCircleButton
               className="public-minute-back-button"
               href="/dashboard/minuta"
               aria-label="Volver a minuta"
-            >
-              ←
-            </Link>
+            />
           </div>
         ) : null}
         <article className="public-minute-sheet">

@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Fragment, ReactNode, useState } from "react";
 import {
   Alert,
@@ -19,6 +20,7 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import type { Dayjs } from "dayjs";
+import Link from "next/link";
 import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
@@ -277,12 +279,23 @@ export default function NewSpeechPage() {
   return (
     <div className="page-stack">
       <div className="page-heading">
-        <Title level={2} style={{ margin: 0 }}>
-          Nuevo mensaje
-        </Title>
-        <Paragraph type="secondary" style={{ marginBottom: 0 }}>
-          Prepará la información del discurso y revisá la vista previa antes de compartir.
-        </Paragraph>
+        <Space align="start">
+          <Link href="/dashboard/discursos" prefetch={false}>
+            <Button
+              aria-label="Volver"
+              icon={<ArrowLeftOutlined />}
+              shape="circle"
+            />
+          </Link>
+          <div>
+            <Title level={2} style={{ margin: 0 }}>
+              Nuevo mensaje
+            </Title>
+            <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+              Prepará la información del discurso y revisá la vista previa antes de compartir.
+            </Paragraph>
+          </div>
+        </Space>
       </div>
 
       <Row gutter={[22, 22]} align="top">

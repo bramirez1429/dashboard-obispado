@@ -1,8 +1,14 @@
 "use client";
 
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Empty, Space, Spin, Table, Tag, message } from "antd";
+import {
+  ArrowLeftOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Checkbox, Empty, Modal, Space, Spin, Table, Tag, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import Link from "next/link";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import dayjs from "dayjs";
@@ -32,16 +38,11 @@ function formatDate(date: string | null) {
   return date ? dayjs(date).format("DD/MM/YYYY") : "Sin fecha";
 }
 
-function getGenderLabel(gender: MessageRow["gender"]) {
-  if (gender === "feminine") return "Femenino";
-  if (gender === "masculine") return "Masculino";
-  return "Sin completar";
-}
-
 export default function DiscursosPage() {
   const [speeches, setSpeeches] = useState<MessageRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingSpeechId, setUpdatingSpeechId] = useState<string | null>(null);
+  const [deletingSpeechId, setDeletingSpeechId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadSpeeches = async () => {
@@ -107,6 +108,43 @@ export default function DiscursosPage() {
     }
   };
 
+  const handleDeleteSpeech = (speech: MessageRow) => {
+    Modal.confirm({
+      title: "Borrar discurso",
+      content: `¿Seguro que querés borrar el discurso de ${
+        speech.name?.trim() || "esta persona"
+      }?`,
+      okText: "Borrar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk: async () => {
+        setDeletingSpeechId(speech.id);
+
+        try {
+          const response = await fetch(`/api/speeches/${speech.id}`, {
+            method: "DELETE",
+          });
+          const result = await response.json();
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || "No se pudo borrar el discurso");
+          }
+
+          setSpeeches((current) =>
+            current.filter((currentSpeech) => currentSpeech.id !== speech.id)
+          );
+          message.success("Discurso borrado correctamente");
+        } catch (error) {
+          message.error(
+            error instanceof Error ? error.message : "No se pudo borrar el discurso"
+          );
+        } finally {
+          setDeletingSpeechId(null);
+        }
+      },
+    });
+  };
+
   const columns: ColumnsType<MessageRow> = [
     {
       title: "Fecha",
@@ -119,12 +157,6 @@ export default function DiscursosPage() {
       dataIndex: "name",
       key: "name",
       render: (name: string | null) => name?.trim() || "Sin completar",
-    },
-    {
-      title: "Género",
-      dataIndex: "gender",
-      key: "gender",
-      render: (gender: MessageRow["gender"]) => getGenderLabel(gender),
     },
     {
       title: "Tema",
@@ -199,20 +231,52 @@ export default function DiscursosPage() {
         </Button>
       ),
     },
+    {
+      title: "Acciones",
+      key: "actions",
+      render: (_, speech) => (
+        <Space>
+          <Link href={`/dashboard/discursos/editar/${speech.id}`} prefetch={false}>
+            <Button
+              aria-label="Editar discurso"
+              icon={<EditOutlined />}
+              size="small"
+            />
+          </Link>
+          <Button
+            aria-label="Borrar discurso"
+            danger
+            icon={<DeleteOutlined />}
+            loading={deletingSpeechId === speech.id}
+            size="small"
+            onClick={() => handleDeleteSpeech(speech)}
+          />
+        </Space>
+      ),
+    },
   ];
 
   return (
     <div className="page-stack">
       <Card className="table-card">
         <Space className="section-toolbar" orientation="horizontal">
-          <div>
-            <Title level={2} style={{ margin: 0 }}>
-              Discursos
-            </Title>
-            <Paragraph type="secondary" style={{ marginBottom: 0 }}>
-              Seguimiento de mensajes asignados y enlaces públicos.
-            </Paragraph>
-          </div>
+          <Space align="start">
+            <Link href="/dashboard" prefetch={false}>
+              <Button
+                aria-label="Volver"
+                icon={<ArrowLeftOutlined />}
+                shape="circle"
+              />
+            </Link>
+            <div>
+              <Title level={2} style={{ margin: 0 }}>
+                Discursos
+              </Title>
+              <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+                Seguimiento de mensajes asignados y enlaces públicos.
+              </Paragraph>
+            </div>
+          </Space>
           <Button
             type="primary"
             size="large"

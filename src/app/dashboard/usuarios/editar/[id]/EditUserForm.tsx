@@ -28,13 +28,10 @@ export default function EditUserForm() {
   const [form] = Form.useForm<EditUserFormValues>();
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
-      setIsLoading(true);
-
       try {
         const response = await fetch(`/api/users/${params.id}`, {
           cache: "no-store",
@@ -53,8 +50,6 @@ export default function EditUserForm() {
         });
       } catch {
         message.error("No se pudo cargar el usuario");
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -90,7 +85,7 @@ export default function EditUserForm() {
 
   return (
     <main style={{ padding: 24 }}>
-      <Card loading={isLoading}>
+      <Card>
         <Typography.Title level={3} style={{ marginTop: 0 }}>
           Editar usuario
         </Typography.Title>

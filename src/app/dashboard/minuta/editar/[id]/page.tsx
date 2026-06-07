@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import BackCircleButton from "@/components/common/BackCircleButton";
 import MinuteEditForms from "../../components/MinuteEditForms";
 import type { MeetingMinute } from "@/types/meeting-minute";
 
@@ -66,14 +66,7 @@ export default async function EditMinutePage({
 
   return (
     <main style={{ maxWidth: 980, margin: "0 auto", paddingBottom: 32 }}>
-      <Link
-        className="public-minute-back-button"
-        href="/dashboard/minuta"
-        prefetch={false}
-        aria-label="Volver a minuta"
-      >
-        ←
-      </Link>
+      <BackCircleButton href="/dashboard/minuta" />
       <div style={{ marginBottom: 12 }}>
         <h1
           style={{
