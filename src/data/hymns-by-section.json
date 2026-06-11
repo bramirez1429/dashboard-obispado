@@ -2,342 +2,1466 @@
   {
     "section": "La Restauración",
     "hymns": [
-      { "number": 1, "title": "Ya rompe el alba" },
-      { "number": 2, "title": "El Espíritu de Dios" },
-      { "number": 3, "title": "Ya regocijemos" },
-      { "number": 4, "title": "Bandera de Sión" },
-      { "number": 5, "title": "Oh Dios de Israel" },
-      { "number": 6, "title": "Israel, Jesús os llama" },
-      { "number": 7, "title": "Id, vosotros mensajeros" },
-      { "number": 8, "title": "¿Qué es lo que vieron en las alturas?" },
-      { "number": 9, "title": "Un ángel del Señor" },
-      { "number": 10, "title": "Te damos, Señor, nuestras gracias" },
-      { "number": 11, "title": "Dios manda a profetas" },
-      { "number": 12, "title": "Pedimos hoy por ti" },
-      { "number": 13, "title": "Bendice, Dios, a nuestro Profeta" },
-      { "number": 14, "title": "La oración del Profeta" },
-      { "number": 15, "title": "Loor al Profeta" },
-      { "number": 16, "title": "Un pobre forastero" },
-      { "number": 17, "title": "¡Oh, está todo bien!" },
-      { "number": 18, "title": "Oh Sión, santuario de libertad" },
-      { "number": 19, "title": "Por Tus dones loor cantamos" },
-      { "number": 20, "title": "Gozoso día llega ya" },
-      { "number": 21, "title": "¡Salve, Sión! Es tu día ilustre" },
-      { "number": 22, "title": "En las cumbres de los montes" },
-      { "number": 23, "title": "Bella Sión" },
-      { "number": 24, "title": "El alba ya rompe" },
-      { "number": 25, "title": "Jehová aparece en Su gloria" },
-      { "number": 26, "title": "Hijos del Señor, venid" },
-      { "number": 27, "title": "Oh Rey de reyes, ven" },
-      { "number": 28, "title": "Himno de batalla de la República" },
-      { "number": 29, "title": "Ven, oh día prometido" },
-      { "number": 30, "title": "A Cristo Rey Jesús" },
-      { "number": 1049, "title": "José oró con fe" }
+      {
+        "number": 1,
+        "title": "Ya rompe el alba",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-morning-breaks?lang=spa"
+      },
+      {
+        "number": 2,
+        "title": "El Espíritu de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-spirit-of-god?lang=spa"
+      },
+      {
+        "number": 3,
+        "title": "Ya regocijemos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/now-let-us-rejoice?lang=spa"
+      },
+      {
+        "number": 4,
+        "title": "Bandera de Sión",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/high-on-the-mountain-top?lang=spa"
+      },
+      {
+        "number": 5,
+        "title": "Oh Dios de Israel",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/redeemer-of-israel?lang=spa"
+      },
+      {
+        "number": 6,
+        "title": "Israel, Jesús os llama",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/israel-israel-god-is-calling?lang=spa"
+      },
+      {
+        "number": 7,
+        "title": "Id, vosotros mensajeros",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/go-ye-messengers-of-heaven?lang=spa"
+      },
+      {
+        "number": 8,
+        "title": "¿Qué es lo que vieron en las alturas?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/what-was-witnessed-in-the-heavens?lang=spa"
+      },
+      {
+        "number": 9,
+        "title": "Un ángel del Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/an-angel-from-on-high?lang=spa"
+      },
+      {
+        "number": 10,
+        "title": "Te damos, Señor, nuestras gracias",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-thank-thee-o-god-for-a-prophet?lang=spa"
+      },
+      {
+        "number": 11,
+        "title": "Dios manda a profetas",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-listen-to-a-prophets-voice?lang=spa"
+      },
+      {
+        "number": 12,
+        "title": "Pedimos hoy por ti",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-ever-pray-for-thee?lang=spa"
+      },
+      {
+        "number": 13,
+        "title": "Bendice, Dios, a nuestro Profeta",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-bless-our-prophet-dear?lang=spa"
+      },
+      {
+        "number": 14,
+        "title": "La oración del Profeta",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/joseph-smiths-first-prayer?lang=spa"
+      },
+      {
+        "number": 15,
+        "title": "Loor al Profeta",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/praise-to-the-man?lang=spa"
+      },
+      {
+        "number": 16,
+        "title": "Un pobre forastero",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/a-poor-wayfaring-man-of-grief?lang=spa"
+      },
+      {
+        "number": 17,
+        "title": "¡Oh, está todo bien!",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-come-ye-saints?lang=spa"
+      },
+      {
+        "number": 18,
+        "title": "Oh Sión, santuario de libertad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-ye-mountains-high?lang=spa"
+      },
+      {
+        "number": 19,
+        "title": "Por Tus dones loor cantamos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/for-the-strength-of-the-hills?lang=spa"
+      },
+      {
+        "number": 20,
+        "title": "Gozoso día llega ya",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-happy-day-at-last-has-come?lang=spa"
+      },
+      {
+        "number": 21,
+        "title": "¡Salve, Sión! Es tu día ilustre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/hail-to-the-brightness-of-zions-glad-morning?lang=spa"
+      },
+      {
+        "number": 22,
+        "title": "En las cumbres de los montes",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/zion-stands-with-hills-surrounded?lang=spa"
+      },
+      {
+        "number": 23,
+        "title": "Bella Sión",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/beautiful-zion-built-above?lang=spa"
+      },
+      {
+        "number": 24,
+        "title": "El alba ya rompe",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-day-dawn-is-breaking?lang=spa"
+      },
+      {
+        "number": 25,
+        "title": "Jehová aparece en Su gloria",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lo-the-mighty-god-appearing?lang=spa"
+      },
+      {
+        "number": 26,
+        "title": "Hijos del Señor, venid",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-ye-children-of-the-lord?lang=spa"
+      },
+      {
+        "number": 27,
+        "title": "Oh Rey de reyes, ven",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-o-thou-king-of-kings?lang=spa"
+      },
+      {
+        "number": 28,
+        "title": "Himno de batalla de la República",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/battle-hymn-of-the-republic?lang=spa"
+      },
+      {
+        "number": 29,
+        "title": "Ven, oh día prometido",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-thou-glorious-day-of-promise?lang=spa"
+      },
+      {
+        "number": 30,
+        "title": "A Cristo Rey Jesús",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/rejoice-the-lord-is-king?lang=spa"
+      },
+      {
+        "number": 1049,
+        "title": "José oró con fe",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/joseph-prayed-in-faith?lang=spa"
+      }
     ]
   },
   {
     "section": "Alabanza y acción de gracias",
     "hymns": [
-      { "number": 31, "title": "Oh, creaciones del Señor" },
-      { "number": 32, "title": "Baluarte firme es nuestro Dios" },
-      { "number": 33, "title": "Honor, loor y gloria" },
-      { "number": 34, "title": "Oh, Santo Dios, omnipotente ser" },
-      { "number": 35, "title": "Haznos pensar en Ti, Señor" },
-      { "number": 36, "title": "Padre bendito, venimos a Ti" },
-      { "number": 37, "title": "Glorias cantad a Dios" },
-      { "number": 38, "title": "Santos, avanzad" },
-      { "number": 39, "title": "Jehová, sé nuestro guía" },
-      { "number": 40, "title": "Qué firmes cimientos" },
-      { "number": 41, "title": "¡Grande eres Tú!" },
-      { "number": 42, "title": "Jesús es mi luz" },
-      { "number": 43, "title": "Por la belleza terrenal" },
-      { "number": 44, "title": "El sublime Creador" },
-      { "number": 45, "title": "Oración de gratitud" },
-      { "number": 46, "title": "Elevemos nuestros himnos" },
-      { "number": 47, "title": "Caros niños, Dios os ama" },
-      { "number": 1001, "title": "Fuente de mis bendiciones" },
-      { "number": 1010, "title": "Sublime gracia" },
-      { "number": 1029, "title": "Los dones que el Padre derrama" },
-      { "number": 1039, "title": "Es gracias al Señor" },
-      { "number": 1048, "title": "A Ti oramos" },
-      { "number": 1059, "title": "El mundo es de Dios" }
+      {
+        "number": 31,
+        "title": "Oh, creaciones del Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/all-creatures-of-our-god-and-king?lang=spa"
+      },
+      {
+        "number": 32,
+        "title": "Baluarte firme es nuestro Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/a-mighty-fortress-is-our-god?lang=spa"
+      },
+      {
+        "number": 33,
+        "title": "Honor, loor y gloria",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/all-glory-laud-and-honor?lang=spa"
+      },
+      {
+        "number": 34,
+        "title": "Oh, Santo Dios, omnipotente ser",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-of-our-fathers-whose-almighty-hand?lang=spa"
+      },
+      {
+        "number": 35,
+        "title": "Haznos pensar en Ti, Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-of-our-fathers-known-of-old-woodbury?lang=spa"
+      },
+      {
+        "number": 36,
+        "title": "Padre bendito, venimos a Ti",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-of-our-fathers-we-come-unto-thee?lang=spa"
+      },
+      {
+        "number": 37,
+        "title": "Glorias cantad a Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/glory-to-god-on-high?lang=spa"
+      },
+      {
+        "number": 38,
+        "title": "Santos, avanzad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/press-forward-saints?lang=spa"
+      },
+      {
+        "number": 39,
+        "title": "Jehová, sé nuestro guía",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/guide-us-o-thou-great-jehovah-harrison?lang=spa"
+      },
+      {
+        "number": 40,
+        "title": "Qué firmes cimientos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-firm-a-foundation?lang=spa"
+      },
+      {
+        "number": 41,
+        "title": "¡Grande eres Tú!",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-great-thou-art?lang=spa"
+      },
+      {
+        "number": 42,
+        "title": "Jesús es mi luz",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-lord-is-my-light?lang=spa"
+      },
+      {
+        "number": 43,
+        "title": "Por la belleza terrenal",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/for-the-beauty-of-the-earth?lang=spa"
+      },
+      {
+        "number": 44,
+        "title": "El sublime Creador",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-is-love?lang=spa"
+      },
+      {
+        "number": 45,
+        "title": "Oración de gratitud",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/prayer-of-thanksgiving?lang=spa"
+      },
+      {
+        "number": 46,
+        "title": "Elevemos nuestros himnos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-ye-thankful-people?lang=spa"
+      },
+      {
+        "number": 47,
+        "title": "Caros niños, Dios os ama",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/dearest-children-god-is-near-you?lang=spa"
+      },
+      {
+        "number": 1001,
+        "title": "Fuente de mis bendiciones",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/come-thou-fount-of-every-blessing?lang=spa"
+      },
+      {
+        "number": 1010,
+        "title": "Sublime gracia",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/amazing-grace?lang=spa"
+      },
+      {
+        "number": 1029,
+        "title": "Los dones que el Padre derrama",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/i-cant-count-them-all?lang=spa"
+      },
+      {
+        "number": 1039,
+        "title": "Es gracias al Señor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/because?lang=spa"
+      },
+      {
+        "number": 1048,
+        "title": "A Ti oramos",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/our-prayer-to-thee?lang=spa"
+      },
+      {
+        "number": 1059,
+        "title": "El mundo es de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/this-is-my-fathers-world?lang=spa"
+      }
     ]
   },
   {
     "section": "Oración y súplica",
     "hymns": [
-      { "number": 48, "title": "Divina Luz" },
-      { "number": 49, "title": "Señor, te necesito" },
-      { "number": 50, "title": "Más cerca, Dios, de ti" },
-      { "number": 51, "title": "Guíame, oh Salvador" },
-      { "number": 52, "title": "Guíame a Ti" },
-      { "number": 53, "title": "¡Oh Jesús, mi gran amor!" },
-      { "number": 54, "title": "Paz, cálmense" },
-      { "number": 55, "title": "Dios da valor" },
-      { "number": 56, "title": "Jehová mi Pastor es" },
-      { "number": 57, "title": "El amor del Salvador" },
-      { "number": 58, "title": "Roca de eternidad" },
-      { "number": 59, "title": "Mirad al Salvador" },
-      { "number": 60, "title": "Venid a Cristo" },
-      { "number": 61, "title": "Venid a Mí" },
-      { "number": 62, "title": "No desmayéis, oh santos" },
-      { "number": 63, "title": "Aunque colmados de pesar" },
-      { "number": 64, "title": "Venid, los que a Dios amáis" },
-      { "number": 65, "title": "¿Sin contestar?" },
-      { "number": 66, "title": "Cuán dulce la ley de Dios" },
-      { "number": 67, "title": "Si la vía es penosa" },
-      { "number": 68, "title": "La fe" },
-      { "number": 69, "title": "¿Dónde hallo el solaz?" },
-      { "number": 70, "title": "Sé humilde" },
-      { "number": 71, "title": "Más santidad dame" },
-      { "number": 1013, "title": "Dios me da Su gracia" },
-      { "number": 1025, "title": "Hoy te doy mi corazón" },
-      { "number": 1030, "title": "Dios siempre cerca está" },
-      { "number": 1042, "title": "Clemente Dios, hoy cual ayer" },
-      { "number": 1043, "title": "Oh, Redentor, rogamos Tu perdón" },
-      { "number": 1058, "title": "Mi canto en la noche" }
+      {
+        "number": 48,
+        "title": "Divina Luz",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lead-kindly-light?lang=spa"
+      },
+      {
+        "number": 49,
+        "title": "Señor, te necesito",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-need-thee-every-hour?lang=spa"
+      },
+      {
+        "number": 50,
+        "title": "Más cerca, Dios, de ti",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/nearer-my-god-to-thee?lang=spa"
+      },
+      {
+        "number": 51,
+        "title": "Guíame, oh Salvador",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jesus-savior-pilot-me?lang=spa"
+      },
+      {
+        "number": 52,
+        "title": "Guíame a Ti",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/guide-me-to-thee?lang=spa"
+      },
+      {
+        "number": 53,
+        "title": "¡Oh Jesús, mi gran amor!",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jesus-lover-of-my-soul?lang=spa"
+      },
+      {
+        "number": 54,
+        "title": "Paz, cálmense",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/master-the-tempest-is-raging?lang=spa"
+      },
+      {
+        "number": 55,
+        "title": "Dios da valor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-speed-the-right?lang=spa"
+      },
+      {
+        "number": 56,
+        "title": "Jehová mi Pastor es",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-lord-is-my-shepherd?lang=spa"
+      },
+      {
+        "number": 57,
+        "title": "El amor del Salvador",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/our-saviors-love?lang=spa"
+      },
+      {
+        "number": 58,
+        "title": "Roca de eternidad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/rock-of-ages?lang=spa"
+      },
+      {
+        "number": 59,
+        "title": "Mirad al Salvador",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/behold-the-lamb-of-god?lang=spa"
+      },
+      {
+        "number": 60,
+        "title": "Venid a Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-unto-jesus?lang=spa"
+      },
+      {
+        "number": 61,
+        "title": "Venid a Mí",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-follow-me?lang=spa"
+      },
+      {
+        "number": 62,
+        "title": "No desmayéis, oh santos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/take-courage-saints?lang=spa"
+      },
+      {
+        "number": 63,
+        "title": "Aunque colmados de pesar",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/though-deepening-trials?lang=spa"
+      },
+      {
+        "number": 64,
+        "title": "Venid, los que a Dios amáis",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-we-that-love-the-lord?lang=spa"
+      },
+      {
+        "number": 65,
+        "title": "¿Sin contestar?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/unanswered-yet-the-prayer?lang=spa"
+      },
+      {
+        "number": 66,
+        "title": "Cuán dulce la ley de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-gentle-gods-commands?lang=spa"
+      },
+      {
+        "number": 67,
+        "title": "Si la vía es penosa",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/if-the-way-be-full-of-trial?lang=spa"
+      },
+      {
+        "number": 68,
+        "title": "La fe",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/when-faith-endures?lang=spa"
+      },
+      {
+        "number": 69,
+        "title": "¿Dónde hallo el solaz?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/where-can-i-turn-for-peace?lang=spa"
+      },
+      {
+        "number": 70,
+        "title": "Sé humilde",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/be-thou-humble?lang=spa"
+      },
+      {
+        "number": 71,
+        "title": "Más santidad dame",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/more-holiness-give-me?lang=spa"
+      },
+      {
+        "number": 1013,
+        "title": "Dios me da Su gracia",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/gods-gracious-love?lang=spa"
+      },
+      {
+        "number": 1025,
+        "title": "Hoy te doy mi corazón",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/take-my-heart-and-let-it-be-consecrated?lang=spa"
+      },
+      {
+        "number": 1030,
+        "title": "Dios siempre cerca está",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/close-as-a-quiet-prayer?lang=spa"
+      },
+      {
+        "number": 1042,
+        "title": "Clemente Dios, hoy cual ayer",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/thou-gracious-god-whose-mercy-lends?lang=spa"
+      },
+      {
+        "number": 1043,
+        "title": "Oh, Redentor, rogamos Tu perdón",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/help-us-remember?lang=spa"
+      },
+      {
+        "number": 1058,
+        "title": "Mi canto en la noche",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/my-song-in-the-night?lang=spa"
+      }
     ]
   },
   {
     "section": "El Salvador",
     "hymns": [
-      { "number": 72, "title": "Creo en Cristo" },
-      { "number": 73, "title": "Yo sé que vive mi Señor" },
-      { "number": 74, "title": "Vive mi Señor" },
-      { "number": 75, "title": "Testimonio" },
-      { "number": 76, "title": "Tan sólo con pensar en Ti" },
-      { "number": 77, "title": "Deja que el Espíritu te enseñe" },
-      { "number": 1002, "title": "Cuando vuelva el Salvador" },
-      { "number": 1003, "title": "Reina paz en mi ser" },
-      { "number": 1004, "title": "Andaré con Cristo" },
-      { "number": 1005, "title": "Él cuida de las aves" },
-      { "number": 1008, "title": "Agua viva, pan de vida" },
-      { "number": 1009, "title": "Getsemaní" },
-      { "number": 1014, "title": "Mi buen pastor es Jehová" },
-      { "number": 1015, "title": "Oh, cuán pleno, cuán profundo" },
-      { "number": 1016, "title": "Mirad las marcas de Jesús" },
-      { "number": 1017, "title": "El Cristo es" },
-      { "number": 1018, "title": "Ven, oh, Cristo" },
-      { "number": 1019, "title": "Amar igual que Tú" },
-      { "number": 1020, "title": "Tiernamente Jesús hoy nos llama" },
-      { "number": 1021, "title": "Cristo me ama, lo sé" },
-      { "number": 1024, "title": "Tengo fe en Jesús, mi Señor" },
-      { "number": 1031, "title": "Venid, oíd la voz de Cristo" },
-      { "number": 1032, "title": "Mirad a Cristo" },
-      { "number": 1040, "title": "Prevalece Su voz" },
-      { "number": 1041, "title": "Por mí la vida diste Tú" },
-      { "number": 1044, "title": "Así nos ministró Cristo" },
-      { "number": 1045, "title": "La senda es Jesús" },
-      { "number": 1050, "title": "Ven a mí" },
-      { "number": 1057, "title": "Mi pastor es Cristo" }
+      {
+        "number": 72,
+        "title": "Creo en Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-believe-in-christ?lang=spa"
+      },
+      {
+        "number": 73,
+        "title": "Yo sé que vive mi Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-know-that-my-redeemer-lives?lang=spa"
+      },
+      {
+        "number": 74,
+        "title": "Vive mi Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/my-redeemer-lives?lang=spa"
+      },
+      {
+        "number": 75,
+        "title": "Testimonio",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/testimony?lang=spa"
+      },
+      {
+        "number": 76,
+        "title": "Tan sólo con pensar en Ti",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jesus-the-very-thought-of-thee?lang=spa"
+      },
+      {
+        "number": 77,
+        "title": "Deja que el Espíritu te enseñe",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/let-the-holy-spirit-guide?lang=spa"
+      },
+      {
+        "number": 1002,
+        "title": "Cuando vuelva el Salvador",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/when-the-savior-comes-again?lang=spa"
+      },
+      {
+        "number": 1003,
+        "title": "Reina paz en mi ser",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/it-is-well-with-my-soul?lang=spa"
+      },
+      {
+        "number": 1004,
+        "title": "Andaré con Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/i-will-walk-with-jesus?lang=spa"
+      },
+      {
+        "number": 1005,
+        "title": "Él cuida de las aves",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/his-eye-is-on-the-sparrow?lang=spa"
+      },
+      {
+        "number": 1008,
+        "title": "Agua viva, pan de vida",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/bread-of-life-living-water?lang=spa"
+      },
+      {
+        "number": 1009,
+        "title": "Getsemaní",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/gethsemane?lang=spa"
+      },
+      {
+        "number": 1014,
+        "title": "Mi buen pastor es Jehová",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/my-shepherd-will-supply-my-need?lang=spa"
+      },
+      {
+        "number": 1015,
+        "title": "Oh, cuán pleno, cuán profundo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/oh-the-deep-deep-love-of-jesus?lang=spa"
+      },
+      {
+        "number": 1016,
+        "title": "Mirad las marcas de Jesús",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/behold-the-wounds-in-jesus-hands?lang=spa"
+      },
+      {
+        "number": 1017,
+        "title": "El Cristo es",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/this-is-the-christ?lang=spa"
+      },
+      {
+        "number": 1018,
+        "title": "Ven, oh, Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/come-lord-jesus?lang=spa"
+      },
+      {
+        "number": 1019,
+        "title": "Amar igual que Tú",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/to-love-like-thee?lang=spa"
+      },
+      {
+        "number": 1020,
+        "title": "Tiernamente Jesús hoy nos llama",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/softly-and-tenderly-jesus-is-calling?lang=spa"
+      },
+      {
+        "number": 1021,
+        "title": "Cristo me ama, lo sé",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/i-know-that-my-savior-loves-me?lang=spa"
+      },
+      {
+        "number": 1024,
+        "title": "Tengo fe en Jesús, mi Señor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/i-have-faith-in-the-lord-jesus-christ?lang=spa"
+      },
+      {
+        "number": 1031,
+        "title": "Venid, oíd la voz de Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/come-hear-the-word-the-lord-has-spoken?lang=spa"
+      },
+      {
+        "number": 1032,
+        "title": "Mirad a Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/look-unto-christ?lang=spa"
+      },
+      {
+        "number": 1040,
+        "title": "Prevalece Su voz",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/his-voice-as-the-sound?lang=spa"
+      },
+      {
+        "number": 1041,
+        "title": "Por mí la vida diste Tú",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/o-lord-who-gave-thy-life-for-me?lang=spa"
+      },
+      {
+        "number": 1044,
+        "title": "Así nos ministró Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/how-did-the-savior-minister?lang=spa"
+      },
+      {
+        "number": 1045,
+        "title": "La senda es Jesús",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/jesus-is-the-way?lang=spa"
+      },
+      {
+        "number": 1050,
+        "title": "Ven a mí",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/stand-by-me?lang=spa"
+      },
+      {
+        "number": 1057,
+        "title": "Mi pastor es Cristo",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/jesus-is-my-shepherd?lang=spa"
+      }
     ]
   },
   {
     "section": "Día de reposo y día de semana",
     "hymns": [
-      { "number": 78, "title": "Oh dulce, grata oración" },
-      { "number": 79, "title": "La oración del alma es" },
-      { "number": 80, "title": "Secreta oración" },
-      { "number": 81, "title": "¿Pensaste orar?" },
-      { "number": 82, "title": "Padre en los cielos" },
-      { "number": 83, "title": "Entonad sagrado son" },
-      { "number": 84, "title": "Dulce Tu obra es, Señor" },
-      { "number": 85, "title": "El día santo del Señor" },
-      { "number": 86, "title": "Nuestro bondadoso Padre" },
-      { "number": 87, "title": "Cual rocío, que destila" },
-      { "number": 88, "title": "Placentero nos es trabajar" },
-      { "number": 89, "title": "Para siempre Dios esté con Vos" },
-      { "number": 90, "title": "Padre, antes de partir" },
-      { "number": 91, "title": "Al partir cantemos" },
-      { "number": 92, "title": "Hemos sentido Tu amor" },
-      { "number": 93, "title": "A Ti, Señor" },
-      { "number": 94, "title": "Ya termina el día" },
-      { "number": 95, "title": "El fuego del Espíritu" },
-      { "number": 96, "title": "El ocaso viene ya" },
-      { "number": 97, "title": "Ante Ti, Señor, Tu grey" },
-      { "number": 98, "title": "Conmigo quédate, Señor" },
-      { "number": 99, "title": "Acompáñame" },
-      { "number": 100, "title": "Dios, bendícenos" },
-      { "number": 101, "title": "Dios, escúchanos orar" },
-      { "number": 102, "title": "Hoy con humildad te pido" },
-      { "number": 1006, "title": "En tu corazón entona una canción" },
-      { "number": 1007, "title": "En Ti pensamos" },
-      { "number": 1026, "title": "Lugares santos" },
-      { "number": 1027, "title": "Soy bienvenido a Su hogar" },
-      { "number": 1028, "title": "Mi pequeña luz" },
-      { "number": 1033, "title": "Placentero nos es trabajar" },
-      { "number": 1035, "title": "Honraré Su día" },
-      { "number": 1037, "title": "Vivir, servir, orar y cantar" },
-      { "number": 1062, "title": "Nuestro ayuno, oh, Señor" }
+      {
+        "number": 78,
+        "title": "Oh dulce, grata oración",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/sweet-hour-of-prayer?lang=spa"
+      },
+      {
+        "number": 79,
+        "title": "La oración del alma es",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/prayer-is-the-souls-sincere-desire?lang=spa"
+      },
+      {
+        "number": 80,
+        "title": "Secreta oración",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/secret-prayer?lang=spa"
+      },
+      {
+        "number": 81,
+        "title": "¿Pensaste orar?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/did-you-think-to-pray?lang=spa"
+      },
+      {
+        "number": 82,
+        "title": "Padre en los cielos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/father-in-heaven?lang=spa"
+      },
+      {
+        "number": 83,
+        "title": "Entonad sagrado son",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/gently-raise-the-sacred-strain?lang=spa"
+      },
+      {
+        "number": 84,
+        "title": "Dulce Tu obra es, Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/sweet-is-the-work?lang=spa"
+      },
+      {
+        "number": 85,
+        "title": "El día santo del Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/sweet-sabbath-day?lang=spa"
+      },
+      {
+        "number": 86,
+        "title": "Nuestro bondadoso Padre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-thou-kind-and-gracious-father?lang=spa"
+      },
+      {
+        "number": 87,
+        "title": "Cual rocío, que destila",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/as-the-dew-from-heaven-distilling?lang=spa"
+      },
+      {
+        "number": 88,
+        "title": "Placentero nos es trabajar",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-pleasing-it-is-to-work?lang=spa"
+      },
+      {
+        "number": 89,
+        "title": "Para siempre Dios esté con Vos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-be-with-you-till-we-meet-again?lang=spa"
+      },
+      {
+        "number": 90,
+        "title": "Padre, antes de partir",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lord-we-ask-thee-ere-we-part?lang=spa"
+      },
+      {
+        "number": 91,
+        "title": "Al partir cantemos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/sing-we-now-at-parting?lang=spa"
+      },
+      {
+        "number": 92,
+        "title": "Hemos sentido Tu amor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-have-partaken-of-thy-love?lang=spa"
+      },
+      {
+        "number": 93,
+        "title": "A Ti, Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/before-thee-lord-i-bow-my-head?lang=spa"
+      },
+      {
+        "number": 94,
+        "title": "Ya termina el día",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/now-the-day-is-over?lang=spa"
+      },
+      {
+        "number": 95,
+        "title": "El fuego del Espíritu",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/thy-spirit-lord-has-stirred-our-souls?lang=spa"
+      },
+      {
+        "number": 96,
+        "title": "El ocaso viene ya",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/softly-now-the-light-of-day?lang=spa"
+      },
+      {
+        "number": 97,
+        "title": "Ante Ti, Señor, Tu grey",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lord-we-come-before-thee-now?lang=spa"
+      },
+      {
+        "number": 98,
+        "title": "Conmigo quédate, Señor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/abide-with-me-tis-eventide?lang=spa"
+      },
+      {
+        "number": 99,
+        "title": "Acompáñame",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/abide-with-me?lang=spa"
+      },
+      {
+        "number": 100,
+        "title": "Dios, bendícenos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lord-dismiss-us-with-thy-blessing?lang=spa"
+      },
+      {
+        "number": 101,
+        "title": "Dios, escúchanos orar",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-our-father-hear-us-pray?lang=spa"
+      },
+      {
+        "number": 102,
+        "title": "Hoy con humildad te pido",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/in-humility-our-savior?lang=spa"
+      },
+      {
+        "number": 1006,
+        "title": "En tu corazón entona una canción",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/think-a-sacred-song?lang=spa"
+      },
+      {
+        "number": 1007,
+        "title": "En Ti pensamos",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/as-bread-is-broken?lang=spa"
+      },
+      {
+        "number": 1026,
+        "title": "Lugares santos",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/holy-places?lang=spa"
+      },
+      {
+        "number": 1027,
+        "title": "Soy bienvenido a Su hogar",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/welcome-home?lang=spa"
+      },
+      {
+        "number": 1028,
+        "title": "Mi pequeña luz",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/this-little-light-of-mine?lang=spa"
+      },
+      {
+        "number": 1033,
+        "title": "Placentero nos es trabajar",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/oh-how-great-is-our-joy?lang=spa"
+      },
+      {
+        "number": 1035,
+        "title": "Honraré Su día",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/as-i-keep-the-sabbath-day?lang=spa"
+      },
+      {
+        "number": 1037,
+        "title": "Vivir, servir, orar y cantar",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/im-gonna-live-so-god-can-use-me?lang=spa"
+      },
+      {
+        "number": 1062,
+        "title": "Nuestro ayuno, oh, Señor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/lord-accept-our-humble-fast?lang=spa"
+      }
     ]
   },
   {
     "section": "La Santa Cena",
     "hymns": [
-      { "number": 103, "title": "La Santa Cena" },
-      { "number": 104, "title": "Oh Dios, Eterno Padre" },
-      { "number": 105, "title": "Jesús de Nazaret" },
-      { "number": 106, "title": "Cuán grato es cantar loor" },
-      { "number": 107, "title": "Pedimos Tu Espíritu" },
-      { "number": 108, "title": "Mansos, reverentes hoy" },
-      { "number": 109, "title": "Cantemos todos a Jesús" },
-      { "number": 110, "title": "En memoria de Tu muerte" },
-      { "number": 111, "title": "En el Calvario, en la cruz" },
-      { "number": 112, "title": "El Padre tanto nos amó" },
-      { "number": 113, "title": "Ya nos juntamos otra vez" },
-      { "number": 114, "title": "Cristo, el Redentor, murió" },
-      { "number": 115, "title": "Nos reunimos, Padre, hoy" },
-      { "number": 116, "title": "Jesús, en la corte celestial" },
-      { "number": 117, "title": "¡Murió! El Redentor murió" },
-      { "number": 118, "title": "Asombro me da" },
-      { "number": 119, "title": "En un lejano cerro fue" },
-      { "number": 1046, "title": "¿Puedes tú contar los astros?" },
-      { "number": 1047, "title": "Dios me conoce" }
+      {
+        "number": 103,
+        "title": "La Santa Cena",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/while-of-these-emblems-we-partake-saul?lang=spa"
+      },
+      {
+        "number": 104,
+        "title": "Oh Dios, Eterno Padre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-god-the-eternal-father?lang=spa"
+      },
+      {
+        "number": 105,
+        "title": "Jesús de Nazaret",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jesus-of-nazareth-savior-and-king?lang=spa"
+      },
+      {
+        "number": 106,
+        "title": "Cuán grato es cantar loor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/tis-sweet-to-sing-the-matchless-love-hancock?lang=spa"
+      },
+      {
+        "number": 107,
+        "title": "Pedimos Tu Espíritu",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-lord-of-hosts?lang=spa"
+      },
+      {
+        "number": 108,
+        "title": "Mansos, reverentes hoy",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/reverently-and-meekly-now?lang=spa"
+      },
+      {
+        "number": 109,
+        "title": "Cantemos todos a Jesús",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/well-sing-all-hail-to-jesus-name?lang=spa"
+      },
+      {
+        "number": 110,
+        "title": "En memoria de Tu muerte",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/in-remembrance-of-thy-suffering?lang=spa"
+      },
+      {
+        "number": 111,
+        "title": "En el Calvario, en la cruz",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/upon-the-cross-of-calvary?lang=spa"
+      },
+      {
+        "number": 112,
+        "title": "El Padre tanto nos amó",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-loved-us-so-he-sent-his-son?lang=spa"
+      },
+      {
+        "number": 113,
+        "title": "Ya nos juntamos otra vez",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/again-we-meet-around-the-board?lang=spa"
+      },
+      {
+        "number": 114,
+        "title": "Cristo, el Redentor, murió",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/behold-the-great-redeemer-die?lang=spa"
+      },
+      {
+        "number": 115,
+        "title": "Nos reunimos, Padre, hoy",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/in-memory-of-the-crucified?lang=spa"
+      },
+      {
+        "number": 116,
+        "title": "Jesús, en la corte celestial",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-great-the-wisdom-and-the-love?lang=spa"
+      },
+      {
+        "number": 117,
+        "title": "¡Murió! El Redentor murió",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/he-died-the-great-redeemer-died?lang=spa"
+      },
+      {
+        "number": 118,
+        "title": "Asombro me da",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-stand-all-amazed?lang=spa"
+      },
+      {
+        "number": 119,
+        "title": "En un lejano cerro fue",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/there-is-a-green-hill-far-away?lang=spa"
+      },
+      {
+        "number": 1046,
+        "title": "¿Puedes tú contar los astros?",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/can-you-count-the-stars-in-heaven?lang=spa"
+      },
+      {
+        "number": 1047,
+        "title": "Dios me conoce",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/he-cares-for-me?lang=spa"
+      }
     ]
   },
   {
     "section": "Semana Santa",
     "hymns": [
-      { "number": 120, "title": "Tan humilde al nacer" },
-      { "number": 121, "title": "Himno de la Pascua de Resurrección" },
-      { "number": 122, "title": "Cristo ha resucitado" },
-      { "number": 1205, "title": "En Pascua himnos entonad" },
-      { "number": 1206, "title": "¿Viste tú?" },
-      { "number": 1207, "title": "Paz, paz, paz" },
-      { "number": 1210, "title": "Tiempo atrás, en un jardín" }
+      {
+        "number": 120,
+        "title": "Tan humilde al nacer",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jesus-once-of-humble-birth?lang=spa"
+      },
+      {
+        "number": 121,
+        "title": "Himno de la Pascua de Resurrección",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/he-is-risen?lang=spa"
+      },
+      {
+        "number": 122,
+        "title": "Cristo ha resucitado",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/christ-the-lord-is-risen-today?lang=spa"
+      },
+      {
+        "number": 1205,
+        "title": "En Pascua himnos entonad",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/let-easter-anthems-ring?lang=spa"
+      },
+      {
+        "number": 1206,
+        "title": "¿Viste tú?",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/were-you-there?lang=spa"
+      },
+      {
+        "number": 1207,
+        "title": "Paz, paz, paz",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/still-still-still?lang=spa"
+      },
+      {
+        "number": 1210,
+        "title": "Tiempo atrás, en un jardín",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/long-ago-within-a-garden?lang=spa"
+      }
     ]
   },
   {
     "section": "Navidad",
     "hymns": [
-      { "number": 123, "title": "¡Regocijad! Jesús nació" },
-      { "number": 124, "title": "Venid, adoremos" },
-      { "number": 125, "title": "Jesús en pesebre" },
-      { "number": 126, "title": "Cantan santos ángeles" },
-      { "number": 127, "title": "Noche de luz" },
-      { "number": 128, "title": "A medianoche se oyó" },
-      { "number": 129, "title": "Oh, pueblecito de Belén" },
-      { "number": 130, "title": "Escuchad el son triunfal" },
-      { "number": 131, "title": "Asombro dio a los magos" },
-      { "number": 132, "title": "La primera Navidad" },
-      { "number": 133, "title": "Campanas de Navidad" },
-      { "number": 134, "title": "En la Judea, en tierra de Dios" },
-      { "number": 1201, "title": "Gloria al día de redención" },
-      { "number": 1202, "title": "El divino Jesús nació" },
-      { "number": 1203, "title": "¿Qué niño es este?" },
-      { "number": 1204, "title": "Estrella de luz" },
-      { "number": 1208, "title": "¡Ve! Dilo en las montañas" },
-      { "number": 1209, "title": "Pequeñito en pesebre" }
+      {
+        "number": 123,
+        "title": "¡Regocijad! Jesús nació",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/joy-to-the-world?lang=spa"
+      },
+      {
+        "number": 124,
+        "title": "Venid, adoremos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/oh-come-all-ye-faithful?lang=spa"
+      },
+      {
+        "number": 125,
+        "title": "Jesús en pesebre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/away-in-a-manger?lang=spa"
+      },
+      {
+        "number": 126,
+        "title": "Cantan santos ángeles",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/angels-we-have-heard-on-high?lang=spa"
+      },
+      {
+        "number": 127,
+        "title": "Noche de luz",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/silent-night?lang=spa"
+      },
+      {
+        "number": 128,
+        "title": "A medianoche se oyó",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/it-came-upon-the-midnight-clear?lang=spa"
+      },
+      {
+        "number": 129,
+        "title": "Oh, pueblecito de Belén",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-little-town-of-bethlehem?lang=spa"
+      },
+      {
+        "number": 130,
+        "title": "Escuchad el son triunfal",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/hark-the-herald-angels-sing?lang=spa"
+      },
+      {
+        "number": 131,
+        "title": "Asombro dio a los magos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/with-wondering-awe?lang=spa"
+      },
+      {
+        "number": 132,
+        "title": "La primera Navidad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-first-noel?lang=spa"
+      },
+      {
+        "number": 133,
+        "title": "Campanas de Navidad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-heard-the-bells-on-christmas-day?lang=spa"
+      },
+      {
+        "number": 134,
+        "title": "En la Judea, en tierra de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/far-far-away-on-judeas-plains?lang=spa"
+      },
+      {
+        "number": 1201,
+        "title": "Gloria al día de redención",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/hail-the-day-that-sees-him-rise?lang=spa"
+      },
+      {
+        "number": 1202,
+        "title": "El divino Jesús nació",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/he-is-born-the-divine-christ-child?lang=spa"
+      },
+      {
+        "number": 1203,
+        "title": "¿Qué niño es este?",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/what-child-is-this?lang=spa"
+      },
+      {
+        "number": 1204,
+        "title": "Estrella de luz",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/star-bright?lang=spa"
+      },
+      {
+        "number": 1208,
+        "title": "¡Ve! Dilo en las montañas",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/go-tell-it-on-the-mountain?lang=spa"
+      },
+      {
+        "number": 1209,
+        "title": "Pequeñito en pesebre",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/little-baby-in-a-manger?lang=spa"
+      }
     ]
   },
   {
     "section": "Temas varios",
     "hymns": [
-      { "number": 135, "title": "Hoy sembramos la semilla" },
-      { "number": 136, "title": "Todos los santos" },
-      { "number": 137, "title": "Tú me has dado muchas bendiciones, Dios" },
-      { "number": 138, "title": "Señor, yo te seguiré" },
-      { "number": 139, "title": "Ama el Pastor las ovejas" },
-      { "number": 140, "title": "A Dios el Padre y a Jesús" },
-      { "number": 141, "title": "¿En el mundo he hecho bien?" },
-      { "number": 142, "title": "Otro año ha pasado" },
-      { "number": 143, "title": "A Dios ofrecemos gozosa canción" },
-      { "number": 144, "title": "A la gloria marcharemos" },
-      { "number": 145, "title": "La voz, ya, del eterno" },
-      { "number": 146, "title": "Tengo gozo en mi alma hoy" },
-      { "number": 147, "title": "Recojamos los destellos" },
-      { "number": 148, "title": "Si hay gozo en tu corazón" },
-      { "number": 149, "title": "Trabajad con fervor" },
-      { "number": 150, "title": "Siembra gozo" },
-      { "number": 151, "title": "Oh, hablemos con tiernos acentos" },
-      { "number": 152, "title": "No hablemos con enojo" },
-      { "number": 153, "title": "Oíd el toque del clarín" },
-      { "number": 154, "title": "Haz tú lo justo" },
-      { "number": 155, "title": "Haz el bien" },
-      { "number": 156, "title": "Señor del cielo, Jehová" },
-      { "number": 157, "title": "Cuenta tus bendiciones" },
-      { "number": 158, "title": "Trabajemos hoy en la obra" },
-      { "number": 159, "title": "Con valor marchemos" },
-      { "number": 160, "title": "Tu casa amamos, Dios" },
-      { "number": 1022, "title": "Con fe en cada paso" },
-      { "number": 1023, "title": "Firme en las promesas" },
-      { "number": 1034, "title": "Soy pionero también" },
-      { "number": 1036, "title": "El Libro de Mormón leeré" },
-      { "number": 1038, "title": "Es Jehová mi buen pastor" },
-      { "number": 1051, "title": "Señor, un buen día es hoy" },
-      { "number": 1052, "title": "¡Oh, qué gozo nos da!" },
-      { "number": 1053, "title": "Mis convenios" },
-      { "number": 1054, "title": "Al bautizarme a Cristo seguiré" },
-      { "number": 1055, "title": "El poder del Santo Espíritu" },
-      { "number": 1056, "title": "Elías y la suave voz" },
-      { "number": 1060, "title": "Un arca construiré" },
-      { "number": 1061, "title": "Cuán dulce hogar de amor" }
+      {
+        "number": 135,
+        "title": "Hoy sembramos la semilla",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-are-sowing?lang=spa"
+      },
+      {
+        "number": 136,
+        "title": "Todos los santos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/for-all-the-saints?lang=spa"
+      },
+      {
+        "number": 137,
+        "title": "Tú me has dado muchas bendiciones, Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/because-i-have-been-given-much?lang=spa"
+      },
+      {
+        "number": 138,
+        "title": "Señor, yo te seguiré",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lord-i-would-follow-thee?lang=spa"
+      },
+      {
+        "number": 139,
+        "title": "Ama el Pastor las ovejas",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/dear-to-the-heart-of-the-shepherd?lang=spa"
+      },
+      {
+        "number": 140,
+        "title": "A Dios el Padre y a Jesús",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/praise-god-from-whom-all-blessings-flow?lang=spa"
+      },
+      {
+        "number": 141,
+        "title": "¿En el mundo he hecho bien?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/have-i-done-any-good?lang=spa"
+      },
+      {
+        "number": 142,
+        "title": "Otro año ha pasado",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/one-more-year-has-gone?lang=spa"
+      },
+      {
+        "number": 143,
+        "title": "A Dios ofrecemos gozosa canción",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-joy-and-the-song?lang=spa"
+      },
+      {
+        "number": 144,
+        "title": "A la gloria marcharemos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-are-marching-on-to-glory?lang=spa"
+      },
+      {
+        "number": 145,
+        "title": "La voz, ya, del eterno",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/improve-the-shining-moments?lang=spa"
+      },
+      {
+        "number": 146,
+        "title": "Tengo gozo en mi alma hoy",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/there-is-sunshine-in-my-soul-today?lang=spa"
+      },
+      {
+        "number": 147,
+        "title": "Recojamos los destellos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/catch-the-sunshine?lang=spa"
+      },
+      {
+        "number": 148,
+        "title": "Si hay gozo en tu corazón",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/you-can-make-the-pathway-bright?lang=spa"
+      },
+      {
+        "number": 149,
+        "title": "Trabajad con fervor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/today-while-the-sun-shines?lang=spa"
+      },
+      {
+        "number": 150,
+        "title": "Siembra gozo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/scatter-sunshine?lang=spa"
+      },
+      {
+        "number": 151,
+        "title": "Oh, hablemos con tiernos acentos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/let-us-oft-speak-kind-words?lang=spa"
+      },
+      {
+        "number": 152,
+        "title": "No hablemos con enojo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/angry-words-oh-let-them-never?lang=spa"
+      },
+      {
+        "number": 153,
+        "title": "Oíd el toque del clarín",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/hark-listen-to-the-trumpeters?lang=spa"
+      },
+      {
+        "number": 154,
+        "title": "Haz tú lo justo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/do-what-is-right?lang=spa"
+      },
+      {
+        "number": 155,
+        "title": "Haz el bien",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/choose-the-right?lang=spa"
+      },
+      {
+        "number": 156,
+        "title": "Señor del cielo, Jehová",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/jehovah-lord-of-heaven-and-earth?lang=spa"
+      },
+      {
+        "number": 157,
+        "title": "Cuenta tus bendiciones",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/count-your-blessings?lang=spa"
+      },
+      {
+        "number": 158,
+        "title": "Trabajemos hoy en la obra",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/let-us-all-press-on?lang=spa"
+      },
+      {
+        "number": 159,
+        "title": "Con valor marchemos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/onward-christian-soldiers?lang=spa"
+      },
+      {
+        "number": 160,
+        "title": "Tu casa amamos, Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-love-thy-house-o-god?lang=spa"
+      },
+      {
+        "number": 1022,
+        "title": "Con fe en cada paso",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/faith-in-every-footstep?lang=spa"
+      },
+      {
+        "number": 1023,
+        "title": "Firme en las promesas",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/standing-on-the-promises?lang=spa"
+      },
+      {
+        "number": 1034,
+        "title": "Soy pionero también",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/im-a-pioneer-too?lang=spa"
+      },
+      {
+        "number": 1036,
+        "title": "El Libro de Mormón leeré",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/read-the-book-of-mormon-and-pray?lang=spa"
+      },
+      {
+        "number": 1038,
+        "title": "Es Jehová mi buen pastor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/the-lords-my-shepherd?lang=spa"
+      },
+      {
+        "number": 1051,
+        "title": "Señor, un buen día es hoy",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/this-day-is-a-good-day-lord?lang=spa"
+      },
+      {
+        "number": 1052,
+        "title": "¡Oh, qué gozo nos da!",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/joyfully-bound?lang=spa"
+      },
+      {
+        "number": 1053,
+        "title": "Mis convenios",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/my-covenants?lang=spa"
+      },
+      {
+        "number": 1054,
+        "title": "Al bautizarme a Cristo seguiré",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/when-i-am-baptized?lang=spa"
+      },
+      {
+        "number": 1055,
+        "title": "El poder del Santo Espíritu",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/the-power-of-the-holy-ghost?lang=spa"
+      },
+      {
+        "number": 1056,
+        "title": "Elías y la suave voz",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/elijah-and-the-still-small-voice?lang=spa"
+      },
+      {
+        "number": 1060,
+        "title": "Un arca construiré",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/build-an-ark?lang=spa"
+      },
+      {
+        "number": 1061,
+        "title": "Cuán dulce hogar de amor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/love-will-bless-our-home?lang=spa"
+      }
     ]
   },
   {
     "section": "Para hombres",
     "hymns": [
-      { "number": 161, "title": "Llamados a servir" },
-      { "number": 162, "title": "Somos los soldados" },
-      { "number": 163, "title": "¡Mirad! Reales huestes" },
-      { "number": 164, "title": "Pon tu hombro a la lid" },
-      { "number": 165, "title": "Tu palabra" },
-      { "number": 166, "title": "Firmes creced en la fe" },
-      { "number": 167, "title": "A vencer" },
-      { "number": 168, "title": "Juventud de Israel" },
-      { "number": 169, "title": "Al mundo ve a predicar" },
-      { "number": 170, "title": "¿Quién sigue al Señor?" },
-      { "number": 171, "title": "La luz de la verdad" },
-      { "number": 172, "title": "Cuando enseñe a Tus hijos" },
-      { "number": 173, "title": "El fin se acerca" },
-      { "number": 174, "title": "Qué maravillosas Tus obras" },
-      { "number": 175, "title": "A donde me mandes iré" },
-      { "number": 176, "title": "Palabras de amor" },
-      { "number": 177, "title": "¿Qué es la verdad?" },
-      { "number": 206, "title": "Venid, los que tenéis de Dios el sacerdocio (Hombres)" },
-      { "number": 207, "title": "Oh vos que sois llamados (Hombres)" },
-      { "number": 208, "title": "Brillan rayos de clemencia (Hombres)" },
-      { "number": 209, "title": "Oh élderes de Israel (Hombres)" }
+      {
+        "number": 161,
+        "title": "Llamados a servir",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/called-to-serve?lang=spa"
+      },
+      {
+        "number": 162,
+        "title": "Somos los soldados",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/we-are-all-enlisted?lang=spa"
+      },
+      {
+        "number": 163,
+        "title": "¡Mirad! Reales huestes",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/behold-a-royal-army?lang=spa"
+      },
+      {
+        "number": 164,
+        "title": "Pon tu hombro a la lid",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/put-your-shoulder-to-the-wheel?lang=spa"
+      },
+      {
+        "number": 165,
+        "title": "Tu palabra",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/thy-holy-word?lang=spa"
+      },
+      {
+        "number": 166,
+        "title": "Firmes creced en la fe",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/true-to-the-faith?lang=spa"
+      },
+      {
+        "number": 167,
+        "title": "A vencer",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/carry-on?lang=spa"
+      },
+      {
+        "number": 168,
+        "title": "Juventud de Israel",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/hope-of-israel?lang=spa"
+      },
+      {
+        "number": 169,
+        "title": "Al mundo ve a predicar",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/go-forth-with-faith?lang=spa"
+      },
+      {
+        "number": 170,
+        "title": "¿Quién sigue al Señor?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/whos-on-the-lords-side?lang=spa"
+      },
+      {
+        "number": 171,
+        "title": "La luz de la verdad",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/hark-all-ye-nations?lang=spa"
+      },
+      {
+        "number": 172,
+        "title": "Cuando enseñe a Tus hijos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/help-me-teach-with-inspiration?lang=spa"
+      },
+      {
+        "number": 173,
+        "title": "El fin se acerca",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-time-is-far-spent?lang=spa"
+      },
+      {
+        "number": 174,
+        "title": "Qué maravillosas Tus obras",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/how-wondrous-and-great?lang=spa"
+      },
+      {
+        "number": 175,
+        "title": "A donde me mandes iré",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/ill-go-where-you-want-me-to-go?lang=spa"
+      },
+      {
+        "number": 176,
+        "title": "Palabras de amor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/oh-holy-words-of-truth-and-love?lang=spa"
+      },
+      {
+        "number": 177,
+        "title": "¿Qué es la verdad?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/oh-say-what-is-truth?lang=spa"
+      },
+      {
+        "number": 206,
+        "title": "Venid, los que tenéis de Dios el sacerdocio (Hombres)",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-all-ye-sons-of-god-men?lang=spa"
+      },
+      {
+        "number": 207,
+        "title": "Oh vos que sois llamados (Hombres)",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/ye-who-are-called-to-labor-men?lang=spa"
+      },
+      {
+        "number": 208,
+        "title": "Brillan rayos de clemencia (Hombres)",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/brightly-beams-our-fathers-mercy-men?lang=spa"
+      },
+      {
+        "number": 209,
+        "title": "Oh élderes de Israel (Hombres)",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/ye-elders-of-israel-men?lang=spa"
+      }
     ]
   },
   {
     "section": "Sacerdocio y templo",
     "hymns": [
-      { "number": 178, "title": "Nuestra mente se refleja" },
-      { "number": 179, "title": "La barra de hierro" },
-      { "number": 180, "title": "Al leer las Escrituras" },
-      { "number": 181, "title": "Cuando raya el nuevo dia" },
-      { "number": 182, "title": "Bienvenido, día santo" },
-      { "number": 183, "title": "Santos templos de Sión" },
-      { "number": 184, "title": "Id, oh santos, a los templos" },
-      { "number": 185, "title": "En los postreros días" },
-      { "number": 186, "title": "Volved vuestro corazón" }
+      {
+        "number": 178,
+        "title": "Nuestra mente se refleja",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/truth-reflects-upon-our-senses?lang=spa"
+      },
+      {
+        "number": 179,
+        "title": "La barra de hierro",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-iron-rod?lang=spa"
+      },
+      {
+        "number": 180,
+        "title": "Al leer las Escrituras",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/as-i-search-the-holy-scriptures?lang=spa"
+      },
+      {
+        "number": 181,
+        "title": "Cuando raya el nuevo dia",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/come-away-to-the-sunday-school?lang=spa"
+      },
+      {
+        "number": 182,
+        "title": "Bienvenido, día santo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/welcome-welcome-sabbath-morning?lang=spa"
+      },
+      {
+        "number": 183,
+        "title": "Santos templos de Sión",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/holy-temples-on-mount-zion?lang=spa"
+      },
+      {
+        "number": 184,
+        "title": "Id, oh santos, a los templos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/rise-ye-saints-and-temples-enter?lang=spa"
+      },
+      {
+        "number": 185,
+        "title": "En los postreros días",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-glorious-gospel-light-has-shone?lang=spa"
+      },
+      {
+        "number": 186,
+        "title": "Volved vuestro corazón",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/turn-your-hearts?lang=spa"
+      }
     ]
   },
   {
     "section": "Familia y hogar",
     "hymns": [
-      { "number": 187, "title": "Oh mi Padre" },
-      { "number": 188, "title": "Quienes nos brindan su amor" },
-      { "number": 189, "title": "Oh Padre, llénanos de amor" },
-      { "number": 190, "title": "Hay un hogar eterno" },
-      { "number": 191, "title": "Con maravillas obra Dios" },
-      { "number": 192, "title": "¿Por qué somos?" },
-      { "number": 193, "title": "El hogar es como el cielo" },
-      { "number": 194, "title": "Cuando hay amor" },
-      { "number": 195, "title": "Las familias pueden ser eternas" },
-      { "number": 196, "title": "Soy un hijo de Dios" },
-      { "number": 197, "title": "Siempre obedece los mandamientos" },
-      { "number": 198, "title": "Hazme andar en la luz" },
-      { "number": 199, "title": "Dios vive" },
-      { "number": 200, "title": "La luz de Dios" },
-      { "number": 201, "title": "Dios cuida a sus hijos" },
-      { "number": 202, "title": "En el pueblo de Sión" },
-      { "number": 203, "title": "Amad a otros" },
-      { "number": 204, "title": "Hijos de nuestro Padre" },
-      { "number": 205, "title": "Sirvamos unidas (Mujeres)" },
-      { "number": 1011, "title": "Somos niños, de la mano del Señor" },
-      { "number": 1012, "title": "En cualquier ocasión" }
+      {
+        "number": 187,
+        "title": "Oh mi Padre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-my-father?lang=spa"
+      },
+      {
+        "number": 188,
+        "title": "Quienes nos brindan su amor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/each-life-that-touches-ours-for-good?lang=spa"
+      },
+      {
+        "number": 189,
+        "title": "Oh Padre, llénanos de amor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/o-love-that-glorifies-the-son?lang=spa"
+      },
+      {
+        "number": 190,
+        "title": "Hay un hogar eterno",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/beautiful-home?lang=spa"
+      },
+      {
+        "number": 191,
+        "title": "Con maravillas obra Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/god-moves-in-a-mysterious-way?lang=spa"
+      },
+      {
+        "number": 192,
+        "title": "¿Por qué somos?",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/lord-accept-our-true-devotion?lang=spa"
+      },
+      {
+        "number": 193,
+        "title": "El hogar es como el cielo",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/home-can-be-a-heaven-on-earth?lang=spa"
+      },
+      {
+        "number": 194,
+        "title": "Cuando hay amor",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/love-at-home?lang=spa"
+      },
+      {
+        "number": 195,
+        "title": "Las familias pueden ser eternas",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/families-can-be-together-forever?lang=spa"
+      },
+      {
+        "number": 196,
+        "title": "Soy un hijo de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-am-a-child-of-god?lang=spa"
+      },
+      {
+        "number": 197,
+        "title": "Siempre obedece los mandamientos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/keep-the-commandments?lang=spa"
+      },
+      {
+        "number": 198,
+        "title": "Hazme andar en la luz",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/teach-me-to-walk-in-the-light?lang=spa"
+      },
+      {
+        "number": 199,
+        "title": "Dios vive",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/i-know-my-father-lives?lang=spa"
+      },
+      {
+        "number": 200,
+        "title": "La luz de Dios",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/the-light-divine?lang=spa"
+      },
+      {
+        "number": 201,
+        "title": "Dios cuida a sus hijos",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/gods-daily-care?lang=spa"
+      },
+      {
+        "number": 202,
+        "title": "En el pueblo de Sión",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/in-our-lovely-deseret?lang=spa"
+      },
+      {
+        "number": 203,
+        "title": "Amad a otros",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/love-one-another?lang=spa"
+      },
+      {
+        "number": 204,
+        "title": "Hijos de nuestro Padre",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/children-of-our-heavenly-father?lang=spa"
+      },
+      {
+        "number": 205,
+        "title": "Sirvamos unidas (Mujeres)",
+        "url": "https://www.churchofjesuschrist.org/study/manual/hymns/as-sisters-in-zion-women?lang=spa"
+      },
+      {
+        "number": 1011,
+        "title": "Somos niños, de la mano del Señor",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/holding-hands-around-the-world?lang=spa"
+      },
+      {
+        "number": 1012,
+        "title": "En cualquier ocasión",
+        "url": "https://www.churchofjesuschrist.org/study/music/hymns-for-home-and-church/anytime-anywhere?lang=spa"
+      }
     ]
   }
 ]

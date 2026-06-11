@@ -687,15 +687,17 @@ export function SacramentalMinuteSheet({
             onChange={setFirstHymn}
             readOnly={readOnly}
           />
-          <div className="minute-two-columns">
+          <div className="minute-two-columns minute-director-pianist-grid">
             <LineField
               label="Directora"
+              className="minute-music-person-field"
               value={director}
               onChange={setDirector}
               readOnly={readOnly}
             />
             <LineField
               label="Pianista"
+              className="minute-music-person-field"
               value={pianist}
               onChange={setPianist}
               readOnly={readOnly}
