@@ -1,0 +1,34 @@
+.list {
+  width: 100%;
+}
+
+.item {
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.removeButton {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.selectDivider {
+  margin: 8px 0 !important;
+}
+
+.addOptionRow {
+  width: 100%;
+  padding: 0 8px 4px;
+}
+
+.addOptionRow :global(.ant-space-item:first-child) {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 640px) {
+  .removeButton {
+    margin-top: 0;
+  }
+}

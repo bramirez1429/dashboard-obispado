@@ -33,7 +33,7 @@ export default function ExistingMinuteCard({
         <Link href={`/dashboard/minuta/pdf/${activeMinuteId}`} prefetch={false}>
           <Button>Ver minuta para PDF</Button>
         </Link>
-        <Link href="/dashboard/minuta?createNext=true" prefetch={false}>
+        <Link href="/dashboard/minuta/nueva" prefetch={false}>
           <Button>Crear minuta siguiente</Button>
         </Link>
       </div>

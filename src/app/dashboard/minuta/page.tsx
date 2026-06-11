@@ -1,7 +1,7 @@
-import BackCircleButton from "@/components/common/BackCircleButton";
-import { SacramentalMinuteSheet } from "@/components/minuta/SacramentalMinuteSheet";
-import EditActiveMinuteButton from "./components/EditActiveMinuteButton";
 import ExistingMinuteCard from "./components/ExistingMinuteCard";
+import ModernMinutesSection from "./components/ModernMinutesSection";
+import type { ModernMinuteCard } from "./components/ModernMinutesSection";
+import NewMinuteExperience from "./components/NewMinuteExperience";
 
 export const revalidate = 120;
 
@@ -60,13 +60,6 @@ function getActiveSundayDate() {
   return formatDateToDDMMYYYY(getActiveSundayUTCDate());
 }
 
-function getNextSundayDate(activeSundayDate: string) {
-  const nextSunday = parseDDMMYYYYToUTCDate(activeSundayDate);
-  nextSunday.setUTCDate(nextSunday.getUTCDate() + 7);
-
-  return formatDateToDDMMYYYY(nextSunday);
-}
-
 function getDDMMYYYYTime(date: string) {
   const parsedDate = parseDDMMYYYYToUTCDate(date);
   const time = parsedDate.getTime();
@@ -121,42 +114,75 @@ async function getPreviousMinutes(activeSundayDate: string) {
     }));
 }
 
-export default async function MinutaPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ createNext?: string; date?: string }>;
-}) {
-  const params = await searchParams;
+const getModernMinutes = async (): Promise<ModernMinuteCard[]> => {
+  const { supabase } = await import("@/lib/supabase/client");
+  const { data, error } = await supabase
+    .from("Meeting_minutes")
+    .select("id, date, leads, presides, attendance");
+
+  if (error || !data) {
+    return [];
+  }
+
+  return (
+    data as {
+      id?: string | number;
+      date?: string;
+      leads?: string | null;
+      presides?: string | null;
+      attendance?: number | null;
+    }[]
+  )
+    .filter(
+      (minute): minute is {
+        id: string | number;
+        date: string;
+        leads?: string | null;
+        presides?: string | null;
+        attendance?: number | null;
+      } => minute.id !== undefined && typeof minute.date === "string"
+    )
+    .sort(
+      (firstMinute, secondMinute) =>
+        getDDMMYYYYTime(secondMinute.date) - getDDMMYYYYTime(firstMinute.date)
+    )
+    .map((minute) => ({
+      id: minute.id,
+      date: minute.date,
+      leads: minute.leads?.trim() || "-",
+      presides: minute.presides?.trim() || "-",
+      attendance: minute.attendance,
+    }));
+};
+
+export default async function MinutaPage() {
   const activeMinute = await getActiveMinute();
   const activeSundayDate = getActiveSundayDate();
-  const nextSundayDate = getNextSundayDate(activeSundayDate);
   const previousMinutes = activeMinute
     ? await getPreviousMinutes(activeSundayDate)
     : [];
-  const creationDate =
-    params?.createNext === "true" || params?.date === nextSundayDate
-      ? nextSundayDate
-      : undefined;
+  const minutes = await getModernMinutes();
+  const newMinuteExperience = (
+    <NewMinuteExperience>
+      <ModernMinutesSection minutes={minutes} />
+    </NewMinuteExperience>
+  );
 
-  if (activeMinute && !creationDate) {
+  if (activeMinute) {
     return (
       <div className="minute-page">
         <ExistingMinuteCard
           activeMinuteId={activeMinute.id}
           previousMinutes={previousMinutes}
         />
+        {newMinuteExperience}
       </div>
     );
   }
 
   return (
     <div className="minute-page">
-      {creationDate ? <BackCircleButton href="/dashboard/minuta" /> : null}
-      <EditActiveMinuteButton minuteId={undefined} />
-      <SacramentalMinuteSheet
-        key={creationDate ?? "active-minute-form"}
-        initialDate={creationDate}
-      />
+      {newMinuteExperience}
     </div>
   );
 }
