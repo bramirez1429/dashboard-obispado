@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
+import meetingMinuteAuthoritiesData from "@/data/meeting-minute-authorities.json";
 import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
 import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
 import type {
@@ -43,7 +44,7 @@ type NewMinuteFormValues = {
   date?: Dayjs;
   presides?: string;
   leads?: string;
-  welcomeAndAcknowledgmentsOfAuthorities?: string;
+  welcomeAndAcknowledgmentsOfAuthorities?: string | string[];
   announcements?: string;
   director?: string;
   pianist?: string;
@@ -87,6 +88,10 @@ const initialPresideOptions = meetingMinutePresidesData.map((preside) => ({
 const initialLeadOptions = meetingMinuteLeadsData.map((lead) => ({
   value: lead,
   label: lead,
+}));
+const initialAuthorityOptions = meetingMinuteAuthoritiesData.map((authority) => ({
+  value: authority,
+  label: authority,
 }));
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
 const hymnOptions = Object.entries(hymnsByNumber)
@@ -204,13 +209,28 @@ const getMessages = (messages: NewMinuteFormValues["messages"]) =>
     }))
     .filter((item) => item.name || item.time || item.topic);
 
+const getAuthoritiesArray = (value?: string | string[]) => {
+  if (Array.isArray(value)) {
+    return value.map((item) => item.trim().toUpperCase()).filter(Boolean);
+  }
+
+  return (value || "")
+    .split("\n")
+    .map((item) => item.trim().toUpperCase())
+    .filter(Boolean);
+};
+
+const getAuthoritiesString = (value?: string | string[]) =>
+  getAuthoritiesArray(value).join("\n");
+
 const getMinuteValues = (values: NewMinuteFormValues): CreateMinuteValues => ({
   attendance: values.attendance || 0,
   date: values.date ? values.date.format("DD-MM-YYYY") : "",
   presides: values.presides?.trim() || "",
   leads: values.leads?.trim() || "",
-  welcomeAndAcknowledgmentsOfAuthorities:
-    values.welcomeAndAcknowledgmentsOfAuthorities?.trim() || "",
+  welcomeAndAcknowledgmentsOfAuthorities: getAuthoritiesString(
+    values.welcomeAndAcknowledgmentsOfAuthorities
+  ),
   announcements: values.announcements?.trim() || "",
   firstHymn: withCatalogHymnData(values.firstHymn),
   director: values.director?.trim() || "",
@@ -230,6 +250,10 @@ const NewMinutePage = () => {
   const [newPresideName, setNewPresideName] = useState("");
   const [leadOptions, setLeadOptions] = useState(initialLeadOptions);
   const [newLeadName, setNewLeadName] = useState("");
+  const [authorityOptions, setAuthorityOptions] = useState(
+    initialAuthorityOptions
+  );
+  const [newAuthorityName, setNewAuthorityName] = useState("");
   const router = useRouter();
 
   const handleAddPreside = () => {
@@ -282,6 +306,41 @@ const NewMinutePage = () => {
     });
     form.setFieldValue("leads", leadName);
     setNewLeadName("");
+  };
+
+  const handleAddAuthority = () => {
+    const authorityName = newAuthorityName.trim().toUpperCase();
+
+    if (!authorityName) {
+      return;
+    }
+
+    setAuthorityOptions((currentOptions) => {
+      if (currentOptions.some((option) => option.value === authorityName)) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: authorityName,
+          label: authorityName,
+        },
+      ];
+    });
+
+    const currentAuthorities = getAuthoritiesArray(
+      form.getFieldValue("welcomeAndAcknowledgmentsOfAuthorities")
+    );
+
+    if (!currentAuthorities.includes(authorityName)) {
+      form.setFieldValue("welcomeAndAcknowledgmentsOfAuthorities", [
+        ...currentAuthorities,
+        authorityName,
+      ]);
+    }
+
+    setNewAuthorityName("");
   };
 
   const handleSubmit = async (values: NewMinuteFormValues) => {
@@ -459,10 +518,48 @@ const NewMinutePage = () => {
                 <Form.Item
                   label="Bienvenida y reconocimiento de autoridades"
                   name="welcomeAndAcknowledgmentsOfAuthorities"
+                  getValueProps={(value) => ({
+                    value: getAuthoritiesArray(value),
+                  })}
+                  normalize={(value) => getAuthoritiesArray(value)}
                 >
-                  <Input.TextArea
-                    rows={2}
-                    placeholder="Ej: Bienvenida y reconocimiento de autoridades visitantes"
+                  <Select
+                    allowClear
+                    mode="tags"
+                    optionFilterProp="label"
+                    optionLabelProp="label"
+                    options={authorityOptions}
+                    placeholder="Ej: PRESIDENTE ROMERO, OBISPO MARTINEZ"
+                    popupRender={(menu) => (
+                      <>
+                        {menu}
+                        <Divider style={{ margin: "8px 0" }} />
+                        <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                          <Input
+                            placeholder="Agregar autoridad"
+                            value={newAuthorityName}
+                            onChange={(event) =>
+                              setNewAuthorityName(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                handleAddAuthority();
+                              }
+                            }}
+                          />
+                          <Button
+                            icon={<PlusOutlined />}
+                            onClick={handleAddAuthority}
+                          >
+                            Agregar
+                          </Button>
+                        </Flex>
+                      </>
+                    )}
+                    showSearch
+                    tokenSeparators={[","]}
                   />
                 </Form.Item>
               </Col>
