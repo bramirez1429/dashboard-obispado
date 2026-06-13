@@ -26,6 +26,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
+import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
+import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
 import type {
   MeetingMinuteHymn,
   MeetingMinuteWardAndStakeBusiness,
@@ -78,6 +80,14 @@ type HymnFieldProps = {
 };
 
 const { Paragraph, Title } = Typography;
+const initialPresideOptions = meetingMinutePresidesData.map((preside) => ({
+  value: preside,
+  label: preside,
+}));
+const initialLeadOptions = meetingMinuteLeadsData.map((lead) => ({
+  value: lead,
+  label: lead,
+}));
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
 const hymnOptions = Object.entries(hymnsByNumber)
   .sort(
@@ -136,7 +146,7 @@ function HymnField({ form, label, name }: HymnFieldProps) {
           placeholder="Selecciona un himno"
           style={{ width: "100%" }}
           optionFilterProp="label"
-          optionLabelProp="value"
+          optionLabelProp="label"
           options={hymnOptions}
           filterOption={(input, option) =>
             String(option?.label ?? "")
@@ -216,7 +226,63 @@ const getMinuteValues = (values: NewMinuteFormValues): CreateMinuteValues => ({
 const NewMinutePage = () => {
   const [form] = Form.useForm<NewMinuteFormValues>();
   const [isSaving, setIsSaving] = useState(false);
+  const [presideOptions, setPresideOptions] = useState(initialPresideOptions);
+  const [newPresideName, setNewPresideName] = useState("");
+  const [leadOptions, setLeadOptions] = useState(initialLeadOptions);
+  const [newLeadName, setNewLeadName] = useState("");
   const router = useRouter();
+
+  const handleAddPreside = () => {
+    const presideName = newPresideName.trim();
+
+    if (!presideName) {
+      return;
+    }
+
+    setPresideOptions((currentOptions) => {
+      if (
+        currentOptions.some(
+          (option) => option.value.toLowerCase() === presideName.toLowerCase()
+        )
+      ) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: presideName,
+          label: presideName,
+        },
+      ];
+    });
+    form.setFieldValue("presides", presideName);
+    setNewPresideName("");
+  };
+
+  const handleAddLead = () => {
+    const leadName = newLeadName.trim().toUpperCase();
+
+    if (!leadName) {
+      return;
+    }
+
+    setLeadOptions((currentOptions) => {
+      if (currentOptions.some((option) => option.value === leadName)) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: leadName,
+          label: leadName,
+        },
+      ];
+    });
+    form.setFieldValue("leads", leadName);
+    setNewLeadName("");
+  };
 
   const handleSubmit = async (values: NewMinuteFormValues) => {
     setIsSaving(true);
@@ -325,12 +391,68 @@ const NewMinutePage = () => {
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item label="Preside" name="presides">
-                  <Input placeholder="Nombre de quien preside" />
+                  <Select
+                    showSearch
+                    optionFilterProp="label"
+                    options={presideOptions}
+                    placeholder="Nombre de quien preside"
+                    popupRender={(menu) => (
+                      <>
+                        {menu}
+                        <Divider style={{ margin: "8px 0" }} />
+                        <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                          <Input
+                            placeholder="Agregar alguien más"
+                            value={newPresideName}
+                            onChange={(event) =>
+                              setNewPresideName(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                handleAddPreside();
+                              }
+                            }}
+                          />
+                          <Button onClick={handleAddPreside}>Agregar</Button>
+                        </Flex>
+                      </>
+                    )}
+                  />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
                 <Form.Item label="Dirige" name="leads">
-                  <Input placeholder="Nombre de quien dirige" />
+                  <Select
+                    showSearch
+                    optionFilterProp="label"
+                    options={leadOptions}
+                    placeholder="Nombre de quien dirige"
+                    popupRender={(menu) => (
+                      <>
+                        {menu}
+                        <Divider style={{ margin: "8px 0" }} />
+                        <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                          <Input
+                            placeholder="Agregar alguien más"
+                            value={newLeadName}
+                            onChange={(event) =>
+                              setNewLeadName(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                handleAddLead();
+                              }
+                            }}
+                          />
+                          <Button onClick={handleAddLead}>Agregar</Button>
+                        </Flex>
+                      </>
+                    )}
+                  />
                 </Form.Item>
               </Col>
               <Col xs={24}>
@@ -363,41 +485,35 @@ const NewMinutePage = () => {
             </Title>
             <Row gutter={[16, 8]}>
               <Col xs={24} md={12}>
-                <HymnField
-                  form={form}
-                  label="Himno de apertura"
-                  name="firstHymn"
-                />
+                <Space orientation="vertical" style={{ width: "100%" }}>
+                  <Form.Item label="Oracion inicial" name="openingPrayer">
+                    <Input placeholder="Nombre de quien ofrece la oracion" />
+                  </Form.Item>
+                  <Form.Item label="Directora de musica" name="director">
+                    <Input placeholder="Nombre de la directora de musica" />
+                  </Form.Item>
+                  <Form.Item label="Pianista" name="pianist">
+                    <Input placeholder="Nombre del pianista" />
+                  </Form.Item>
+                  <Form.Item label="Oracion final" name="closingPrayer">
+                    <Input placeholder="Nombre de quien ofrece la oracion" />
+                  </Form.Item>
+                </Space>
               </Col>
               <Col xs={24} md={12}>
-                <Form.Item label="Directora de musica" name="director">
-                  <Input placeholder="Nombre de la directora de musica" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item label="Pianista" name="pianist">
-                  <Input placeholder="Nombre del pianista" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item label="Oracion inicial" name="openingPrayer">
-                  <Input placeholder="Nombre de quien ofrece la oracion" />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <HymnField
-                  form={form}
-                  label="Himno sacramental"
-                  name="sacramentalHymn"
-                />
-              </Col>
-              <Col xs={24} md={12}>
-                <HymnField form={form} label="Himno final" name="lastHymn" />
-              </Col>
-              <Col xs={24} md={12}>
-                <Form.Item label="Oracion final" name="closingPrayer">
-                  <Input placeholder="Nombre de quien ofrece la oracion" />
-                </Form.Item>
+                <Space orientation="vertical" style={{ width: "100%" }}>
+                  <HymnField
+                    form={form}
+                    label="Himno de apertura"
+                    name="firstHymn"
+                  />
+                  <HymnField
+                    form={form}
+                    label="Himno sacramental"
+                    name="sacramentalHymn"
+                  />
+                  <HymnField form={form} label="Himno final" name="lastHymn" />
+                </Space>
               </Col>
             </Row>
           </section>
