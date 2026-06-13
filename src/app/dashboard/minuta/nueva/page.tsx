@@ -1,12 +1,17 @@
 "use client";
 
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Card,
   Col,
   DatePicker,
   Divider,
+  Flex,
   Form,
   Input,
   InputNumber,
@@ -243,6 +248,19 @@ const NewMinutePage = () => {
   return (
     <main className={styles.page}>
       <Card className={styles.card}>
+        <Flex align="center" gap={12} style={{ marginBottom: 16 }}>
+          <Link href="/dashboard/minuta" prefetch={false}>
+            <Button
+              aria-label="Volver a minuta"
+              icon={<ArrowLeftOutlined />}
+              shape="circle"
+            />
+          </Link>
+          <Title level={2} style={{ marginBottom: 16 }}>
+            Experiencia nueva de minuta
+          </Title>
+        </Flex>
+
         <div className={styles.header}>
           <div className={styles.headerContent}>
             <Title className={styles.title} level={1}>
