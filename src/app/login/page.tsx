@@ -3,6 +3,7 @@
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type LoginValues = {
   identifier: string;
@@ -11,8 +12,11 @@ type LoginValues = {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (values: LoginValues) => {
+    setIsSubmitting(true);
+
     const result = await signIn("credentials", {
       identifier: values.identifier,
       password: values.password,
@@ -20,6 +24,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
+      setIsSubmitting(false);
       message.error("Usuario o contraseña incorrectos");
       return;
     }
@@ -58,7 +63,7 @@ export default function LoginPage() {
             />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" loading={isSubmitting} block>
             Ingresar
           </Button>
         </Form>
