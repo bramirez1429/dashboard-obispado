@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Collapse, Empty } from "antd";
 import type { MeetingMinute } from "@/components/meeting-minutes/MeetingMinuteView";
@@ -15,6 +15,16 @@ type ChecklistSection = {
 type AdminMeetingMinuteViewProps = {
   minute?: MeetingMinute | null;
 };
+
+const ADMIN_CHECKOUT_STORAGE_PREFIX = "reunion-sacramental-admin-checkout";
+const ADMIN_MODULE_KEYS = [
+  "inicio",
+  "bienvenida",
+  "asuntos",
+  "himnos-oraciones",
+  "mensajes",
+  "cierre",
+];
 
 const getText = (value?: string) => (value?.trim() ? value : "-");
 
@@ -45,6 +55,38 @@ const getBusinesses = (business?: MeetingMinute["wardAndStakeBusiness"]) => {
         : item?.subject || item?.name || "-",
     details: item?.details || "",
   }));
+};
+
+const getStorageKey = (minuteDate?: string) =>
+  minuteDate ? `${ADMIN_CHECKOUT_STORAGE_PREFIX}:${minuteDate}` : null;
+
+const getMinuteExpirationTimestamp = (minuteDate?: string) => {
+  const match = minuteDate?.trim().match(/^(\d{2})-(\d{2})-(\d{4})$/);
+
+  if (!match) {
+    return null;
+  }
+
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  const parsedDate = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    parsedDate.getUTCFullYear() !== year ||
+    parsedDate.getUTCMonth() !== month - 1 ||
+    parsedDate.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  return Date.UTC(year, month - 1, day, 16);
+};
+
+const isMinuteCheckoutExpired = (minuteDate?: string) => {
+  const expirationTimestamp = getMinuteExpirationTimestamp(minuteDate);
+
+  return expirationTimestamp !== null && Date.now() >= expirationTimestamp;
 };
 
 const FieldLine = ({ label, value }: { label: string; value: ReactNode }) => (
@@ -119,8 +161,8 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
 
   return [
     {
-      key: "summary",
-      title: "Resumen",
+      key: "inicio",
+      title: "Inicio",
       children: (
         <div style={{ display: "grid", gap: 12 }}>
           <FieldLine label="Fecha" value={getText(minute.date)} />
@@ -130,43 +172,33 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "welcome",
+      key: "bienvenida",
       title: "Bienvenida y reconocimientos",
       children: (
-        <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-          {getText(minute.welcomeAndAcknowledgmentsOfAuthorities)}
-        </p>
-      ),
-    },
-    {
-      key: "announcements",
-      title: "Anuncios",
-      children: announcementItems.length ? (
-        <ul style={{ margin: 0, paddingLeft: 22 }}>
-          {announcementItems.map((announcement, index) => (
-            <li key={`${announcement}-${index}`}>{announcement}</li>
-          ))}
-        </ul>
-      ) : (
-        <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-          {getText(minute.announcements)}
-        </p>
-      ),
-    },
-    {
-      key: "opening",
-      title: "Inicio de la reunion",
-      children: (
-        <div style={{ display: "grid", gap: 12 }}>
-          <FieldLine label="Primer himno" value={getHymnText(minute.firstHymn)} />
-          <FieldLine label="Directora" value={getText(minute.director)} />
-          <FieldLine label="Pianista" value={getText(minute.pianist)} />
-          <FieldLine label="Primera oracion" value={getText(minute.openingPrayer)} />
+        <div style={{ display: "grid", gap: 16 }}>
+          <FieldLine
+            label="Bienvenida y reconocimientos"
+            value={getText(minute.welcomeAndAcknowledgmentsOfAuthorities)}
+          />
+          <div>
+            <strong>Anuncios</strong>
+            {announcementItems.length ? (
+              <ul style={{ margin: "8px 0 0", paddingLeft: 22 }}>
+                {announcementItems.map((announcement, index) => (
+                  <li key={`${announcement}-${index}`}>{announcement}</li>
+                ))}
+              </ul>
+            ) : (
+              <p style={{ margin: "8px 0 0", whiteSpace: "pre-wrap" }}>
+                {getText(minute.announcements)}
+              </p>
+            )}
+          </div>
         </div>
       ),
     },
     {
-      key: "business",
+      key: "asuntos",
       title: "Asuntos del barrio y estaca",
       children: businesses.length ? (
         <div style={{ display: "grid", gap: 12 }}>
@@ -184,14 +216,23 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "sacrament",
-      title: "Himno sacramental",
+      key: "himnos-oraciones",
+      title: "Himnos y oraciones",
       children: (
-        <p style={{ margin: 0 }}>{getHymnText(minute.sacramentalHymn)}</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          <FieldLine label="Primer himno" value={getHymnText(minute.firstHymn)} />
+          <FieldLine label="Directora" value={getText(minute.director)} />
+          <FieldLine label="Pianista" value={getText(minute.pianist)} />
+          <FieldLine label="Primera oracion" value={getText(minute.openingPrayer)} />
+          <FieldLine
+            label="Himno sacramental"
+            value={getHymnText(minute.sacramentalHymn)}
+          />
+        </div>
       ),
     },
     {
-      key: "messages",
+      key: "mensajes",
       title: "Mensajes",
       children: minute.messages?.length ? (
         <div style={{ display: "grid", gap: 12 }}>
@@ -207,7 +248,7 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "closing",
+      key: "cierre",
       title: "Final de la reunion",
       children: (
         <div style={{ display: "grid", gap: 12 }}>
@@ -223,9 +264,59 @@ export default function AdminMeetingMinuteView({
   minute,
 }: AdminMeetingMinuteViewProps) {
   const sections = minute ? buildSections(minute) : [];
-  const allModuleKeys = sections.map((section) => section.key);
+  const allModuleKeys = ADMIN_MODULE_KEYS;
   const [openModuleKeys, setOpenModuleKeys] = useState<string[]>(allModuleKeys);
   const [completedModuleKeys, setCompletedModuleKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    const restoreCheckout = (
+      nextCompletedKeys: string[],
+      nextOpenKeys: string[]
+    ) => {
+      window.setTimeout(() => {
+        setCompletedModuleKeys(nextCompletedKeys);
+        setOpenModuleKeys(nextOpenKeys);
+      }, 0);
+    };
+
+    if (!minute?.date) {
+      restoreCheckout([], ADMIN_MODULE_KEYS);
+      return;
+    }
+
+    const storageKey = getStorageKey(minute.date);
+
+    if (!storageKey) {
+      return;
+    }
+
+    if (isMinuteCheckoutExpired(minute.date)) {
+      localStorage.removeItem(storageKey);
+      restoreCheckout([], ADMIN_MODULE_KEYS);
+      return;
+    }
+
+    try {
+      const storedValue = localStorage.getItem(storageKey);
+      const storedCompletedKeys = storedValue
+        ? (JSON.parse(storedValue) as unknown)
+        : [];
+      const nextCompletedKeys = Array.isArray(storedCompletedKeys)
+        ? storedCompletedKeys.filter(
+            (key): key is string =>
+              typeof key === "string" && ADMIN_MODULE_KEYS.includes(key)
+          )
+        : [];
+
+      restoreCheckout(
+        nextCompletedKeys,
+        ADMIN_MODULE_KEYS.filter((key) => !nextCompletedKeys.includes(key))
+      );
+    } catch {
+      localStorage.removeItem(storageKey);
+      restoreCheckout([], ADMIN_MODULE_KEYS);
+    }
+  }, [minute?.date]);
 
   if (!minute) {
     return (
@@ -255,19 +346,28 @@ export default function AdminMeetingMinuteView({
 
   const handleCompleteModule = (sectionKey: string) => {
     setCompletedModuleKeys((currentKeys) => {
+      const nextCompletedKeys = currentKeys.includes(sectionKey)
+        ? currentKeys.filter((key) => key !== sectionKey)
+        : [...currentKeys, sectionKey];
+      const storageKey = getStorageKey(minute?.date);
+
+      if (storageKey && minute?.date && !isMinuteCheckoutExpired(minute.date)) {
+        localStorage.setItem(storageKey, JSON.stringify(nextCompletedKeys));
+      }
+
       if (currentKeys.includes(sectionKey)) {
         setOpenModuleKeys((openKeys) =>
           openKeys.includes(sectionKey) ? openKeys : [...openKeys, sectionKey]
         );
 
-        return currentKeys.filter((key) => key !== sectionKey);
+        return nextCompletedKeys;
       }
 
       setOpenModuleKeys((openKeys) =>
         openKeys.filter((key) => key !== sectionKey)
       );
 
-      return [...currentKeys, sectionKey];
+      return nextCompletedKeys;
     });
   };
 
