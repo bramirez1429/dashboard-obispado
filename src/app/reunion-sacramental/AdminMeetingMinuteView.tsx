@@ -378,7 +378,7 @@ export default function AdminMeetingMinuteView({
         <article style={{ borderRadius: 22, background: "#fff", padding: "24px 18px" }}>
           <header style={{ marginBottom: 18, textAlign: "center" }}>
             <h1 style={{ margin: 0, color: "#3880c7", fontSize: 36 }}>
-              Reunion Sacramental
+              Reunión Sacramental
             </h1>
           </header>
           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginBottom: 12 }}>

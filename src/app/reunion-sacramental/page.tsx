@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import AdminMeetingMinuteView from "./AdminMeetingMinuteView";
 import MinuteRealtimeRefresh from "./MinuteRealtimeRefresh";
 import { auth } from "@/auth";
+import BackCircleButton from "@/components/common/BackCircleButton";
 import { MeetingMinuteView } from "@/components/meeting-minutes/MeetingMinuteView";
 import type { MeetingMinute } from "@/components/meeting-minutes/MeetingMinuteView";
 
@@ -53,7 +54,7 @@ const getPublicCurrentMeetingMinute =
     if (!response.ok) {
       return {
         success: false,
-        error: "No se pudo cargar la reunion sacramental.",
+        error: "No se pudo cargar la reunión sacramental.",
         data: null,
       };
     }
@@ -78,7 +79,15 @@ const SacramentalMeetingPage = async () => {
         minuteId={minute?.id ? String(minute.id) : undefined}
       />
       {showDashboardBackButton ? (
-        <AdminMeetingMinuteView minute={minute} />
+        <>
+          <div style={{ padding: "16px 16px 0", background: "#eef3f7" }}>
+            <BackCircleButton
+              href="/dashboard/minuta"
+              ariaLabel="Volver a minuta"
+            />
+          </div>
+          <AdminMeetingMinuteView minute={minute} />
+        </>
       ) : (
         <MeetingMinuteView minute={minute} />
       )}
