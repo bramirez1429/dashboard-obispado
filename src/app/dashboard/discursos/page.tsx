@@ -2,6 +2,7 @@
 
 import {
   ArrowLeftOutlined,
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
@@ -36,6 +37,10 @@ type SpeechesResponse = {
 
 function formatDate(date: string | null) {
   return date ? dayjs(date).format("DD/MM/YYYY") : "Sin fecha";
+}
+
+function getPublicSpeechLink(id: string) {
+  return `${window.location.origin}/m/${id}`;
 }
 
 export default function DiscursosPage() {
@@ -145,9 +150,33 @@ export default function DiscursosPage() {
     });
   };
 
+  const handleCopyPublicLink = async (id: string) => {
+    await navigator.clipboard.writeText(getPublicSpeechLink(id));
+    message.success("Link copiado para compartir");
+  };
+
   const columns: ColumnsType<MessageRow> = [
     {
-      title: "Fecha",
+      title: "N° discurso",
+      dataIndex: "id",
+      key: "speech_id",
+      render: (_: string, record) => record.id,
+    },
+    {
+      title: "Compartir",
+      dataIndex: "id",
+      key: "share",
+      render: (id: string) => (
+        <Button
+          aria-label="Copiar link"
+          icon={<CopyOutlined />}
+          size="small"
+          onClick={() => handleCopyPublicLink(id)}
+        />
+      ),
+    },
+    {
+      title: "Fecha de discurso",
       dataIndex: "date",
       key: "date",
       render: (date: string | null) => formatDate(date),
@@ -157,12 +186,6 @@ export default function DiscursosPage() {
       dataIndex: "name",
       key: "name",
       render: (name: string | null) => name?.trim() || "Sin completar",
-    },
-    {
-      title: "Tema",
-      dataIndex: "speech",
-      key: "speech",
-      render: (speech: string | null) => speech?.trim() || "Sin completar",
     },
     {
       title: "Tiempo asignado",
