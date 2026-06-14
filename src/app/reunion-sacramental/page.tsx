@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { headers } from "next/headers";
+import AdminMeetingMinuteView from "./AdminMeetingMinuteView";
 import MinuteRealtimeRefresh from "./MinuteRealtimeRefresh";
 import { auth } from "@/auth";
 import { MeetingMinuteView } from "@/components/meeting-minutes/MeetingMinuteView";
@@ -76,10 +77,11 @@ const SacramentalMeetingPage = async () => {
       <MinuteRealtimeRefresh
         minuteId={minute?.id ? String(minute.id) : undefined}
       />
-      <MeetingMinuteView
-        minute={minute}
-        showDashboardBackButton={showDashboardBackButton}
-      />
+      {showDashboardBackButton ? (
+        <AdminMeetingMinuteView minute={minute} />
+      ) : (
+        <MeetingMinuteView minute={minute} />
+      )}
     </>
   );
 };
