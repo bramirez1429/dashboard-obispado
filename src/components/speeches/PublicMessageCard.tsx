@@ -74,11 +74,7 @@ function GuidanceBlock() {
   return (
     <div className="message-guidance-box">
       <Typography.Title level={5}>Orientación para preparar su mensaje</Typography.Title>
-      <Typography.Paragraph>
-        Agradecemos su disposición para participar en la reunión sacramental. Al
-        preparar su mensaje, le invitamos a utilizar recursos oficiales de la
-        Iglesia, tales como:
-      </Typography.Paragraph>
+ 
       <ul>
         <li>Las Escrituras canónicas.</li>
         <li>La Guía para el Estudio de las Escrituras.</li>
