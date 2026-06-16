@@ -171,10 +171,7 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
           <GuidanceBlock />
 
           <div className="public-message-closing-note">
-            <Typography.Paragraph>
-              Muchas gracias por su disposición para participar y servir en la
-              reunión sacramental.
-            </Typography.Paragraph>
+     
             <Typography.Paragraph>
               Atentamente,
               <br />
