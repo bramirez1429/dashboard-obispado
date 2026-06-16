@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Collapse, Empty } from "antd";
+import { Button, Checkbox, Collapse, Empty, Flex } from "antd";
 import type { MeetingMinute } from "@/components/meeting-minutes/MeetingMinuteView";
 
 type ChecklistSection = {
@@ -18,12 +18,13 @@ type AdminMeetingMinuteViewProps = {
 
 const ADMIN_CHECKOUT_STORAGE_PREFIX = "reunion-sacramental-admin-checkout";
 const ADMIN_MODULE_KEYS = [
-  "inicio",
-  "bienvenida",
-  "asuntos",
-  "himnos-oraciones",
-  "mensajes",
-  "cierre",
+  "direction-introduction",
+  "welcome-announcements",
+  "ward-stake-business",
+  "opening-hymn-prayer",
+  "sacrament-hymn",
+  "messages",
+  "closing",
 ];
 
 const getText = (value?: string) => (value?.trim() ? value : "-");
@@ -161,19 +162,25 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
 
   return [
     {
-      key: "inicio",
-      title: "Inicio",
+      key: "direction-introduction",
+      title: "Dirección e introducción",
       children: (
         <div style={{ display: "grid", gap: 12 }}>
           <FieldLine label="Fecha" value={getText(minute.date)} />
-          <FieldLine label="Preside" value={getText(minute.presides)} />
-          <FieldLine label="Dirige" value={getText(minute.leads)} />
+          <Flex gap={24} wrap>
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <FieldLine label="Preside" value={getText(minute.presides)} />
+            </div>
+            <div style={{ flex: 1, minWidth: 180 }}>
+              <FieldLine label="Dirige" value={getText(minute.leads)} />
+            </div>
+          </Flex>
         </div>
       ),
     },
     {
-      key: "bienvenida",
-      title: "Bienvenida y reconocimientos",
+      key: "welcome-announcements",
+      title: "Bienvenida, reconocimientos y anuncios",
       children: (
         <div style={{ display: "grid", gap: 16 }}>
           <FieldLine
@@ -198,7 +205,7 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "asuntos",
+      key: "ward-stake-business",
       title: "Asuntos del barrio y estaca",
       children: businesses.length ? (
         <div style={{ display: "grid", gap: 12 }}>
@@ -216,14 +223,22 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "himnos-oraciones",
-      title: "Himnos y oraciones",
+      key: "opening-hymn-prayer",
+      title: "Primer himno y primera oración",
       children: (
         <div style={{ display: "grid", gap: 12 }}>
           <FieldLine label="Primer himno" value={getHymnText(minute.firstHymn)} />
           <FieldLine label="Directora" value={getText(minute.director)} />
           <FieldLine label="Pianista" value={getText(minute.pianist)} />
           <FieldLine label="Primera oracion" value={getText(minute.openingPrayer)} />
+        </div>
+      ),
+    },
+    {
+      key: "sacrament-hymn",
+      title: "Himno sacramental",
+      children: (
+        <div style={{ display: "grid", gap: 12 }}>
           <FieldLine
             label="Himno sacramental"
             value={getHymnText(minute.sacramentalHymn)}
@@ -232,8 +247,8 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "mensajes",
-      title: "Mensajes",
+      key: "messages",
+      title: "Tiempo de mensajes",
       children: minute.messages?.length ? (
         <div style={{ display: "grid", gap: 12 }}>
           {minute.messages.map((message, index) => (
@@ -248,8 +263,8 @@ const buildSections = (minute: MeetingMinute): ChecklistSection[] => {
       ),
     },
     {
-      key: "cierre",
-      title: "Final de la reunion",
+      key: "closing",
+      title: "Cierre",
       children: (
         <div style={{ display: "grid", gap: 12 }}>
           <FieldLine label="Ultimo himno" value={getHymnText(minute.lastHymn)} />

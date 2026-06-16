@@ -4,7 +4,6 @@ import { ExportOutlined } from "@ant-design/icons";
 import { Card, Col, Divider, Row, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
 
@@ -26,6 +25,20 @@ function formatLongDate(date: string | null) {
 
 function displayValue(value: string | null) {
   return value?.trim() || "Sin completar";
+}
+
+function getSpeakerNameWithPrefix(speech: PublicSpeech) {
+  const speakerName = displayValue(speech.name);
+
+  if (speech.gender === "feminine") {
+    return `Hna. ${speakerName}`;
+  }
+
+  if (speech.gender === "masculine") {
+    return `Hno. ${speakerName}`;
+  }
+
+  return speakerName;
 }
 
 function renderTextWithLinks(text: string) {
@@ -60,39 +73,41 @@ function renderTextWithLinks(text: string) {
 function GuidanceBlock() {
   return (
     <div className="message-guidance-box">
-      <Typography.Title level={5}>Orientación para preparar el mensaje</Typography.Title>
+      <Typography.Title level={5}>Orientación para preparar su mensaje</Typography.Title>
       <Typography.Paragraph>
-        Para preparar su mensaje, le invitamos a utilizar recursos aprobados de la
+        Agradecemos su disposición para participar en la reunión sacramental. Al
+        preparar su mensaje, le invitamos a utilizar recursos oficiales de la
         Iglesia, tales como:
       </Typography.Paragraph>
       <ul>
-        <li>Las Escrituras canónicas</li>
-        <li>La Guía para el Estudio de las Escrituras</li>
-        <li>Mensajes de la Conferencia General</li>
-        <li>Revistas Liahona</li>
-        <li>Experiencias personales apropiadas que fortalezcan la fe</li>
-      </ul>
-      <Typography.Paragraph>Al preparar su mensaje:</Typography.Paragraph>
-      <ul>
-        <li>Ore y busque la guía del Espíritu Santo.</li>
-        <li>Centre su mensaje en Jesucristo y Su Evangelio.</li>
+        <li>Las Escrituras canónicas.</li>
+        <li>La Guía para el Estudio de las Escrituras.</li>
+        <li>Mensajes de la Conferencia General.</li>
+        <li>Artículos y mensajes de la revista Liahona.</li>
         <li>
-          Procure enseñar principios que edifiquen la fe y fortalezcan a los miembros.
+          Experiencias personales apropiadas que fortalezcan la fe y edifiquen a
+          los demás.
+        </li>
+      </ul>
+      <Typography.Title level={5}>Sugerencias para la preparación</Typography.Title>
+      <ul>
+        <li>
+          Ore y busque la guía del Espíritu Santo durante su estudio y preparación.
+        </li>
+        <li>Centre su mensaje en Jesucristo, Su Evangelio y Sus enseñanzas.</li>
+        <li>
+          Enseñe principios que fortalezcan la fe, inspiren la conversión y ayuden
+          a los miembros a acercarse más al Salvador.
         </li>
         <li>
-          Comparta experiencias o testimonios que sean reverentes, apropiados y
-          edificantes.
+          Comparta experiencias personales y testimonios que sean reverentes,
+          apropiados y edificantes.
         </li>
         <li>
           Evite comentarios negativos, controversiales o experiencias que no
-          contribuyan al espíritu de la reunión.
+          contribuyan al espíritu de adoración de la reunión.
         </li>
-        <li>Le pedimos acompañarnos en el estrado antes de comenzar la reunión.</li>
       </ul>
-      <Typography.Paragraph className="message-guidance-closing">
-        Muchas gracias por su disposición para participar y servir en la reunión
-        sacramental.
-      </Typography.Paragraph>
     </div>
   );
 }
@@ -115,6 +130,8 @@ function DetailCard({
 }
 
 const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
+  const speakerName = getSpeakerNameWithPrefix(speech);
+
   return (
     <main className="public-message-page">
       <div className="public-message-shell">
@@ -129,19 +146,21 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
             <Divider style={{ margin: 0 }} />
           </div>
 
+          <Typography.Paragraph>
+            {speakerName}, agradecemos sinceramente su disposición para participar
+            en la reunión sacramental y compartir un mensaje con la congregación.
+            Su preparación, testimonio y deseo de servir pueden ayudar a fortalecer
+            la fe de los miembros e invitar el Espíritu del Señor durante la reunión.
+          </Typography.Paragraph>
+
           <Row gutter={[16, 16]} className="public-assignment-grid">
-            <Col xs={24} md={8}>
-              <DetailCard label={getSpeechTreatment(speech.gender)}>
-                {displayValue(speech.name)}
-              </DetailCard>
+            <Col xs={24} md={12}>
+              <DetailCard label="Fecha">{formatLongDate(speech.date)}</DetailCard>
             </Col>
-            <Col xs={24} md={8}>
-              <DetailCard label="Tiempo asignado">
+            <Col xs={24} md={12}>
+              <DetailCard label="Tiempo">
                 {speech.time ? `${speech.time} minutos` : "Sin completar"}
               </DetailCard>
-            </Col>
-            <Col xs={24} md={8}>
-              <DetailCard label="Fecha">{formatLongDate(speech.date)}</DetailCard>
             </Col>
             <Col xs={24}>
               <DetailCard label="Tema">{displayValue(speech.speech)}</DetailCard>
