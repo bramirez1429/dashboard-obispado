@@ -6,7 +6,7 @@ import {
   PlusOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Empty, Row, Space, Tag } from "antd";
+import { Button, Card, Col, Empty, Flex, QRCode, Row, Space, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import { getDashboardSpeechSummary } from "@/lib/dashboard-summary";
@@ -63,6 +63,24 @@ export function DashboardHome({
   const speechSummary = getDashboardSpeechSummary(assignedSpeeches);
 
   const cards = [
+    {
+      title: "Reunión sacramental",
+      href: "/reunion-sacramental",
+      icon: null,
+      content: (
+        <Flex vertical align="center" gap={12}>
+          <QRCode
+            errorLevel="H"
+            value="https://dashboard-obispado.vercel.app/reunion-sacramental"
+            icon="/images/lds-tools-icon.png"
+            size={160}
+          />
+          <Typography.Text type="secondary" style={{ textAlign: "center" }}>
+            Escaneá para compartir la reunión.
+          </Typography.Text>
+        </Flex>
+      ),
+    },
     {
       title: "Minuta sacramental",
       href: "/dashboard/minuta",
@@ -171,9 +189,11 @@ export function DashboardHome({
               }
               style={{ height: "100%" }}
             >
-              <div className="dashboard-card-icon dashboard-card-icon-blue">
-                {item.icon}
-              </div>
+              {item.icon ? (
+                <div className="dashboard-card-icon dashboard-card-icon-blue">
+                  {item.icon}
+                </div>
+              ) : null}
               <div className="dashboard-card-content">{item.content}</div>
             </Card>
           </Col>
