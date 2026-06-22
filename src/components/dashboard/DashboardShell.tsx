@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import LogoutButton from "@/components/auth/LogoutButton";
 import {
+  CheckSquareOutlined,
   FileTextOutlined,
   HomeOutlined,
   MenuFoldOutlined,
@@ -35,6 +36,11 @@ const menuItems = [
     label: "Discursos",
   },
   {
+    key: "/dashboard/tareas",
+    icon: <CheckSquareOutlined />,
+    label: "Tareas",
+  },
+  {
     key: "/dashboard/usuarios",
     icon: <UserAddOutlined />,
     label: "Usuarios",
@@ -48,6 +54,10 @@ function selectedKey(pathname: string) {
 
   if (pathname.startsWith("/dashboard/discursos")) {
     return "/dashboard/discursos";
+  }
+
+  if (pathname.startsWith("/dashboard/tareas")) {
+    return "/dashboard/tareas";
   }
 
   if (pathname.startsWith("/dashboard/usuarios")) {
