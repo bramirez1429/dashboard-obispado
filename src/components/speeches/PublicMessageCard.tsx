@@ -74,30 +74,26 @@ function GuidanceBlock() {
   return (
     <div className="message-guidance-box">
       <Typography.Title level={5}>Orientación para preparar su mensaje</Typography.Title>
- 
+      <Typography.Paragraph>
+        Le invitamos a utilizar recursos oficiales de la Iglesia, tales como:
+      </Typography.Paragraph>
+
       <ul>
         <li>Las Escrituras canónicas.</li>
-        <li>La Guía para el Estudio de las Escrituras.</li>
         <li>Mensajes de la Conferencia General.</li>
-        <li>Artículos y mensajes de la revista Liahona.</li>
         <li>
-          Experiencias personales apropiadas que fortalezcan la fe y edifiquen a
-          los demás.
+          Experiencias personales apropiadas que fortalezcan la fe.
         </li>
       </ul>
       <Typography.Title level={5}>Sugerencias para la preparación</Typography.Title>
       <ul>
         <li>
-          Ore y busque la guía del Espíritu Santo durante su estudio y preparación.
+          Ore y busque la guía del Espíritu Santo durante su preparación.
         </li>
-        <li>Centre su mensaje en Jesucristo, Su Evangelio y Sus enseñanzas.</li>
+        <li>Centre su mensaje en el Salvador, Su amor y Su evangelio.</li>
         <li>
-          Enseñe principios que fortalezcan la fe, inspiren la conversión y ayuden
-          a los miembros a acercarse más al Salvador.
-        </li>
-        <li>
-          Comparta experiencias personales y testimonios que sean reverentes,
-          apropiados y edificantes.
+          Comparta principios, experiencias personales y testimonios reverentes
+          que fortalezcan la fe y ayuden a los miembros a acercarse más a Él.
         </li>
         <li>
           Evite comentarios negativos, controversiales o experiencias que no
@@ -143,10 +139,11 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
           </div>
 
           <Typography.Paragraph>
-            {speakerName}, agradecemos sinceramente su disposición para participar
-            en la reunión sacramental y compartir un mensaje con la congregación.
-            Su preparación, testimonio y deseo de servir pueden ayudar a fortalecer
-            la fe de los miembros e invitar el Espíritu del Señor durante la reunión.
+            {speakerName}, le invitamos a compartir un mensaje en la reunión
+            sacramental, procurando centrar sus palabras en nuestro Salvador,
+            Su amor y Su evangelio. Deseamos que, al preparar y compartir su
+            mensaje, pueda sentir la guía del Espíritu Santo y el amor puro del
+            Salvador, fortaleciendo tanto su fe como la fe de la congregación.
           </Typography.Paragraph>
 
           <Row gutter={[16, 16]} className="public-assignment-grid">
