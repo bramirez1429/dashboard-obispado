@@ -300,14 +300,22 @@ export default function DiscursosPage() {
               </Paragraph>
             </div>
           </Space>
-          <Button
-            type="primary"
-            size="large"
-            href="/dashboard/discursos/nuevo"
-            icon={<PlusOutlined />}
-          >
-            Nuevo mensaje
-          </Button>
+          <Space wrap>
+            <Button
+              size="large"
+              href="/dashboard/discursos/posibles-discursantes"
+            >
+              Posibles discursantes
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              href="/dashboard/discursos/nuevo"
+              icon={<PlusOutlined />}
+            >
+              Nuevo mensaje
+            </Button>
+          </Space>
         </Space>
 
         <Table
