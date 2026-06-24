@@ -7,7 +7,7 @@ export const revalidate = 0;
 async function getPossibleSpeakers() {
   const { data, error } = await supabase
     .from("Possible_speakers")
-    .select("id, first_name, last_name, discourse")
+    .select("id, first_name, last_name, discourse, gender")
     .order("id", { ascending: true });
 
   if (error) {

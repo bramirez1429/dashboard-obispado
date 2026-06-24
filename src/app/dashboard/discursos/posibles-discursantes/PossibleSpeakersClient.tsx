@@ -27,12 +27,14 @@ export type PossibleSpeaker = {
   first_name: string | null;
   last_name: string | null;
   discourse: boolean | null;
+  gender?: "female" | "male" | null;
 };
 
 type PossibleSpeakerFormValues = {
   first_name: string;
   last_name: string;
   discourse: boolean;
+  gender: "female" | "male";
 };
 
 type PossibleSpeakersClientProps = {
@@ -45,6 +47,23 @@ const discourseOptions = [
   { label: "Sí", value: true },
   { label: "No", value: false },
 ];
+
+const genderOptions = [
+  { label: "Femenino", value: "female" },
+  { label: "Masculino", value: "male" },
+];
+
+function getGenderLabel(gender?: PossibleSpeaker["gender"]) {
+  if (gender === "female") {
+    return "Femenino";
+  }
+
+  if (gender === "male") {
+    return "Masculino";
+  }
+
+  return "Sin definir";
+}
 
 const normalizeText = (value: string) =>
   value
@@ -100,6 +119,7 @@ export default function PossibleSpeakersClient({
       first_name: values.first_name,
       last_name: values.last_name,
       discourse: values.discourse,
+      gender: values.gender,
     });
 
     setIsSavingNewSpeaker(false);
@@ -121,6 +141,7 @@ export default function PossibleSpeakersClient({
       first_name: speaker.first_name || "",
       last_name: speaker.last_name || "",
       discourse: Boolean(speaker.discourse),
+      gender: speaker.gender || undefined,
     });
   };
 
@@ -139,6 +160,7 @@ export default function PossibleSpeakersClient({
         first_name: values.first_name,
         last_name: values.last_name,
         discourse: values.discourse,
+        gender: values.gender,
       })
       .eq("id", speakerId);
 
@@ -172,6 +194,17 @@ export default function PossibleSpeakersClient({
 
     message.success("Discursante borrado correctamente");
     refreshSpeakers();
+  };
+
+  const handleBuildDiscourse = (speaker: PossibleSpeaker) => {
+    const fullName = `${speaker.first_name || ""} ${speaker.last_name || ""}`.trim();
+    const genderQuery = speaker.gender
+      ? `&gender=${encodeURIComponent(speaker.gender)}`
+      : "";
+
+    router.push(
+      `/dashboard/discursos/nuevo?speakerName=${encodeURIComponent(fullName)}${genderQuery}`
+    );
   };
 
   const columns: ColumnsType<PossibleSpeaker> = [
@@ -227,6 +260,39 @@ export default function PossibleSpeakersClient({
         ) : (
           <Tag color={value ? "success" : "default"}>{value ? "Sí" : "No"}</Tag>
         ),
+    },
+    {
+      title: "Género",
+      dataIndex: "gender",
+      key: "gender",
+      render: (value: PossibleSpeaker["gender"], record) =>
+        editingSpeakerId === record.id ? (
+          <Form.Item
+            name="gender"
+            rules={[{ required: true, message: "Seleccioná el género" }]}
+            style={{ margin: 0 }}
+          >
+            <Select
+              placeholder="Seleccionar género"
+              options={genderOptions}
+            />
+          </Form.Item>
+        ) : (
+          getGenderLabel(value)
+        ),
+    },
+    {
+      title: "Discurso",
+      key: "buildDiscourse",
+      render: (_, record) => (
+        <Button
+          type="link"
+          size="small"
+          onClick={() => handleBuildDiscourse(record)}
+        >
+          Armar discurso
+        </Button>
+      ),
     },
     {
       title: "Acciones",
@@ -379,6 +445,16 @@ export default function PossibleSpeakersClient({
             rules={[{ required: true, message: "Seleccioná una opción" }]}
           >
             <Select options={discourseOptions} />
+          </Form.Item>
+          <Form.Item
+            label="Género"
+            name="gender"
+            rules={[{ required: true, message: "Seleccioná el género" }]}
+          >
+            <Select
+              placeholder="Seleccionar género"
+              options={genderOptions}
+            />
           </Form.Item>
         </Form>
       </Modal>

@@ -23,6 +23,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 import type { Dayjs } from "dayjs";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
@@ -225,8 +226,21 @@ function PublicMessageCard({
 }
 
 export default function NewSpeechPage() {
+  const searchParams = useSearchParams();
+  const speakerName = searchParams.get("speakerName") || "";
+  const possibleSpeakerGender = searchParams.get("gender");
+  const initialGender: Gender =
+    possibleSpeakerGender === "female"
+      ? "feminine"
+      : possibleSpeakerGender === "male"
+        ? "masculine"
+        : initialFormState.gender;
   const screens = Grid.useBreakpoint();
-  const [formValues, setFormValues] = useState<MessageFormState>(initialFormState);
+  const [formValues, setFormValues] = useState<MessageFormState>({
+    ...initialFormState,
+    brotherName: speakerName,
+    gender: initialGender,
+  });
   const [savedSpeech, setSavedSpeech] = useState<SavedSpeech | null>(null);
   const [generatedSpeeches, setGeneratedSpeeches] = useState<GeneratedSpeech[]>([]);
   const [isSaving, setIsSaving] = useState(false);
