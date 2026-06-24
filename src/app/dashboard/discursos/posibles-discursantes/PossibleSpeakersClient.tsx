@@ -12,6 +12,7 @@ import {
   Modal,
   Popconfirm,
   Select,
+  Segmented,
   Table,
   Tag,
   Typography,
@@ -38,15 +39,27 @@ type PossibleSpeakersClientProps = {
   initialSpeakers: PossibleSpeaker[];
 };
 
+type DiscourseFilter = "all" | "yes" | "no";
+
 const discourseOptions = [
   { label: "Sí", value: true },
   { label: "No", value: false },
 ];
 
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
 export default function PossibleSpeakersClient({
   initialSpeakers,
 }: PossibleSpeakersClientProps) {
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [discourseFilter, setDiscourseFilter] =
+    useState<DiscourseFilter>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSavingNewSpeaker, setIsSavingNewSpeaker] = useState(false);
   const [editingSpeakerId, setEditingSpeakerId] =
@@ -57,6 +70,24 @@ export default function PossibleSpeakersClient({
     useState<PossibleSpeaker["id"] | null>(null);
   const [createForm] = Form.useForm<PossibleSpeakerFormValues>();
   const [editForm] = Form.useForm<PossibleSpeakerFormValues>();
+  const filteredSpeakers = initialSpeakers.filter((speaker) => {
+    const search = normalizeText(searchText);
+    const matchesSearch = !search
+      ? true
+      : [
+          speaker.first_name || "",
+          speaker.last_name || "",
+          `${speaker.first_name || ""} ${speaker.last_name || ""}`,
+        ].some((value) => normalizeText(value).includes(search));
+    const matchesDiscourse =
+      discourseFilter === "all"
+        ? true
+        : discourseFilter === "yes"
+          ? speaker.discourse === true
+          : speaker.discourse === false;
+
+    return matchesSearch && matchesDiscourse;
+  });
 
   const refreshSpeakers = () => {
     router.refresh();
@@ -274,11 +305,36 @@ export default function PossibleSpeakersClient({
           </Button>
         </Flex>
 
+        <Flex
+          align="center"
+          gap={12}
+          justify="space-between"
+          style={{ marginBottom: 16 }}
+          wrap
+        >
+          <Input.Search
+            allowClear
+            placeholder="Buscar por nombre o apellido"
+            value={searchText}
+            onChange={(event) => setSearchText(event.target.value)}
+            style={{ width: "100%", maxWidth: 360 }}
+          />
+          <Segmented
+            value={discourseFilter}
+            onChange={(value) => setDiscourseFilter(value as DiscourseFilter)}
+            options={[
+              { label: "Todos", value: "all" },
+              { label: "Discursaron", value: "yes" },
+              { label: "No discursaron", value: "no" },
+            ]}
+          />
+        </Flex>
+
         <Form form={editForm} component={false}>
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={initialSpeakers}
+            dataSource={filteredSpeakers}
             pagination={false}
             scroll={{ x: true }}
           />
