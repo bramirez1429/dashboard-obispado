@@ -39,6 +39,7 @@ import {
 } from "../components/actions";
 import WardStakeAffairsList from "./WardStakeAffairsList";
 import styles from "./page.module.css";
+import dayjs from "dayjs";
 
 type NewMinuteFormValues = {
   date?: Dayjs;
@@ -93,6 +94,17 @@ const initialAuthorityOptions = meetingMinuteAuthoritiesData.map((authority) => 
   value: authority,
   label: authority,
 }));
+const defaultLead = "OBISPO MARTINEZ";
+const defaultWelcomeAndAcknowledgmentsOfAuthorities = [
+  "DANIEL LOZANO (MSC)",
+  "NARCISO GERONIMO (PATRIARCA)",
+];
+const getUpcomingSunday = () => {
+  const today = dayjs();
+  const daysUntilSunday = today.day() === 0 ? 0 : 7 - today.day();
+
+  return today.add(daysUntilSunday, "day");
+};
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
 const hymnOptions = Object.entries(hymnsByNumber)
   .sort(
@@ -408,6 +420,10 @@ const NewMinutePage = () => {
           className={styles.form}
           form={form}
           initialValues={{
+            date: getUpcomingSunday(),
+            leads: defaultLead,
+            welcomeAndAcknowledgmentsOfAuthorities:
+              defaultWelcomeAndAcknowledgmentsOfAuthorities,
             firstHymn: emptyHymn,
             sacramentalHymn: emptyHymn,
             lastHymn: emptyHymn,
