@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
+import hymnsBySectionData from "@/data/hymns-by-section.json";
 import meetingMinuteAuthoritiesData from "@/data/meeting-minute-authorities.json";
 import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
 import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
@@ -75,10 +76,29 @@ type HymnCatalogEntry = {
   url?: string;
 };
 
+type HymnSection = {
+  section: string;
+  hymns: HymnCatalogEntry[];
+};
+
+type HymnSelectOption = {
+  label: string;
+  value: string;
+};
+
+type HymnSelectOptionGroup = {
+  label: string;
+  options: HymnSelectOption[];
+};
+
+type HymnSelectOptions = Array<HymnSelectOption | HymnSelectOptionGroup>;
+
 type HymnFieldProps = {
   form: ReturnType<typeof Form.useForm<NewMinuteFormValues>>[0];
   label: string;
   name: "firstHymn" | "sacramentalHymn" | "lastHymn";
+  options?: HymnSelectOptions;
+  placeholder?: string;
 };
 
 const { Paragraph, Title } = Typography;
@@ -94,7 +114,7 @@ const initialAuthorityOptions = meetingMinuteAuthoritiesData.map((authority) => 
   value: authority,
   label: authority,
 }));
-const defaultLead = "OBISPO MARTINEZ";
+const defaultPreside = "OBISPO MARTINEZ";
 const defaultWelcomeAndAcknowledgmentsOfAuthorities = [
   "DANIEL LOZANO (MSC)",
   "NARCISO GERONIMO (PATRIARCA)",
@@ -106,15 +126,36 @@ const getUpcomingSunday = () => {
   return today.add(daysUntilSunday, "day");
 };
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
-const hymnOptions = Object.entries(hymnsByNumber)
-  .sort(
-    ([firstNumber], [secondNumber]) =>
-      Number(firstNumber) - Number(secondNumber)
-  )
-  .map(([number, hymn]) => ({
-    value: number,
-    label: `${hymn.number} - ${hymn.title}`,
+const hymnsBySection = hymnsBySectionData as HymnSection[];
+const getHymnValue = (hymn: HymnCatalogEntry) => String(hymn.number);
+const flattenHymnsBySection = (sections: HymnSection[]) =>
+  sections.flatMap((sectionGroup) => sectionGroup.hymns);
+const allHymns = flattenHymnsBySection(hymnsBySection);
+const findHymnByValue = (value?: string | number) =>
+  allHymns.find((hymn) => getHymnValue(hymn) === String(value));
+const buildHymnOptionsBySection = (
+  sections: HymnSection[]
+): HymnSelectOptionGroup[] =>
+  sections.map((sectionGroup) => ({
+    label: sectionGroup.section,
+    options: sectionGroup.hymns.map((hymn) => ({
+      label: `${hymn.number} - ${hymn.title}`,
+      value: getHymnValue(hymn),
+    })),
   }));
+const hymnOptionsBySection = buildHymnOptionsBySection(hymnsBySection);
+const sacramentalHymnOptionsBySection: HymnSelectOptionGroup[] =
+  hymnsBySection
+    .filter(
+      (sectionGroup) => sectionGroup.section.toUpperCase() === "LA SANTA CENA"
+    )
+    .map((sectionGroup) => ({
+      label: "LA SANTA CENA",
+      options: sectionGroup.hymns.map((hymn) => ({
+        label: `${hymn.number} - ${hymn.title}`,
+        value: getHymnValue(hymn),
+      })),
+    }));
 
 const emptyHymn: MeetingMinuteHymn = {
   number: "",
@@ -122,25 +163,36 @@ const emptyHymn: MeetingMinuteHymn = {
   url: "",
 };
 
-function withCatalogHymnData(hymn?: MeetingMinuteHymn): MeetingMinuteHymn {
-  const number = String(hymn?.number ?? "");
-  const catalogHymn = hymnsByNumber[number];
+function withCatalogHymnData(
+  hymn?: MeetingMinuteHymn | string | number
+): MeetingMinuteHymn {
+  const selectedValue =
+    typeof hymn === "object" && hymn !== null ? hymn.number : hymn;
+  const number = String(selectedValue ?? "");
+  const catalogHymn = findHymnByValue(number) || hymnsByNumber[number];
+  const currentHymn = typeof hymn === "object" && hymn !== null ? hymn : null;
 
   return {
     number,
-    title: hymn?.title || catalogHymn?.title || "",
-    url: hymn?.url || catalogHymn?.url || "",
+    title: currentHymn?.title || catalogHymn?.title || "",
+    url: currentHymn?.url || catalogHymn?.url || "",
   };
 }
 
-function HymnField({ form, label, name }: HymnFieldProps) {
+function HymnField({
+  form,
+  label,
+  name,
+  options = hymnOptionsBySection,
+  placeholder = "Seleccionar himno",
+}: HymnFieldProps) {
   const updateHymn = (value?: string) => {
     if (!value) {
       form.setFieldValue(name, emptyHymn);
       return;
     }
 
-    const hymn = hymnsByNumber[value];
+    const hymn = findHymnByValue(value) || hymnsByNumber[value];
 
     form.setFieldValue(name, {
       number: String(hymn?.number ?? value),
@@ -160,11 +212,11 @@ function HymnField({ form, label, name }: HymnFieldProps) {
       <Form.Item label={label} name={[name, "number"]}>
         <Select
           showSearch
-          placeholder="Selecciona un himno"
+          placeholder={placeholder}
           style={{ width: "100%" }}
           optionFilterProp="label"
           optionLabelProp="label"
-          options={hymnOptions}
+          options={options}
           filterOption={(input, option) =>
             String(option?.label ?? "")
               .toLowerCase()
@@ -374,6 +426,7 @@ const NewMinutePage = () => {
       router.push("/dashboard/minuta");
       router.refresh();
     } catch (error) {
+      console.error("Error guardando minuta:", error);
       message.error(
         error instanceof Error ? error.message : "No se pudo guardar la minuta"
       );
@@ -421,7 +474,8 @@ const NewMinutePage = () => {
           form={form}
           initialValues={{
             date: getUpcomingSunday(),
-            leads: defaultLead,
+            presides: defaultPreside,
+            leads: undefined,
             welcomeAndAcknowledgmentsOfAuthorities:
               defaultWelcomeAndAcknowledgmentsOfAuthorities,
             firstHymn: emptyHymn,
@@ -624,6 +678,8 @@ const NewMinutePage = () => {
                     form={form}
                     label="Himno sacramental"
                     name="sacramentalHymn"
+                    options={sacramentalHymnOptionsBySection}
+                    placeholder="Seleccionar himno sacramental"
                   />
                   <HymnField form={form} label="Himno final" name="lastHymn" />
                 </Space>
