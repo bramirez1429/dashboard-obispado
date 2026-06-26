@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import LogoutButton from "@/components/auth/LogoutButton";
 import {
   CheckSquareOutlined,
+  CalendarOutlined,
   FileTextOutlined,
   HomeOutlined,
   MenuFoldOutlined,
@@ -47,6 +48,20 @@ const menuItems = [
   },
 ];
 
+const adminMenuItems = [
+  {
+    type: "group" as const,
+    label: "Administradores",
+    children: [
+      {
+        key: "/dashboard/admin/entrevistas",
+        icon: <CalendarOutlined />,
+        label: "Entrevistas",
+      },
+    ],
+  },
+];
+
 function selectedKey(pathname: string) {
   if (pathname.startsWith("/dashboard/minuta")) {
     return "/dashboard/minuta";
@@ -64,15 +79,21 @@ function selectedKey(pathname: string) {
     return "/dashboard/usuarios";
   }
 
+  if (pathname.startsWith("/dashboard/admin/entrevistas")) {
+    return "/dashboard/admin/entrevistas";
+  }
+
   return "/dashboard";
 }
 
 export function DashboardShell({
   children,
+  isAdmin,
 }: {
   children: React.ReactNode;
   userFullName: string;
   userCalling: string;
+  isAdmin: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -171,7 +192,7 @@ export function DashboardShell({
           mode="inline"
           inlineCollapsed={collapsed}
           selectedKeys={[selectedKey(pathname)]}
-          items={menuItems}
+          items={isAdmin ? [...menuItems, ...adminMenuItems] : menuItems}
           onClick={({ key }) => router.push(key)}
           style={{ borderInlineEnd: 0 }}
         />

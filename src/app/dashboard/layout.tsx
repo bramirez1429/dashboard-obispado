@@ -17,9 +17,14 @@ export default async function DashboardLayout({
     `${session?.user?.name || ""} ${session?.user?.lastname || ""}`.trim() ||
     "Usuario";
   const calling = session?.user?.callings || "Sin llamamiento asignado";
+  const isAdmin = session?.user?.role === "Admin";
 
   return (
-    <DashboardShell userFullName={fullName} userCalling={calling}>
+    <DashboardShell
+      userFullName={fullName}
+      userCalling={calling}
+      isAdmin={isAdmin}
+    >
       {children}
     </DashboardShell>
   );
