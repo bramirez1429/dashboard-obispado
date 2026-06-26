@@ -669,16 +669,8 @@ const NewMinutePage = () => {
             firstHymn: emptyHymn,
             sacramentalHymn: emptyHymn,
             lastHymn: emptyHymn,
-            messages: [{ name: "", time: undefined, topic: "" }],
-            wardStakeAffairs: [
-              {
-                type: "Sostenimiento",
-                customType: "",
-                name: "",
-                calling: undefined,
-                customCalling: "",
-              },
-            ],
+            messages: [],
+            wardStakeAffairs: [],
           }}
           layout="vertical"
           onFinish={handleSubmit}
