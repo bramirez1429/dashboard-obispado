@@ -122,6 +122,9 @@ const WardStakeAffairsList = () => (
       <Space className={styles.list} orientation="vertical" size={12}>
         {fields.map((field) => (
           <div className={styles.item} key={field.key}>
+            <Form.Item name={[field.name, "interviewId"]} hidden>
+              <Input />
+            </Form.Item>
             <Row align="top" gutter={[12, 0]}>
               <Col xs={24} md={7}>
                 <Form.Item label="Asunto" name={[field.name, "type"]}>

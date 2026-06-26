@@ -328,6 +328,14 @@ export default function InterviewsClient() {
                   <Space direction="vertical" size={10} style={{ width: "100%" }}>
                     <div>
                       <Typography.Text type="secondary">
+                        Fecha de sostenimiento
+                      </Typography.Text>
+                      <Typography.Paragraph style={{ marginBottom: 0 }}>
+                        {formatDisplayDate(interview.sustaining_date)}
+                      </Typography.Paragraph>
+                    </div>
+                    <div>
+                      <Typography.Text type="secondary">
                         Persona a entrevistar
                       </Typography.Text>
                       <Typography.Paragraph strong style={{ marginBottom: 0 }}>
@@ -352,14 +360,6 @@ export default function InterviewsClient() {
                       <Typography.Text type="secondary">Asunto</Typography.Text>
                       <Typography.Paragraph style={{ marginBottom: 0 }}>
                         {interview.subject || "-"}
-                      </Typography.Paragraph>
-                    </div>
-                    <div>
-                      <Typography.Text type="secondary">
-                        Fecha de sostenimiento
-                      </Typography.Text>
-                      <Typography.Paragraph style={{ marginBottom: 0 }}>
-                        {formatDisplayDate(interview.sustaining_date)}
                       </Typography.Paragraph>
                     </div>
                     <div>
@@ -429,6 +429,15 @@ export default function InterviewsClient() {
       >
         <Form form={form} layout="vertical">
           <Form.Item
+            label="Fecha de sostenimiento"
+            name="sustaining_date"
+            rules={[
+              { required: true, message: "Selecciona la fecha de sostenimiento" },
+            ]}
+          >
+            <DatePicker format="DD-MM-YYYY" style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item
             label="Persona a entrevistar"
             name="person_name"
             rules={[{ required: true, message: "Ingresa la persona" }]}
@@ -483,15 +492,6 @@ export default function InterviewsClient() {
                 </>
               )}
             />
-          </Form.Item>
-          <Form.Item
-            label="Fecha de sostenimiento"
-            name="sustaining_date"
-            rules={[
-              { required: true, message: "Selecciona la fecha de sostenimiento" },
-            ]}
-          >
-            <DatePicker format="DD-MM-YYYY" style={{ width: "100%" }} />
           </Form.Item>
         </Form>
       </Modal>

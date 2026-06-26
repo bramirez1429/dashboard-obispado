@@ -5,6 +5,7 @@ export type MeetingMinuteHymn = {
 };
 
 export type MeetingMinuteWardAndStakeBusiness = {
+  interviewId?: string | number;
   subject: string;
   name: string;
   details: string;

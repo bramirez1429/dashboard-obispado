@@ -64,6 +64,7 @@ type NewMinuteFormValues = {
     topic?: string;
   }[];
   wardStakeAffairs?: {
+    interviewId?: string | number;
     type?: string;
     customType?: string;
     name?: string;
@@ -115,6 +116,15 @@ type AcceptedSpeechRecord = {
   title?: string | null;
   time?: number | null;
   duration?: number | null;
+};
+
+type AcceptedInterviewRecord = {
+  id: string | number;
+  person_name: string | null;
+  calling_name: string | null;
+  subject: string | null;
+  accepted_calling: boolean | null;
+  sustaining_date: string | null;
 };
 
 const { Paragraph, Title } = Typography;
@@ -274,6 +284,7 @@ const getWardAndStakeBusiness = (
 ): MeetingMinuteWardAndStakeBusiness[] => {
   const business = (affairs || [])
     .map((affair) => ({
+      interviewId: affair.interviewId,
       subject:
         affair.type === "Otro"
           ? affair.customType?.trim() || ""
@@ -284,7 +295,7 @@ const getWardAndStakeBusiness = (
           ? affair.customCalling?.trim() || ""
           : affair.calling?.trim() || "",
     }))
-    .filter((item) => item.subject || item.name || item.details);
+    .filter((item) => item.interviewId || item.subject || item.name || item.details);
 
   return business.length
     ? business
@@ -414,9 +425,88 @@ const NewMinutePage = () => {
     [form]
   );
 
+  const syncAcceptedCallingsForDate = useCallback(
+    async (minuteDate?: Dayjs | string | null) => {
+      const formattedMinuteDate = getFormattedMinuteDate(minuteDate);
+
+      if (!formattedMinuteDate) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("Interviews")
+        .select(
+          "id, person_name, calling_name, subject, accepted_calling, sustaining_date"
+        )
+        .eq("accepted_calling", true)
+        .eq("sustaining_date", formattedMinuteDate)
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error cargando entrevistas aceptadas para la minuta:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+          formattedMinuteDate,
+        });
+        message.error("No se pudieron cargar los asuntos aceptados");
+        return;
+      }
+
+      if (!data?.length) {
+        return;
+      }
+
+      const acceptedInterviewItems = (data as AcceptedInterviewRecord[]).map(
+        (interview) => ({
+          interviewId: interview.id,
+          type: interview.subject || "",
+          name: interview.person_name || "",
+          calling: interview.calling_name || "",
+        })
+      );
+      const currentAffairs: NonNullable<NewMinuteFormValues["wardStakeAffairs"]> =
+        (
+          (form.getFieldValue("wardStakeAffairs") || []) as NonNullable<
+            NewMinuteFormValues["wardStakeAffairs"]
+          >
+        ).filter(
+          (affair) =>
+            affair.interviewId ||
+            affair.type ||
+            affair.customType ||
+            affair.name ||
+            affair.calling ||
+            affair.customCalling
+        );
+      const mergedAffairs = [
+        ...currentAffairs,
+        ...acceptedInterviewItems.filter(
+          (acceptedItem) =>
+            !currentAffairs.some(
+              (currentItem) =>
+                String(currentItem.interviewId ?? "") ===
+                String(acceptedItem.interviewId)
+            )
+        ),
+      ];
+
+      form.setFieldsValue({
+        wardStakeAffairs: mergedAffairs,
+      });
+    },
+    [form]
+  );
+
   useEffect(() => {
     void syncAcceptedSpeechesForDate(defaultMinuteDate);
-  }, [defaultMinuteDate, syncAcceptedSpeechesForDate]);
+    void syncAcceptedCallingsForDate(defaultMinuteDate);
+  }, [
+    defaultMinuteDate,
+    syncAcceptedCallingsForDate,
+    syncAcceptedSpeechesForDate,
+  ]);
 
   const handleAddPreside = () => {
     const presideName = newPresideName.trim();
@@ -607,7 +697,10 @@ const NewMinutePage = () => {
                   <DatePicker
                     className={styles.control}
                     format="DD-MM-YYYY"
-                    onChange={(date) => void syncAcceptedSpeechesForDate(date)}
+                    onChange={(date) => {
+                      void syncAcceptedSpeechesForDate(date);
+                      void syncAcceptedCallingsForDate(date);
+                    }}
                   />
                 </Form.Item>
               </Col>

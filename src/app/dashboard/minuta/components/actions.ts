@@ -25,11 +25,12 @@ const getWardAndStakeBusiness = (values: CreateMinuteValues) => {
     : [values.wardAndStakeBusiness];
   const business = businessItems
     .map((item) => ({
+      interviewId: item?.interviewId,
       subject: item?.subject?.trim() || "",
       name: item?.name?.trim() || "",
       details: item?.details?.trim() || "",
     }))
-    .filter((item) => item.subject || item.name || item.details);
+    .filter((item) => item.interviewId || item.subject || item.name || item.details);
 
   return business.length
     ? business
