@@ -42,6 +42,7 @@ type PossibleSpeakersClientProps = {
 };
 
 type DiscourseFilter = "all" | "yes" | "no";
+type GenderFilter = "all" | "female" | "male";
 
 const discourseOptions = [
   { label: "Sí", value: true },
@@ -73,12 +74,13 @@ const normalizeText = (value: string) =>
     .trim();
 
 export default function PossibleSpeakersClient({
-  initialSpeakers,
+  initialSpeakers: speakers,
 }: PossibleSpeakersClientProps) {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [discourseFilter, setDiscourseFilter] =
     useState<DiscourseFilter>("all");
+  const [genderFilter, setGenderFilter] = useState<GenderFilter>("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSavingNewSpeaker, setIsSavingNewSpeaker] = useState(false);
   const [editingSpeakerId, setEditingSpeakerId] =
@@ -89,7 +91,8 @@ export default function PossibleSpeakersClient({
     useState<PossibleSpeaker["id"] | null>(null);
   const [createForm] = Form.useForm<PossibleSpeakerFormValues>();
   const [editForm] = Form.useForm<PossibleSpeakerFormValues>();
-  const filteredSpeakers = initialSpeakers.filter((speaker) => {
+  const totalSpeakersCount = speakers.length;
+  const filteredSpeakers = speakers.filter((speaker) => {
     const search = normalizeText(searchText);
     const matchesSearch = !search
       ? true
@@ -104,9 +107,15 @@ export default function PossibleSpeakersClient({
         : discourseFilter === "yes"
           ? speaker.discourse === true
           : speaker.discourse === false;
+    const matchesGender =
+      genderFilter === "all" ? true : speaker.gender === genderFilter;
 
-    return matchesSearch && matchesDiscourse;
+    return matchesSearch && matchesDiscourse && matchesGender;
   });
+  const hasActiveFilters =
+    searchText.trim() !== "" ||
+    discourseFilter !== "all" ||
+    genderFilter !== "all";
 
   const refreshSpeakers = () => {
     router.refresh();
@@ -374,7 +383,7 @@ export default function PossibleSpeakersClient({
         <Flex
           align="center"
           gap={12}
-          justify="space-between"
+          justify="start"
           style={{ marginBottom: 16 }}
           wrap
         >
@@ -394,6 +403,20 @@ export default function PossibleSpeakersClient({
               { label: "No discursaron", value: "no" },
             ]}
           />
+          <Segmented
+            value={genderFilter}
+            onChange={(value) => setGenderFilter(value as GenderFilter)}
+            options={[
+              { label: "Todos", value: "all" },
+              { label: "Mujeres", value: "female" },
+              { label: "Hombres", value: "male" },
+            ]}
+          />
+          <Typography.Text strong>
+            {hasActiveFilters
+              ? `Mostrando: ${filteredSpeakers.length} de ${totalSpeakersCount}`
+              : `Total de discursantes: ${totalSpeakersCount}`}
+          </Typography.Text>
         </Flex>
 
         <Form form={editForm} component={false}>

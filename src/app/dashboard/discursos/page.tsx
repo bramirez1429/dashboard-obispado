@@ -7,14 +7,28 @@ import {
   EditOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Checkbox, Empty, Modal, Space, Spin, Table, Tag, message } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Empty,
+  Modal,
+  Space,
+  Spin,
+  Switch,
+  Table,
+  Tag,
+  message,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { getSpeechStatusLabel } from "@/lib/speeches";
+import { supabase } from "@/lib/supabase/client";
 
 type SpeechStatus = "pending" | "shared";
 
@@ -27,12 +41,7 @@ type MessageRow = {
   time: number | null;
   status: SpeechStatus | null;
   did_speak: boolean | null;
-};
-
-type SpeechesResponse = {
-  success: boolean;
-  data?: MessageRow[];
-  error?: string;
+  accepted_discourse: boolean | null;
 };
 
 function formatDate(date: string | null) {
@@ -44,6 +53,7 @@ function getPublicSpeechLink(id: string) {
 }
 
 export default function DiscursosPage() {
+  const router = useRouter();
   const [speeches, setSpeeches] = useState<MessageRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingSpeechId, setUpdatingSpeechId] = useState<string | null>(null);
@@ -52,15 +62,20 @@ export default function DiscursosPage() {
   useEffect(() => {
     const loadSpeeches = async () => {
       try {
-        const response = await fetch("/api/speeches");
-        const result = (await response.json()) as SpeechesResponse;
+        const { data, error } = await supabase
+          .from("Speeches")
+          .select(
+            "id, name, gender, speech, date, time, status, did_speak, accepted_discourse"
+          )
+          .order("date", { ascending: false });
 
-        if (!response.ok || !result.success) {
-          message.error(result.error || "No se pudieron cargar los discursos");
+        if (error) {
+          console.error("Error loading speeches:", error);
+          message.error("No se pudieron cargar los discursos");
           return;
         }
 
-        setSpeeches(result.data || []);
+        setSpeeches((data || []) as MessageRow[]);
       } catch (error) {
         message.error(
           error instanceof Error
@@ -155,12 +170,57 @@ export default function DiscursosPage() {
     message.success("Link copiado para compartir");
   };
 
+  const handleAcceptedDiscourseChange = async (
+    speechId: string | number,
+    checked: boolean
+  ) => {
+    console.log("Actualizando discurso", speechId, checked);
+
+    const { data, error } = await supabase
+      .from("Speeches")
+      .update({ accepted_discourse: checked })
+      .eq("id", speechId)
+      .select("id, accepted_discourse")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error actualizando accepted_discourse:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        speechId,
+        checked,
+      });
+      message.error("No se pudo actualizar la aceptación del discurso");
+      return;
+    }
+
+    if (!data) {
+      console.error("No se encontro el discurso para actualizar", {
+        speechId,
+        checked,
+      });
+      message.error("No se encontro el discurso para actualizar");
+      return;
+    }
+
+    setSpeeches((prevSpeeches) =>
+      prevSpeeches.map((speech) =>
+        String(speech.id) === String(data.id)
+          ? { ...speech, accepted_discourse: data.accepted_discourse }
+          : speech
+      )
+    );
+    message.success("Estado de aceptación actualizado");
+    router.refresh();
+  };
+
   const columns: ColumnsType<MessageRow> = [
     {
       title: "N° discurso",
       dataIndex: "id",
-      key: "speech_id",
-      render: (_: string, record) => record.id,
+      key: "id",
     },
     {
       title: "Compartir",
@@ -252,6 +312,21 @@ export default function DiscursosPage() {
         <Button type="link" href={`/m/${id}`} target="_blank">
           Ver
         </Button>
+      ),
+    },
+    {
+      title: "Aceptó discurso",
+      dataIndex: "accepted_discourse",
+      key: "accepted_discourse",
+      render: (accepted: boolean | null, record) => (
+        <Switch
+          checked={Boolean(accepted)}
+          checkedChildren="Sí"
+          unCheckedChildren="No"
+          onChange={(checked) =>
+            void handleAcceptedDiscourseChange(record.id, checked)
+          }
+        />
       ),
     },
     {
