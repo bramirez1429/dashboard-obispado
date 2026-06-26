@@ -44,27 +44,33 @@ function getSpeakerNameWithPrefix(speech: PublicSpeech) {
 function renderTextWithLinks(text: string) {
   if (!text.trim()) return "Sin completar";
 
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(https?:\/\/[^\s]+)/gi;
   const lines = text.split("\n");
 
   return lines.map((line, lineIndex) => (
     <Fragment key={`${line}-${lineIndex}`}>
-      {line.split(urlRegex).map((part, partIndex) =>
-        /^https?:\/\//.test(part) ? (
+      {line.split(urlRegex).map((part, partIndex) => {
+        const isUrl = /^https?:\/\//i.test(part);
+
+        if (!isUrl) {
+          return <Fragment key={`${part}-${partIndex}`}>{part}</Fragment>;
+        }
+
+        const normalizedUrl = part.toLowerCase();
+
+        return (
           <a
-            className="speech-reference-link"
+            className="speech-reference-link public-reference-link"
             key={`${part}-${partIndex}`}
-            href={part}
+            href={normalizedUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>{part}</span>
+            <span>{normalizedUrl}</span>
             <ExportOutlined aria-hidden="true" />
           </a>
-        ) : (
-          <Fragment key={`${part}-${partIndex}`}>{part}</Fragment>
-        ),
-      )}
+        );
+      })}
       {lineIndex < lines.length - 1 ? <br /> : null}
     </Fragment>
   ));

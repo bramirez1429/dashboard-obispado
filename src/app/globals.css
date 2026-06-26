@@ -1105,6 +1105,11 @@ a {
   text-transform: uppercase;
 }
 
+.public-detail-card .public-reference-link,
+.public-detail-card .public-reference-link span {
+  text-transform: none;
+}
+
 .public-detail-value {
   color: #1f2933;
   font-size: 16px;
