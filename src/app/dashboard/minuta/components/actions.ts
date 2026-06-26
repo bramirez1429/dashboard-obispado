@@ -10,11 +10,14 @@ export type CreateMinuteValues = MeetingMinute;
 const getMessages = (values: CreateMinuteValues) =>
   (values.messages ?? [])
     .map((message) => ({
+      speechId: message.speechId,
       name: message.name?.trim() ?? "",
       time: Number(message.time ?? 0),
       topic: message.topic?.trim() ?? "",
     }))
-    .filter((message) => message.name || message.time || message.topic);
+    .filter(
+      (message) => message.speechId || message.name || message.time || message.topic
+    );
 
 const getWardAndStakeBusiness = (values: CreateMinuteValues) => {
   const businessItems = Array.isArray(values.wardAndStakeBusiness)

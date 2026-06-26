@@ -15,6 +15,7 @@ export type MeetingMinuteWardAndStakeBusinessValue =
   | MeetingMinuteWardAndStakeBusiness[];
 
 export type MeetingMinuteMessage = {
+  speechId?: string | number;
   name: string;
   time: number;
   topic: string;

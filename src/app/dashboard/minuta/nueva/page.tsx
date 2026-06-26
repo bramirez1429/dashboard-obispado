@@ -24,12 +24,13 @@ import {
 import type { Dayjs } from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
 import hymnsBySectionData from "@/data/hymns-by-section.json";
 import meetingMinuteAuthoritiesData from "@/data/meeting-minute-authorities.json";
 import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
 import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
+import { supabase } from "@/lib/supabase/client";
 import type {
   MeetingMinuteHymn,
   MeetingMinuteWardAndStakeBusiness,
@@ -57,6 +58,7 @@ type NewMinuteFormValues = {
   lastHymn?: MeetingMinuteHymn;
   closingPrayer?: string;
   messages?: {
+    speechId?: string | number;
     name?: string;
     time?: number;
     topic?: string;
@@ -101,7 +103,22 @@ type HymnFieldProps = {
   placeholder?: string;
 };
 
+type AcceptedSpeechRecord = {
+  id: string | number;
+  speaker_name?: string | null;
+  name?: string | null;
+  full_name?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  speech?: string | null;
+  topic?: string | null;
+  title?: string | null;
+  time?: number | null;
+  duration?: number | null;
+};
+
 const { Paragraph, Title } = Typography;
+const SPEECH_DATE_FIELD = "date";
 const initialPresideOptions = meetingMinutePresidesData.map((preside) => ({
   value: preside,
   label: preside,
@@ -125,6 +142,22 @@ const getUpcomingSunday = () => {
 
   return today.add(daysUntilSunday, "day");
 };
+const getFormattedMinuteDate = (dateValue?: Dayjs | string | null) => {
+  if (!dateValue) {
+    return null;
+  }
+
+  if (dayjs.isDayjs(dateValue)) {
+    return dateValue.format("YYYY-MM-DD");
+  }
+
+  return dayjs(dateValue).format("YYYY-MM-DD");
+};
+const getSpeakerName = (speech: AcceptedSpeechRecord) =>
+  speech.speaker_name ||
+  speech.name ||
+  speech.full_name ||
+  `${speech.first_name || ""} ${speech.last_name || ""}`.trim();
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
 const hymnsBySection = hymnsBySectionData as HymnSection[];
 const getHymnValue = (hymn: HymnCatalogEntry) => String(hymn.number);
@@ -267,11 +300,12 @@ const getWardAndStakeBusiness = (
 const getMessages = (messages: NewMinuteFormValues["messages"]) =>
   (messages || [])
     .map((item) => ({
+      speechId: item.speechId,
       name: item.name?.trim() || "",
       time: Number(item.time ?? 0),
       topic: item.topic?.trim() || "",
     }))
-    .filter((item) => item.name || item.time || item.topic);
+    .filter((item) => item.speechId || item.name || item.time || item.topic);
 
 const getAuthoritiesArray = (value?: string | string[]) => {
   if (Array.isArray(value)) {
@@ -309,6 +343,7 @@ const getMinuteValues = (values: NewMinuteFormValues): CreateMinuteValues => ({
 
 const NewMinutePage = () => {
   const [form] = Form.useForm<NewMinuteFormValues>();
+  const [defaultMinuteDate] = useState(() => getUpcomingSunday());
   const [isSaving, setIsSaving] = useState(false);
   const [presideOptions, setPresideOptions] = useState(initialPresideOptions);
   const [newPresideName, setNewPresideName] = useState("");
@@ -319,6 +354,69 @@ const NewMinutePage = () => {
   );
   const [newAuthorityName, setNewAuthorityName] = useState("");
   const router = useRouter();
+
+  const syncAcceptedSpeechesForDate = useCallback(
+    async (minuteDate?: Dayjs | string | null) => {
+      const formattedDate = getFormattedMinuteDate(minuteDate);
+
+      if (!formattedDate) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("Speeches")
+        .select("*")
+        .eq("accepted_discourse", true)
+        .eq(SPEECH_DATE_FIELD, formattedDate)
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error cargando discursos aceptados para la minuta:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
+          formattedDate,
+          speechDateField: SPEECH_DATE_FIELD,
+        });
+        message.error("No se pudieron cargar los discursos aceptados");
+        return;
+      }
+
+      if (!data?.length) {
+        return;
+      }
+
+      const acceptedMessages = (data as AcceptedSpeechRecord[]).map((speech) => ({
+        speechId: speech.id,
+        name: getSpeakerName(speech),
+        topic: speech.speech || speech.topic || speech.title || "",
+        time: speech.time || speech.duration || 10,
+      }));
+      const currentMessages: NonNullable<NewMinuteFormValues["messages"]> =
+        form.getFieldValue("messages") || [];
+      const mergedMessages = [
+        ...currentMessages,
+        ...acceptedMessages.filter(
+          (acceptedMessage) =>
+            !currentMessages.some(
+              (currentMessage) =>
+                String(currentMessage.speechId ?? "") ===
+                String(acceptedMessage.speechId)
+            )
+        ),
+      ];
+
+      form.setFieldsValue({
+        messages: mergedMessages,
+      });
+    },
+    [form]
+  );
+
+  useEffect(() => {
+    void syncAcceptedSpeechesForDate(defaultMinuteDate);
+  }, [defaultMinuteDate, syncAcceptedSpeechesForDate]);
 
   const handleAddPreside = () => {
     const presideName = newPresideName.trim();
@@ -473,7 +571,7 @@ const NewMinutePage = () => {
           className={styles.form}
           form={form}
           initialValues={{
-            date: getUpcomingSunday(),
+            date: defaultMinuteDate,
             presides: defaultPreside,
             leads: undefined,
             welcomeAndAcknowledgmentsOfAuthorities:
@@ -506,7 +604,11 @@ const NewMinutePage = () => {
                   name="date"
                   rules={[{ required: true, message: "Selecciona una fecha" }]}
                 >
-                  <DatePicker className={styles.control} format="DD-MM-YYYY" />
+                  <DatePicker
+                    className={styles.control}
+                    format="DD-MM-YYYY"
+                    onChange={(date) => void syncAcceptedSpeechesForDate(date)}
+                  />
                 </Form.Item>
               </Col>
               <Col xs={24} md={12}>
@@ -716,6 +818,9 @@ const NewMinutePage = () => {
                       gutter={[12, 0]}
                       key={field.key}
                     >
+                      <Form.Item name={[field.name, "speechId"]} hidden>
+                        <Input />
+                      </Form.Item>
                       <Col xs={24} md={9}>
                         <Form.Item
                           label="Nombre del discursante"
