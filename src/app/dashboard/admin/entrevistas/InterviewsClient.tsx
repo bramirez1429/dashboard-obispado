@@ -325,7 +325,7 @@ export default function InterviewsClient() {
                     </Tag>
                   }
                 >
-                  <Space direction="vertical" size={10} style={{ width: "100%" }}>
+                  <Space orientation="vertical" size={10} style={{ width: "100%" }}>
                     <div>
                       <Typography.Text type="secondary">
                         Fecha de sostenimiento
