@@ -35,11 +35,13 @@ export default function LoginPage() {
   return (
     <main className="login-page">
       <Card className="login-card">
-        <Typography.Title level={2} style={{ marginTop: 0 }}>
+        <section className="login-form-panel" aria-label="Formulario de inicio de sesion">
+          <div className="login-form-box">
+        <Typography.Title className="login-title" level={2} style={{ marginTop: 0 }}>
           Iniciar sesión
         </Typography.Title>
 
-        <Typography.Paragraph type="secondary">
+        <Typography.Paragraph className="login-subtitle" type="secondary">
           Ingrese con el usuario asignado
         </Typography.Paragraph>
 
@@ -68,10 +70,20 @@ export default function LoginPage() {
             />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" loading={isSubmitting} block>
+          <Button
+            className="login-submit-button"
+            type="primary"
+            htmlType="submit"
+            loading={isSubmitting}
+            block
+          >
             Ingresar
           </Button>
         </Form>
+          </div>
+        </section>
+
+        <section className="login-image-panel" aria-label="Capitan Moroni" />
       </Card>
     </main>
   );
