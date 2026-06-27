@@ -1385,18 +1385,252 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background: #f5f7fb;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #d8ecff 0%, #b9dcff 100%);
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px;
-  border-radius: 18px;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  max-width: 430px;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #8fc4f4 0%, #6fb2ed 100%);
+  box-shadow: 0 24px 60px rgba(36, 92, 140, 0.18);
+}
+
+.login-card .ant-card {
+  background: transparent;
+}
+
+.login-card .ant-card-body {
+  padding: 40px;
+}
+
+.login-card .ant-typography {
+  text-align: center;
+}
+
+.login-card h2.ant-typography {
+  margin-bottom: 8px;
+  color: #103a5f;
+  font-weight: 700;
+}
+
+.login-card .ant-typography-secondary {
+  margin-bottom: 28px;
+  color: rgba(16, 58, 95, 0.82);
+}
+
+.login-card .ant-form {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.login-card .ant-form-item-label > label {
+  color: #103a5f;
+  font-weight: 600;
+}
+
+.login-card .ant-input,
+.login-card .ant-input-affix-wrapper {
+  width: 100%;
+  height: 46px;
+  border-color: rgba(113, 160, 199, 0.4);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: none;
+}
+
+.login-card .ant-input {
+  padding: 0 14px;
+}
+
+.login-card .ant-input-affix-wrapper {
+  padding: 0 14px;
+}
+
+.login-card .ant-input-affix-wrapper .ant-input {
+  padding-right: 0;
+  padding-left: 0;
+  background: transparent;
+}
+
+.login-input.ant-input-affix-wrapper,
+.login-input.ant-input {
+  width: 100%;
+  height: 46px;
+  border-radius: 10px;
+  background: #e8f2ff;
+  border: 1px solid #b7d4f5;
+  box-shadow: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.login-input.ant-input {
+  padding: 0 14px;
+}
+
+.login-input.ant-input-affix-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 14px;
+}
+
+.login-input input,
+.login-input.ant-input-affix-wrapper input {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  background: transparent;
+}
+
+.login-input.ant-input-affix-wrapper .ant-input-suffix {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 100%;
+  margin-left: 8px;
+  background: transparent;
+}
+
+.login-input.ant-input-affix-wrapper:hover,
+.login-input.ant-input:hover {
+  border-color: #7fb8f0;
+  background: #e8f2ff;
+  box-shadow: none;
+}
+
+.login-input.ant-input-affix-wrapper-focused,
+.login-input.ant-input-affix-wrapper:focus-within,
+.login-input.ant-input:focus {
+  border-color: #4f9de8;
+  background: #e8f2ff;
+  box-shadow: none;
+}
+
+.login-input.ant-input-affix-wrapper:hover .ant-input-suffix,
+.login-input.ant-input-affix-wrapper-focused .ant-input-suffix,
+.login-input.ant-input-affix-wrapper:focus-within .ant-input-suffix {
+  background: transparent;
+}
+
+.login-card .ant-input:not(.login-input):hover,
+.login-card .ant-input:not(.login-input):focus,
+.login-card .ant-input-affix-wrapper:not(.login-input):hover,
+.login-card .ant-input-affix-wrapper-focused:not(.login-input) {
+  border-color: #5f9fd6;
+  box-shadow: 0 0 0 3px rgba(95, 159, 214, 0.16);
+}
+
+.login-password-input.ant-input-affix-wrapper {
+  overflow: hidden;
+}
+
+.login-password-input.ant-input-affix-wrapper input {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.login-password-input.ant-input-affix-wrapper input:hover,
+.login-password-input.ant-input-affix-wrapper input:focus {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.login-password-input.ant-input-affix-wrapper .ant-input-suffix {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+  margin-inline-start: 0;
+  padding-inline-start: 8px;
+}
+
+.login-password-input.ant-input-affix-wrapper:hover .ant-input-suffix,
+.login-password-input.ant-input-affix-wrapper-focused .ant-input-suffix,
+.login-password-input.ant-input-affix-wrapper:focus-within .ant-input-suffix {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+.login-password-input.ant-input-affix-wrapper .ant-input-suffix *,
+.login-password-input.ant-input-affix-wrapper:hover .ant-input-suffix * {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.login-password-input.ant-input-affix-wrapper .ant-input-suffix::before,
+.login-password-input.ant-input-affix-wrapper .ant-input-suffix::after,
+.login-password-input.ant-input-affix-wrapper:hover .ant-input-suffix::before,
+.login-password-input.ant-input-affix-wrapper:hover .ant-input-suffix::after {
+  display: none !important;
+  content: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.login-card .ant-btn-primary {
+  height: 46px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #1c5f9d;
+  font-weight: 700;
+  box-shadow: 0 14px 28px rgba(56, 118, 174, 0.18);
+}
+
+.login-card .ant-btn-primary:hover,
+.login-card .ant-btn-primary:focus {
+  background: #ffffff;
+  color: #164f84;
+  box-shadow: 0 16px 32px rgba(56, 118, 174, 0.24);
 }
 
 @media (max-width: 768px) {
+  .login-page {
+    padding: 20px;
+  }
+
+  .login-card {
+    max-width: 100%;
+    border-radius: 20px;
+  }
+
+  .login-card .ant-card-body {
+    padding: 30px 22px;
+  }
+
   .dashboard-content {
     height: 100vh;
     padding: 20px;

@@ -36,7 +36,7 @@ export default function LoginPage() {
     <main className="login-page">
       <Card className="login-card">
         <Typography.Title level={2} style={{ marginTop: 0 }}>
-          Ingreso al dashboard
+          Iniciar sesión
         </Typography.Title>
 
         <Typography.Paragraph type="secondary">
@@ -49,7 +49,11 @@ export default function LoginPage() {
             name="identifier"
             rules={[{ required: true, message: "Ingrese el usuario o teléfono" }]}
           >
-            <Input autoComplete="username" placeholder="Ej: consejero1 o 1161941121" />
+            <Input
+              autoComplete="username"
+              className="login-input"
+              placeholder="Ej: consejero1 o 1161941121"
+            />
           </Form.Item>
 
           <Form.Item
@@ -59,6 +63,7 @@ export default function LoginPage() {
           >
             <Input.Password
               autoComplete="current-password"
+              className="login-input login-password-input"
               placeholder="Ingrese su contraseña"
             />
           </Form.Item>
