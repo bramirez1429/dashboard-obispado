@@ -2,18 +2,33 @@
 
 import {
   ArrowLeftOutlined,
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Checkbox, Empty, Modal, Space, Spin, Table, Tag, message } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Empty,
+  Modal,
+  Space,
+  Spin,
+  Switch,
+  Table,
+  Tag,
+  message,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { getSpeechStatusLabel } from "@/lib/speeches";
+import { supabase } from "@/lib/supabase/client";
 
 type SpeechStatus = "pending" | "shared";
 
@@ -26,19 +41,19 @@ type MessageRow = {
   time: number | null;
   status: SpeechStatus | null;
   did_speak: boolean | null;
-};
-
-type SpeechesResponse = {
-  success: boolean;
-  data?: MessageRow[];
-  error?: string;
+  accepted_discourse: boolean | null;
 };
 
 function formatDate(date: string | null) {
   return date ? dayjs(date).format("DD/MM/YYYY") : "Sin fecha";
 }
 
+function getPublicSpeechLink(id: string) {
+  return `${window.location.origin}/m/${id}`;
+}
+
 export default function DiscursosPage() {
+  const router = useRouter();
   const [speeches, setSpeeches] = useState<MessageRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingSpeechId, setUpdatingSpeechId] = useState<string | null>(null);
@@ -47,15 +62,20 @@ export default function DiscursosPage() {
   useEffect(() => {
     const loadSpeeches = async () => {
       try {
-        const response = await fetch("/api/speeches");
-        const result = (await response.json()) as SpeechesResponse;
+        const { data, error } = await supabase
+          .from("Speeches")
+          .select(
+            "id, name, gender, speech, date, time, status, did_speak, accepted_discourse"
+          )
+          .order("date", { ascending: false });
 
-        if (!response.ok || !result.success) {
-          message.error(result.error || "No se pudieron cargar los discursos");
+        if (error) {
+          console.error("Error loading speeches:", error);
+          message.error("No se pudieron cargar los discursos");
           return;
         }
 
-        setSpeeches(result.data || []);
+        setSpeeches((data || []) as MessageRow[]);
       } catch (error) {
         message.error(
           error instanceof Error
@@ -145,9 +165,78 @@ export default function DiscursosPage() {
     });
   };
 
+  const handleCopyPublicLink = async (id: string) => {
+    await navigator.clipboard.writeText(getPublicSpeechLink(id));
+    message.success("Link copiado para compartir");
+  };
+
+  const handleAcceptedDiscourseChange = async (
+    speechId: string | number,
+    checked: boolean
+  ) => {
+    console.log("Actualizando discurso", speechId, checked);
+
+    const { data, error } = await supabase
+      .from("Speeches")
+      .update({ accepted_discourse: checked })
+      .eq("id", speechId)
+      .select("id, accepted_discourse")
+      .maybeSingle();
+
+    if (error) {
+      console.error("Error actualizando accepted_discourse:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        speechId,
+        checked,
+      });
+      message.error("No se pudo actualizar la aceptación del discurso");
+      return;
+    }
+
+    if (!data) {
+      console.error("No se encontro el discurso para actualizar", {
+        speechId,
+        checked,
+      });
+      message.error("No se encontro el discurso para actualizar");
+      return;
+    }
+
+    setSpeeches((prevSpeeches) =>
+      prevSpeeches.map((speech) =>
+        String(speech.id) === String(data.id)
+          ? { ...speech, accepted_discourse: data.accepted_discourse }
+          : speech
+      )
+    );
+    message.success("Estado de aceptación actualizado");
+    router.refresh();
+  };
+
   const columns: ColumnsType<MessageRow> = [
     {
-      title: "Fecha",
+      title: "N° discurso",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Compartir",
+      dataIndex: "id",
+      key: "share",
+      render: (id: string) => (
+        <Button
+          aria-label="Copiar link"
+          icon={<CopyOutlined />}
+          size="small"
+          onClick={() => handleCopyPublicLink(id)}
+        />
+      ),
+    },
+    {
+      title: "Fecha de discurso",
       dataIndex: "date",
       key: "date",
       render: (date: string | null) => formatDate(date),
@@ -157,12 +246,6 @@ export default function DiscursosPage() {
       dataIndex: "name",
       key: "name",
       render: (name: string | null) => name?.trim() || "Sin completar",
-    },
-    {
-      title: "Tema",
-      dataIndex: "speech",
-      key: "speech",
-      render: (speech: string | null) => speech?.trim() || "Sin completar",
     },
     {
       title: "Tiempo asignado",
@@ -232,6 +315,21 @@ export default function DiscursosPage() {
       ),
     },
     {
+      title: "Aceptó discurso",
+      dataIndex: "accepted_discourse",
+      key: "accepted_discourse",
+      render: (accepted: boolean | null, record) => (
+        <Switch
+          checked={Boolean(accepted)}
+          checkedChildren="Sí"
+          unCheckedChildren="No"
+          onChange={(checked) =>
+            void handleAcceptedDiscourseChange(record.id, checked)
+          }
+        />
+      ),
+    },
+    {
       title: "Acciones",
       key: "actions",
       render: (_, speech) => (
@@ -277,14 +375,22 @@ export default function DiscursosPage() {
               </Paragraph>
             </div>
           </Space>
-          <Button
-            type="primary"
-            size="large"
-            href="/dashboard/discursos/nuevo"
-            icon={<PlusOutlined />}
-          >
-            Nuevo mensaje
-          </Button>
+          <Space wrap>
+            <Button
+              size="large"
+              href="/dashboard/discursos/posibles-discursantes"
+            >
+              Posibles discursantes
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              href="/dashboard/discursos/nuevo"
+              icon={<PlusOutlined />}
+            >
+              Nuevo mensaje
+            </Button>
+          </Space>
         </Space>
 
         <Table

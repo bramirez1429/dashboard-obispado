@@ -4,6 +4,8 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
+  Divider,
+  Flex,
   Form,
   Input,
   InputNumber,
@@ -15,6 +17,9 @@ import {
 } from "antd";
 import { useState } from "react";
 import hymnsByNumberData from "@/data/hymns-by-number.json";
+import meetingMinuteAuthoritiesData from "@/data/meeting-minute-authorities.json";
+import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
+import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
 import type {
   MeetingMinute,
   MeetingMinuteHymn,
@@ -33,6 +38,18 @@ type HymnCatalogEntry = {
 };
 
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
+const initialPresideOptions = meetingMinutePresidesData.map((preside) => ({
+  value: preside,
+  label: preside,
+}));
+const initialLeadOptions = meetingMinuteLeadsData.map((lead) => ({
+  value: lead,
+  label: lead,
+}));
+const initialAuthorityOptions = meetingMinuteAuthoritiesData.map((authority) => ({
+  value: authority,
+  label: authority,
+}));
 const hymnOptions = Object.entries(hymnsByNumber)
   .sort(([firstNumber], [secondNumber]) => Number(firstNumber) - Number(secondNumber))
   .map(([number, hymn]) => ({
@@ -129,6 +146,20 @@ function normalizeWardAndStakeBusinessList(
   return normalizedBusinesses.length ? normalizedBusinesses : [emptyBusiness];
 }
 
+const getAuthoritiesArray = (value?: string | string[]) => {
+  if (Array.isArray(value)) {
+    return value.map((item) => item.trim().toUpperCase()).filter(Boolean);
+  }
+
+  return (value || "")
+    .split("\n")
+    .map((item) => item.trim().toUpperCase())
+    .filter(Boolean);
+};
+
+const getAuthoritiesString = (value?: string | string[]) =>
+  getAuthoritiesArray(value).join("\n");
+
 export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
   const minuteWithHymnUrls = {
     ...minute,
@@ -146,7 +177,99 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
   const businessSave = useModuleSave("Asuntos guardados");
   const messagesSave = useModuleSave("Mensajes guardados");
   const closingSave = useModuleSave("Cierre guardado");
+  const [mainForm] = Form.useForm();
   const [hymnsForm] = Form.useForm();
+  const [presideOptions, setPresideOptions] = useState(initialPresideOptions);
+  const [newPresideName, setNewPresideName] = useState("");
+  const [leadOptions, setLeadOptions] = useState(initialLeadOptions);
+  const [newLeadName, setNewLeadName] = useState("");
+  const [authorityOptions, setAuthorityOptions] = useState(
+    initialAuthorityOptions
+  );
+  const [newAuthorityName, setNewAuthorityName] = useState("");
+
+  const handleAddPreside = () => {
+    const presideName = newPresideName.trim().toUpperCase();
+
+    if (!presideName) {
+      return;
+    }
+
+    setPresideOptions((currentOptions) => {
+      if (currentOptions.some((option) => option.value === presideName)) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: presideName,
+          label: presideName,
+        },
+      ];
+    });
+    mainForm.setFieldValue("presides", presideName);
+    setNewPresideName("");
+  };
+
+  const handleAddLead = () => {
+    const leadName = newLeadName.trim().toUpperCase();
+
+    if (!leadName) {
+      return;
+    }
+
+    setLeadOptions((currentOptions) => {
+      if (currentOptions.some((option) => option.value === leadName)) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: leadName,
+          label: leadName,
+        },
+      ];
+    });
+    mainForm.setFieldValue("leads", leadName);
+    setNewLeadName("");
+  };
+
+  const handleAddAuthority = () => {
+    const authorityName = newAuthorityName.trim().toUpperCase();
+
+    if (!authorityName) {
+      return;
+    }
+
+    setAuthorityOptions((currentOptions) => {
+      if (currentOptions.some((option) => option.value === authorityName)) {
+        return currentOptions;
+      }
+
+      return [
+        ...currentOptions,
+        {
+          value: authorityName,
+          label: authorityName,
+        },
+      ];
+    });
+
+    const currentAuthorities = getAuthoritiesArray(
+      mainForm.getFieldValue("welcomeAndAcknowledgmentsOfAuthorities")
+    );
+
+    if (!currentAuthorities.includes(authorityName)) {
+      mainForm.setFieldValue("welcomeAndAcknowledgmentsOfAuthorities", [
+        ...currentAuthorities,
+        authorityName,
+      ]);
+    }
+
+    setNewAuthorityName("");
+  };
 
   const handleHymnChange = (
     fieldName: "firstHymn" | "sacramentalHymn" | "lastHymn",
@@ -163,10 +286,23 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
     <Space orientation="vertical" size={12} style={{ width: "100%" }}>
       <Card size="small" title="Datos principales">
         <Form
+          form={mainForm}
           layout="vertical"
-          initialValues={minuteWithHymnUrls}
+          initialValues={{
+            ...minuteWithHymnUrls,
+            welcomeAndAcknowledgmentsOfAuthorities: getAuthoritiesArray(
+              minuteWithHymnUrls.welcomeAndAcknowledgmentsOfAuthorities
+            ),
+          }}
           onValuesChange={notifyEditing}
-          onFinish={(values) => mainSave.save(minute.id, values)}
+          onFinish={(values) =>
+            mainSave.save(minute.id, {
+              ...values,
+              welcomeAndAcknowledgmentsOfAuthorities: getAuthoritiesString(
+                values.welcomeAndAcknowledgmentsOfAuthorities
+              ),
+            })
+          }
         >
           <Row gutter={12}>
             <Col xs={24} md={12}>
@@ -176,12 +312,74 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
             </Col>
             <Col xs={24} md={12}>
               <Form.Item label="Preside" name="presides" style={formItemStyle}>
-                <Input size="small" />
+                <Select
+                  size="small"
+                  showSearch
+                  optionFilterProp="label"
+                  options={presideOptions}
+                  placeholder="Seleccionar quien preside"
+                  popupRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          size="small"
+                          placeholder="Agregar alguien más"
+                          value={newPresideName}
+                          onChange={(event) =>
+                            setNewPresideName(event.target.value)
+                          }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              handleAddPreside();
+                            }
+                          }}
+                        />
+                        <Button size="small" onClick={handleAddPreside}>
+                          Agregar
+                        </Button>
+                      </Flex>
+                    </>
+                  )}
+                />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
               <Form.Item label="Dirige" name="leads" style={formItemStyle}>
-                <Input size="small" />
+                <Select
+                  size="small"
+                  showSearch
+                  optionFilterProp="label"
+                  options={leadOptions}
+                  placeholder="Seleccionar quien dirige"
+                  popupRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          size="small"
+                          placeholder="Agregar alguien más"
+                          value={newLeadName}
+                          onChange={(event) => setNewLeadName(event.target.value)}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              handleAddLead();
+                            }
+                          }}
+                        />
+                        <Button size="small" onClick={handleAddLead}>
+                          Agregar
+                        </Button>
+                      </Flex>
+                    </>
+                  )}
+                />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
@@ -194,8 +392,52 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
                 label="Bienvenida y reconocimiento de autoridades"
                 name="welcomeAndAcknowledgmentsOfAuthorities"
                 style={formItemStyle}
+                getValueProps={(value) => ({
+                  value: getAuthoritiesArray(value),
+                })}
+                normalize={(value) => getAuthoritiesArray(value)}
               >
-                <Input.TextArea rows={2} size="small" />
+                <Select
+                  allowClear
+                  mode="tags"
+                  optionFilterProp="label"
+                  optionLabelProp="label"
+                  options={authorityOptions}
+                  placeholder="Seleccionar autoridades"
+                  showSearch
+                  size="small"
+                  tokenSeparators={[","]}
+                  popupRender={(menu) => (
+                    <>
+                      {menu}
+                      <Divider style={{ margin: "8px 0" }} />
+                      <Flex gap={8} style={{ padding: "0 8px 4px" }}>
+                        <Input
+                          size="small"
+                          placeholder="Agregar autoridad"
+                          value={newAuthorityName}
+                          onChange={(event) =>
+                            setNewAuthorityName(event.target.value)
+                          }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              handleAddAuthority();
+                            }
+                          }}
+                        />
+                        <Button
+                          size="small"
+                          icon={<PlusOutlined />}
+                          onClick={handleAddAuthority}
+                        >
+                          Agregar
+                        </Button>
+                      </Flex>
+                    </>
+                  )}
+                />
               </Form.Item>
             </Col>
           </Row>

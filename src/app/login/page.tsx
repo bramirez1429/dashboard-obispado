@@ -3,6 +3,7 @@
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type LoginValues = {
   identifier: string;
@@ -11,8 +12,11 @@ type LoginValues = {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (values: LoginValues) => {
+    setIsSubmitting(true);
+
     const result = await signIn("credentials", {
       identifier: values.identifier,
       password: values.password,
@@ -20,6 +24,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
+      setIsSubmitting(false);
       message.error("Usuario o contraseña incorrectos");
       return;
     }
@@ -30,11 +35,13 @@ export default function LoginPage() {
   return (
     <main className="login-page">
       <Card className="login-card">
-        <Typography.Title level={2} style={{ marginTop: 0 }}>
-          Ingreso al dashboard
+        <section className="login-form-panel" aria-label="Formulario de inicio de sesion">
+          <div className="login-form-box">
+        <Typography.Title className="login-title" level={2} style={{ marginTop: 0 }}>
+          Iniciar sesión
         </Typography.Title>
 
-        <Typography.Paragraph type="secondary">
+        <Typography.Paragraph className="login-subtitle" type="secondary">
           Ingrese con el usuario asignado
         </Typography.Paragraph>
 
@@ -44,7 +51,11 @@ export default function LoginPage() {
             name="identifier"
             rules={[{ required: true, message: "Ingrese el usuario o teléfono" }]}
           >
-            <Input autoComplete="username" placeholder="Ej: consejero1 o 1161941121" />
+            <Input
+              autoComplete="username"
+              className="login-input"
+              placeholder="Ej: consejero1 o 1161941121"
+            />
           </Form.Item>
 
           <Form.Item
@@ -54,14 +65,25 @@ export default function LoginPage() {
           >
             <Input.Password
               autoComplete="current-password"
+              className="login-input login-password-input"
               placeholder="Ingrese su contraseña"
             />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" block>
+          <Button
+            className="login-submit-button"
+            type="primary"
+            htmlType="submit"
+            loading={isSubmitting}
+            block
+          >
             Ingresar
           </Button>
         </Form>
+          </div>
+        </section>
+
+        <section className="login-image-panel" aria-label="Capitan Moroni" />
       </Card>
     </main>
   );

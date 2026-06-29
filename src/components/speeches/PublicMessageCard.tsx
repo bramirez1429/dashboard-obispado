@@ -4,7 +4,6 @@ import { ExportOutlined } from "@ant-design/icons";
 import { Card, Col, Divider, Row, Space, Typography } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-import { getSpeechTreatment } from "@/lib/speeches";
 
 dayjs.locale("es");
 
@@ -28,30 +27,50 @@ function displayValue(value: string | null) {
   return value?.trim() || "Sin completar";
 }
 
+function getSpeakerNameWithPrefix(speech: PublicSpeech) {
+  const speakerName = displayValue(speech.name);
+
+  if (speech.gender === "feminine") {
+    return `Hna. ${speakerName}`;
+  }
+
+  if (speech.gender === "masculine") {
+    return `Hno. ${speakerName}`;
+  }
+
+  return speakerName;
+}
+
 function renderTextWithLinks(text: string) {
   if (!text.trim()) return "Sin completar";
 
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(https?:\/\/[^\s]+)/gi;
   const lines = text.split("\n");
 
   return lines.map((line, lineIndex) => (
     <Fragment key={`${line}-${lineIndex}`}>
-      {line.split(urlRegex).map((part, partIndex) =>
-        /^https?:\/\//.test(part) ? (
+      {line.split(urlRegex).map((part, partIndex) => {
+        const isUrl = /^https?:\/\//i.test(part);
+
+        if (!isUrl) {
+          return <Fragment key={`${part}-${partIndex}`}>{part}</Fragment>;
+        }
+
+        const normalizedUrl = part.toLowerCase();
+
+        return (
           <a
-            className="speech-reference-link"
+            className="speech-reference-link public-reference-link"
             key={`${part}-${partIndex}`}
-            href={part}
+            href={normalizedUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>{part}</span>
+            <span>{normalizedUrl}</span>
             <ExportOutlined aria-hidden="true" />
           </a>
-        ) : (
-          <Fragment key={`${part}-${partIndex}`}>{part}</Fragment>
-        ),
-      )}
+        );
+      })}
       {lineIndex < lines.length - 1 ? <br /> : null}
     </Fragment>
   ));
@@ -60,39 +79,33 @@ function renderTextWithLinks(text: string) {
 function GuidanceBlock() {
   return (
     <div className="message-guidance-box">
-      <Typography.Title level={5}>Orientación para preparar el mensaje</Typography.Title>
+      <Typography.Title level={5}>Orientación para preparar su mensaje</Typography.Title>
       <Typography.Paragraph>
-        Para preparar su mensaje, le invitamos a utilizar recursos aprobados de la
-        Iglesia, tales como:
+        Le invitamos a utilizar recursos oficiales de la Iglesia, tales como:
       </Typography.Paragraph>
+
       <ul>
-        <li>Las Escrituras canónicas</li>
-        <li>La Guía para el Estudio de las Escrituras</li>
-        <li>Mensajes de la Conferencia General</li>
-        <li>Revistas Liahona</li>
-        <li>Experiencias personales apropiadas que fortalezcan la fe</li>
-      </ul>
-      <Typography.Paragraph>Al preparar su mensaje:</Typography.Paragraph>
-      <ul>
-        <li>Ore y busque la guía del Espíritu Santo.</li>
-        <li>Centre su mensaje en Jesucristo y Su Evangelio.</li>
+        <li>Las Escrituras canónicas.</li>
+        <li>Mensajes de la Conferencia General.</li>
         <li>
-          Procure enseñar principios que edifiquen la fe y fortalezcan a los miembros.
+          Experiencias personales apropiadas que fortalezcan la fe.
         </li>
+      </ul>
+      <Typography.Title level={5}>Sugerencias para la preparación</Typography.Title>
+      <ul>
         <li>
-          Comparta experiencias o testimonios que sean reverentes, apropiados y
-          edificantes.
+          Ore y busque la guía del Espíritu Santo durante su preparación.
+        </li>
+        <li>Centre su mensaje en el Salvador, Su amor y Su evangelio.</li>
+        <li>
+          Comparta principios, experiencias personales y testimonios reverentes
+          que fortalezcan la fe y ayuden a los miembros a acercarse más a Él.
         </li>
         <li>
           Evite comentarios negativos, controversiales o experiencias que no
-          contribuyan al espíritu de la reunión.
+          contribuyan al espíritu de adoración de la reunión.
         </li>
-        <li>Le pedimos acompañarnos en el estrado antes de comenzar la reunión.</li>
       </ul>
-      <Typography.Paragraph className="message-guidance-closing">
-        Muchas gracias por su disposición para participar y servir en la reunión
-        sacramental.
-      </Typography.Paragraph>
     </div>
   );
 }
@@ -115,6 +128,8 @@ function DetailCard({
 }
 
 const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
+  const speakerName = getSpeakerNameWithPrefix(speech);
+
   return (
     <main className="public-message-page">
       <div className="public-message-shell">
@@ -129,19 +144,22 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
             <Divider style={{ margin: 0 }} />
           </div>
 
+          <Typography.Paragraph>
+            {speakerName}, le invitamos a compartir un mensaje en la reunión
+            sacramental, procurando centrar sus palabras en nuestro Salvador,
+            Su amor y Su evangelio. Deseamos que, al preparar y compartir su
+            mensaje, pueda sentir la guía del Espíritu Santo y el amor puro del
+            Salvador, fortaleciendo tanto su fe como la fe de la congregación.
+          </Typography.Paragraph>
+
           <Row gutter={[16, 16]} className="public-assignment-grid">
-            <Col xs={24} md={8}>
-              <DetailCard label={getSpeechTreatment(speech.gender)}>
-                {displayValue(speech.name)}
-              </DetailCard>
+            <Col xs={24} md={12}>
+              <DetailCard label="Fecha">{formatLongDate(speech.date)}</DetailCard>
             </Col>
-            <Col xs={24} md={8}>
-              <DetailCard label="Tiempo asignado">
+            <Col xs={24} md={12}>
+              <DetailCard label="Tiempo">
                 {speech.time ? `${speech.time} minutos` : "Sin completar"}
               </DetailCard>
-            </Col>
-            <Col xs={24} md={8}>
-              <DetailCard label="Fecha">{formatLongDate(speech.date)}</DetailCard>
             </Col>
             <Col xs={24}>
               <DetailCard label="Tema">{displayValue(speech.speech)}</DetailCard>
@@ -156,10 +174,7 @@ const PublicMessageCard = ({ speech }: { speech: PublicSpeech }) => {
           <GuidanceBlock />
 
           <div className="public-message-closing-note">
-            <Typography.Paragraph>
-              Muchas gracias por su disposición para participar y servir en la
-              reunión sacramental.
-            </Typography.Paragraph>
+     
             <Typography.Paragraph>
               Atentamente,
               <br />

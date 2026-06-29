@@ -5,6 +5,7 @@ export type MeetingMinuteHymn = {
 };
 
 export type MeetingMinuteWardAndStakeBusiness = {
+  interviewId?: string | number;
   subject: string;
   name: string;
   details: string;
@@ -15,6 +16,7 @@ export type MeetingMinuteWardAndStakeBusinessValue =
   | MeetingMinuteWardAndStakeBusiness[];
 
 export type MeetingMinuteMessage = {
+  speechId?: string | number;
   name: string;
   time: number;
   topic: string;

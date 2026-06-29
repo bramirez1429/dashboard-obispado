@@ -6,9 +6,10 @@ import {
   PlusOutlined,
   ReadOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Empty, Row, Space, Tag } from "antd";
+import { Button, Card, Col, Empty, Flex, Row, Space, Tag, Typography } from "antd";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
+import Image from "next/image";
 import { getDashboardSpeechSummary } from "@/lib/dashboard-summary";
 import { normalizeSpeechStatus } from "@/lib/speeches";
 
@@ -63,6 +64,25 @@ export function DashboardHome({
   const speechSummary = getDashboardSpeechSummary(assignedSpeeches);
 
   const cards = [
+    {
+      title: "Reunión sacramental",
+      href: "/reunion-sacramental",
+      icon: null,
+      content: (
+        <Flex vertical align="center" gap={12}>
+          <Image
+            src="/images/qr-sacramental.jpeg"
+            alt="QR reunión sacramental"
+            width={160}
+            height={160}
+            style={{ objectFit: "contain" }}
+          />
+          <Typography.Text type="secondary" style={{ textAlign: "center" }}>
+            Escaneá para ver la reunión sacramental.
+          </Typography.Text>
+        </Flex>
+      ),
+    },
     {
       title: "Minuta sacramental",
       href: "/dashboard/minuta",
@@ -171,9 +191,11 @@ export function DashboardHome({
               }
               style={{ height: "100%" }}
             >
-              <div className="dashboard-card-icon dashboard-card-icon-blue">
-                {item.icon}
-              </div>
+              {item.icon ? (
+                <div className="dashboard-card-icon dashboard-card-icon-blue">
+                  {item.icon}
+                </div>
+              ) : null}
               <div className="dashboard-card-content">{item.content}</div>
             </Card>
           </Col>

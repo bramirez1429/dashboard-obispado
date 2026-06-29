@@ -12,6 +12,8 @@ import {
   Card,
   Divider,
   Empty,
+  Flex,
+  Grid,
   Popconfirm,
   Space,
   Typography,
@@ -35,8 +37,11 @@ type ModernMinutesSectionProps = {
 };
 
 const { Text } = Typography;
+const { useBreakpoint } = Grid;
 
 const ModernMinutesSection = ({ minutes }: ModernMinutesSectionProps) => {
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
   const [messageApi, contextHolder] = message.useMessage();
   const [items, setItems] = useState(minutes);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -115,23 +120,61 @@ const ModernMinutesSection = ({ minutes }: ModernMinutesSectionProps) => {
                   <Avatar
                     className={styles.avatar}
                     icon={<FileTextOutlined />}
-                    size={56}
+                    shape="circle"
+                    size={isMobile ? 48 : 56}
+                    style={{
+                      flex: `0 0 ${isMobile ? 48 : 56}px`,
+                      height: isMobile ? 48 : 56,
+                      width: isMobile ? 48 : 56,
+                    }}
                   />
                   <div className={styles.metaContent}>
                     <span className={styles.title}>Minuta sacramental</span>
-                    <Text className={styles.description}>
-                      Dirige: {minute.leads} - Preside: {minute.presides}
-                    </Text>
+                    {isMobile ? (
+                      <Flex vertical>
+                        <Text className={styles.description}>
+                          Dirige: {minute.leads}
+                        </Text>
+                        <Text className={styles.description}>
+                          Preside: {minute.presides}
+                        </Text>
+                      </Flex>
+                    ) : (
+                      <Text className={styles.description}>
+                        Dirige: {minute.leads} - Preside: {minute.presides}
+                      </Text>
+                    )}
                   </div>
                 </div>
                 {renderButtons(minute)}
+                {isMobile ? (
+                  <Flex
+                    align="center"
+                    justify="center"
+                    style={{
+                      width: "100%",
+                      marginTop: 10,
+                      textAlign: "center",
+                    }}
+                    vertical
+                  >
+                    <Text className={styles.minuteDate}>
+                      Domingo {minute.date}
+                    </Text>
+                    <Text className={styles.minuteAttendance}>
+                      Asistencia: {minute.attendance ?? "-"}
+                    </Text>
+                  </Flex>
+                ) : null}
               </div>
-              <Card className={styles.minuteInfoCard}>
-                <Text className={styles.minuteDate}>Domingo {minute.date}</Text>
-                <Text className={styles.minuteAttendance}>
-                  Asistencia: {minute.attendance ?? "-"}
-                </Text>
-              </Card>
+              {!isMobile ? (
+                <Card className={styles.minuteInfoCard}>
+                  <Text className={styles.minuteDate}>Domingo {minute.date}</Text>
+                  <Text className={styles.minuteAttendance}>
+                    Asistencia: {minute.attendance ?? "-"}
+                  </Text>
+                </Card>
+              ) : null}
             </article>
           ))
         ) : (

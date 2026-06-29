@@ -1,7 +1,19 @@
 "use client";
 
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Card, Modal, Space, Table, Typography, message } from "antd";
+import {
+  Button,
+  Card,
+  Empty,
+  Flex,
+  Grid,
+  Modal,
+  Space,
+  Table,
+  Tag,
+  Typography,
+  message,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -35,6 +47,8 @@ const roleLabels: Record<string, string> = {
 };
 
 export default function UsersTable() {
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
   const [users, setUsers] = useState<DashboardUser[]>([]);
   const [currentUserUuid, setCurrentUserUuid] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
@@ -153,10 +167,12 @@ export default function UsersTable() {
   ];
 
   return (
-    <main style={{ padding: 24 }}>
+    <main style={{ padding: isMobile ? 12 : 24 }}>
       <Card>
-        <Space
-          align="start"
+        <Flex
+          align={isMobile ? "stretch" : "start"}
+          vertical={isMobile}
+          gap={16}
           style={{ width: "100%", justifyContent: "space-between", marginBottom: 16 }}
         >
           <div>
@@ -168,17 +184,78 @@ export default function UsersTable() {
             </Typography.Paragraph>
           </div>
           <Link href="/dashboard/usuarios/nuevo" prefetch={false}>
-            <Button type="primary">Crear usuario</Button>
+            <Button type="primary" block={isMobile}>
+              Crear usuario
+            </Button>
           </Link>
-        </Space>
+        </Flex>
 
-        <Table
-          rowKey="id"
-          loading={isLoading}
-          columns={columns}
-          dataSource={users}
-          pagination={false}
-        />
+        {isMobile ? (
+          <Flex vertical gap={12}>
+            {isLoading ? (
+              <Typography.Text type="secondary">Cargando usuarios...</Typography.Text>
+            ) : users.length === 0 ? (
+              <Empty description="No hay usuarios creados" />
+            ) : (
+              users.map((user) => {
+                const fullName =
+                  `${user.name || ""} ${user.lastname || ""}`.trim() ||
+                  "Sin nombre";
+                const roleLabel = user.role
+                  ? roleLabels[user.role] || user.role
+                  : "Sin rol";
+
+                return (
+                  <Card key={user.id} size="small">
+                    <Flex vertical gap={8}>
+                      <Typography.Text strong>{fullName}</Typography.Text>
+
+                      <Typography.Text type="secondary">
+                        {user.username || "Sin usuario"}
+                      </Typography.Text>
+
+                      <Flex gap={8} wrap>
+                        <Tag>{roleLabel}</Tag>
+                      </Flex>
+
+                      <Flex gap={8} justify="end" wrap>
+                        <Link
+                          href={`/dashboard/usuarios/editar/${user.id}`}
+                          prefetch={false}
+                        >
+                          <Button
+                            icon={<EditOutlined />}
+                            size="small"
+                          >
+                            Editar
+                          </Button>
+                        </Link>
+                        <Button
+                          danger
+                          icon={<DeleteOutlined />}
+                          size="small"
+                          loading={deletingUserId === user.id}
+                          onClick={() => handleDeleteUser(user)}
+                        >
+                          Borrar
+                        </Button>
+                      </Flex>
+                    </Flex>
+                  </Card>
+                );
+              })
+            )}
+          </Flex>
+        ) : (
+          <Table
+            rowKey="id"
+            loading={isLoading}
+            columns={columns}
+            dataSource={users}
+            pagination={false}
+            scroll={{ x: true }}
+          />
+        )}
       </Card>
     </main>
   );

@@ -2,30 +2,5 @@
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid #dbeafe;
-}
-
-.header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
   margin-bottom: 16px;
-}
-
-.eyebrow {
-  display: block;
-  margin-bottom: 4px;
-  color: #2563eb;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.title {
-  margin: 0 !important;
-}
-
-@media (max-width: 640px) {
-  .header {
-    flex-direction: column;
-  }
 }
