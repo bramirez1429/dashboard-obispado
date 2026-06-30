@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/lib/supabase/client";
-import { ShareAltOutlined, TeamOutlined } from "@ant-design/icons";
+import { FilePdfOutlined, ShareAltOutlined, TeamOutlined } from "@ant-design/icons";
 import { Button, Card, FloatButton, Form, Input, Modal, Select, Spin, Typography, message } from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -138,6 +138,15 @@ function formatSelectedDate(date: Date) {
 function formatDateKey(dateKey: string) {
   const [year, month, day] = dateKey.split("-").map(Number);
   return formatSelectedDate(new Date(year, month - 1, day));
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function isMobileView() {
@@ -339,6 +348,167 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleExportPdf = () => {
+    const printWindow = window.open("", "_blank", "width=1200,height=800");
+
+    if (!printWindow) {
+      message.error("No se pudo abrir la ventana de impresión.");
+      return;
+    }
+
+    const weekdays = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+
+    const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+    const firstDay = monthStart.getDay() === 0 ? 6 : monthStart.getDay() - 1;
+    const totalDays = monthEnd.getDate();
+
+    const emptyDays = Array.from({ length: firstDay });
+
+    const monthDays = Array.from({ length: totalDays }, (_, index) => {
+      const dayNumber = index + 1;
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), dayNumber);
+      const dateKey = date.toISOString().slice(0, 10);
+      const lunch = lunches.find((item) => item.lunch_date === dateKey);
+
+      return {
+        dayNumber,
+        dateKey,
+        lunch,
+      };
+    });
+
+    const daysHtml = [
+      ...emptyDays.map(
+        () => `<div class="day empty" aria-hidden="true"></div>`,
+      ),
+      ...monthDays.map(({ dayNumber, lunch }) => {
+        const isOccupied = lunch?.status === "occupied";
+
+        return `
+          <div class="day ${isOccupied ? "occupied" : ""}">
+            <div class="day-number">${dayNumber}</div>
+            ${
+              isOccupied
+                ? `
+                  <div class="lunch-info">
+                    <div class="person">${escapeHtml(lunch?.person_name || "")}</div>
+                    <div class="time">${escapeHtml(lunch?.lunch_time || "")}</div>
+                  </div>
+                `
+                : ""
+            }
+          </div>
+        `;
+      }),
+    ].join("");
+
+    const weekdaysHtml = weekdays.map((day) => `<div class="weekday">${day}</div>`).join("");
+
+    const html = `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Calendario de almuerzos misioneros</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+        color: #111;
+        background: #fff;
+      }
+
+      h1 {
+        margin: 0;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      h2 {
+        margin: 8px 0 22px;
+        text-align: center;
+        font-size: 19px;
+        font-weight: 600;
+      }
+
+      .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+
+      .weekday {
+        padding: 8px 4px;
+        text-align: center;
+        font-weight: 700;
+        border-bottom: 1px solid #777;
+      }
+
+      .day {
+        min-height: 95px;
+        border: 1px solid #bdbdbd;
+        padding: 7px;
+        font-size: 12px;
+        background: #fff;
+      }
+
+      .day.empty {
+        border: none;
+      }
+
+      .day.occupied {
+        background: #fff1f1;
+        border-color: #ff9b9b;
+      }
+
+      .day-number {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .lunch-info {
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .person {
+        font-weight: 700;
+      }
+
+      .time {
+        margin-top: 4px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calendario de almuerzos misioneros</h1>
+    <h2>${escapeHtml(calendarTitle)}</h2>
+    <div class="calendar">
+      ${weekdaysHtml}
+      ${daysHtml}
+    </div>
+    <script>
+      window.onload = function () {
+        window.focus();
+        window.print();
+      };
+    </script>
+  </body>
+</html>`;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
   const handleOpenMissionariesModal = async () => {
     if (!isAdminMode) {
       return;
@@ -472,6 +642,9 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
         </Typography.Paragraph>
 
         <div className="calendar-share-row">
+          <Button icon={<FilePdfOutlined />} onClick={handleExportPdf}>
+            Exportar PDF
+          </Button>
           {isAdminMode ? (
             <Button type="default" icon={<TeamOutlined />} onClick={handleOpenMissionariesModal}>
               Misioneros
