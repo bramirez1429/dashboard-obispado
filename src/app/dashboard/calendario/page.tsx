@@ -1,22 +1,9 @@
 import { auth } from "@/auth";
-import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import MissionaryLunchCalendar from "@/components/missionary-lunch-calendar/MissionaryLunchCalendar";
 import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function CalendarioPage() {
   const session = await auth();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
-
-  const fullName =
-    `${session?.user?.name || ""} ${session?.user?.lastname || ""}`.trim() ||
-    "Usuario";
-  const calling = session?.user?.callings || "Sin llamamiento asignado";
   const role = session?.user?.role;
   const normalizedRole = role
     ?.toLowerCase()
@@ -34,16 +21,11 @@ export default async function DashboardLayout({
   const isGestion = roleKey === "gestion";
   const isCollaborator = roleKey === "colaborador";
   const canAccessCalendar = isAdmin || isGestion || isCollaborator;
+  const canManageCalendar = isAdmin || isCollaborator;
 
-  return (
-    <DashboardShell
-      userFullName={fullName}
-      userCalling={calling}
-      isAdmin={isAdmin}
-      isCollaborator={isCollaborator}
-      canAccessCalendar={canAccessCalendar}
-    >
-      {children}
-    </DashboardShell>
-  );
+  if (!canAccessCalendar) {
+    redirect("/dashboard");
+  }
+
+  return <MissionaryLunchCalendar mode={canManageCalendar ? "admin" : "public"} />;
 }

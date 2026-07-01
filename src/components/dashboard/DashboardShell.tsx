@@ -48,6 +48,12 @@ const menuItems = [
   },
 ];
 
+const calendarMenuItem = {
+  key: "/dashboard/calendario",
+  icon: <CalendarOutlined />,
+  label: "Calendario",
+};
+
 const adminMenuItems = [
   {
     type: "group" as const,
@@ -71,6 +77,10 @@ function selectedKey(pathname: string) {
     return "/dashboard/discursos";
   }
 
+  if (pathname.startsWith("/dashboard/calendario")) {
+    return "/dashboard/calendario";
+  }
+
   if (pathname.startsWith("/dashboard/tareas")) {
     return "/dashboard/tareas";
   }
@@ -89,16 +99,27 @@ function selectedKey(pathname: string) {
 export function DashboardShell({
   children,
   isAdmin,
+  isCollaborator,
+  canAccessCalendar,
 }: {
   children: React.ReactNode;
   userFullName: string;
   userCalling: string;
   isAdmin: boolean;
+  isCollaborator: boolean;
+  canAccessCalendar: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [isMobileSidebar, setIsMobileSidebar] = useState(false);
+  const isCalendarPath = pathname.startsWith("/dashboard/calendario");
+  const shouldRedirectCollaborator = isCollaborator && !isCalendarPath;
+  const visibleMenuItems = isCollaborator
+    ? [calendarMenuItem]
+    : canAccessCalendar
+    ? [...menuItems.slice(0, 3), calendarMenuItem, ...menuItems.slice(3)]
+    : menuItems;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 480px)");
@@ -118,6 +139,12 @@ export function DashboardShell({
       mediaQuery.removeEventListener("change", handleViewportChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (shouldRedirectCollaborator) {
+      router.replace("/dashboard/calendario");
+    }
+  }, [router, shouldRedirectCollaborator]);
 
   return (
     <Layout className="dashboard-shell">
@@ -192,7 +219,7 @@ export function DashboardShell({
           mode="inline"
           inlineCollapsed={collapsed}
           selectedKeys={[selectedKey(pathname)]}
-          items={isAdmin ? [...menuItems, ...adminMenuItems] : menuItems}
+          items={isAdmin ? [...visibleMenuItems, ...adminMenuItems] : visibleMenuItems}
           onClick={({ key }) => router.push(key)}
           style={{ borderInlineEnd: 0 }}
         />
@@ -208,7 +235,7 @@ export function DashboardShell({
               </div>
             </Space>
           </div>
-          {children}
+          {shouldRedirectCollaborator ? null : children}
         </Content>
       </Layout>
     </Layout>
