@@ -2,14 +2,26 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { FilePdfOutlined, ShareAltOutlined, TeamOutlined } from "@ant-design/icons";
-import { Button, Card, FloatButton, Form, Input, Modal, Select, Spin, Typography, message } from "antd";
+import {
+  Button,
+  Card,
+  FloatButton,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Spin,
+  Typography,
+  message,
+  notification,
+} from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type CalendarMode = "public" | "admin";
 type LunchStatus = "available" | "occupied";
 type Companionship = "chacabuco_1" | "chacabuco_2" | "both";
 
-type MissionaryLunch = {
+export type MissionaryLunch = {
   id: string | number;
   lunch_date: string;
   status: LunchStatus;
@@ -104,9 +116,9 @@ function toDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function getMonthRange(date: Date) {
+function getMonthRange(date: Date, monthsToInclude = 1) {
   const start = new Date(date.getFullYear(), date.getMonth(), 1);
-  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const end = new Date(date.getFullYear(), date.getMonth() + monthsToInclude, 0);
   return { start: toDateKey(start), end: toDateKey(end) };
 }
 
@@ -153,14 +165,35 @@ function isMobileView() {
   return window.innerWidth <= 768;
 }
 
-export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }) {
+type MissionaryLunchCalendarProps = {
+  mode: CalendarMode;
+  initialLunches?: MissionaryLunch[];
+  initialYear?: number;
+  initialMonth?: number;
+  canViewNextMonth?: boolean;
+  nextMonthLabel?: string;
+};
+
+export default function MissionaryLunchCalendar({
+  mode,
+  initialLunches,
+  initialYear,
+  initialMonth,
+  canViewNextMonth = false,
+  nextMonthLabel = "Mes siguiente",
+}: MissionaryLunchCalendarProps) {
   const isAdminMode = mode === "admin";
-  const [currentMonth, setCurrentMonth] = useState(() => new Date());
+  const publicBaseYear = initialYear ?? new Date().getFullYear();
+  const publicBaseMonth = initialMonth ?? new Date().getMonth();
+  const [currentMonth, setCurrentMonth] = useState(
+    () => new Date(publicBaseYear, publicBaseMonth, 1),
+  );
+  const [isViewingNextPublicMonth, setIsViewingNextPublicMonth] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [occupiedLunch, setOccupiedLunch] = useState<MissionaryLunch | null>(null);
-  const [lunches, setLunches] = useState<MissionaryLunch[]>([]);
+  const [lunches, setLunches] = useState<MissionaryLunch[]>(() => initialLunches ?? []);
   const [mounted, setMounted] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !(mode === "public" && initialLunches !== undefined));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMissionariesModalOpen, setIsMissionariesModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -195,6 +228,42 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
     }
 
     return getCompanionshipLabel(lunch);
+  };
+
+  const loadLunchesByMonth = async (targetMonth: Date) => {
+    const startDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1)
+      .toISOString()
+      .slice(0, 10);
+    const endDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0)
+      .toISOString()
+      .slice(0, 10);
+
+    setIsLoading(true);
+
+    const { data, error } = await supabase
+      .from("Missionary_lunches")
+      .select(
+        "id,lunch_date,status,person_name,lunch_time,companionship,chacabuco_1_elders,chacabuco_2_elders,created_at",
+      )
+      .gte("lunch_date", startDate)
+      .lte("lunch_date", endDate)
+      .order("lunch_date", { ascending: true });
+
+    if (error) {
+      console.log("Error cargando mes:", error);
+      setIsLoading(false);
+      return [];
+    }
+
+    const loadedLunches = (data ?? []) as MissionaryLunch[];
+    const latestLunchWithElders = loadedLunches.find(
+      (lunch) => lunch.chacabuco_1_elders || lunch.chacabuco_2_elders,
+    );
+    setChacabuco1Elders(latestLunchWithElders?.chacabuco_1_elders || DEFAULT_CHACABUCO_1_ELDERS);
+    setChacabuco2Elders(latestLunchWithElders?.chacabuco_2_elders || DEFAULT_CHACABUCO_2_ELDERS);
+    setLunches(loadedLunches);
+    setIsLoading(false);
+    return loadedLunches;
   };
 
   useEffect(() => {
@@ -235,12 +304,39 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
   }, [currentMonth]);
 
   useEffect(() => {
+    if (mode === "public" && initialLunches !== undefined) {
+      setIsLoading(false);
+      return;
+    }
+
     const timeoutId = window.setTimeout(() => {
       void loadLunches();
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [loadLunches]);
+  }, [initialLunches, loadLunches, mode]);
+
+  const handlePublicNextMonth = async () => {
+    const nextMonth = new Date(publicBaseYear, publicBaseMonth + 1, 1);
+
+    setSelectedDate(null);
+    setOccupiedLunch(null);
+    setCurrentMonth(nextMonth);
+    setIsViewingNextPublicMonth(true);
+
+    await loadLunchesByMonth(nextMonth);
+  };
+
+  const handlePublicCurrentMonth = async () => {
+    const currentPublicMonth = new Date(publicBaseYear, publicBaseMonth, 1);
+
+    setSelectedDate(null);
+    setOccupiedLunch(null);
+    setCurrentMonth(currentPublicMonth);
+    setIsViewingNextPublicMonth(false);
+    setLunches(initialLunches || []);
+    setIsLoading(false);
+  };
 
   const handleMonthChange = (offset: number) => {
     setCurrentMonth((month) => new Date(month.getFullYear(), month.getMonth() + offset, 1));
@@ -250,9 +346,18 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
     form.resetFields();
   };
 
-  const handleCloseModal = () => {
+  const handleCloseLunchModal = () => {
     setIsModalOpen(false);
+    setSelectedDate(null);
+    setOccupiedLunch(null);
     form.resetFields();
+  };
+
+  const handleOpenCreateLunchModal = (date: Date) => {
+    setSelectedDate(date);
+    setOccupiedLunch(null);
+    form.resetFields();
+    setIsModalOpen(true);
   };
 
   const handleEditLunch = () => {
@@ -306,9 +411,12 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
           }
 
           message.success("Registro borrado correctamente.");
-          setOccupiedLunch(null);
-          await loadLunches();
+          handleCloseLunchModal();
+          const freshLunches = await loadLunches();
+          const updatedLunch = freshLunches.find((item) => item.lunch_date === selectedDateKey) ?? null;
+          setOccupiedLunch(updatedLunch);
         } finally {
+          Modal.destroyAll();
           setIsDeleting(false);
         }
       },
@@ -335,9 +443,7 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
       return;
     }
 
-    setOccupiedLunch(null);
-    form.resetFields();
-    setIsModalOpen(true);
+    handleOpenCreateLunchModal(day);
   };
 
   const handleShareCalendar = () => {
@@ -592,6 +698,30 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
           stringified: JSON.stringify(error),
         });
 
+        const errorMessage = error?.message || "";
+        const isAlreadyOccupied =
+          errorMessage.toLowerCase().includes("ocupado") ||
+          errorMessage.toLowerCase().includes("already");
+
+        if (isAlreadyOccupied) {
+          notification.warning({
+            title: "Día no disponible",
+            description: "Ese día acaba de ser reservado por otra persona. Elegí otro día disponible.",
+            duration: 34,
+            placement: "top",
+            className: "calendar-conflict-notification",
+          });
+          setIsModalOpen(false);
+          form.resetFields();
+
+          const freshLunches = await loadLunches();
+          const updatedLunch =
+            freshLunches.find((item) => item.lunch_date === selectedDateKey) ?? null;
+
+          setOccupiedLunch(updatedLunch);
+          return;
+        }
+
         message.error(error?.message || "No se pudo guardar el almuerzo.");
         return;
       }
@@ -599,8 +729,7 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
       console.log("Almuerzo guardado:", data);
 
       message.success(isAdminMode ? "Almuerzo guardado correctamente." : "Gracias, quedaste anotada.");
-      setIsModalOpen(false);
-      form.resetFields();
+      handleCloseLunchModal();
       const loadedLunches = await loadLunches();
       setOccupiedLunch(loadedLunches.find((lunch) => lunch.lunch_date === selectedDateKey) ?? null);
     } catch (error) {
@@ -642,9 +771,11 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
         </Typography.Paragraph>
 
         <div className="calendar-share-row">
-          <Button icon={<FilePdfOutlined />} onClick={handleExportPdf}>
-            Exportar PDF
-          </Button>
+          {isAdminMode ? (
+            <Button icon={<FilePdfOutlined />} onClick={handleExportPdf}>
+              Exportar PDF
+            </Button>
+          ) : null}
           {isAdminMode ? (
             <Button type="default" icon={<TeamOutlined />} onClick={handleOpenMissionariesModal}>
               Misioneros
@@ -660,6 +791,17 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
             No disponible
           </div>
         </div>
+
+        {!isAdminMode && canViewNextMonth ? (
+          <div className="calendar-public-next-row">
+            <Button
+              size="large"
+              onClick={isViewingNextPublicMonth ? handlePublicCurrentMonth : handlePublicNextMonth}
+            >
+              {isViewingNextPublicMonth ? "Mes actual" : `Mes ${nextMonthLabel}`}
+            </Button>
+          </div>
+        ) : null}
 
         <div className={`simple-calendar-header ${isAdminMode ? "" : "simple-calendar-header-public"}`}>
           {isAdminMode ? (
@@ -774,9 +916,13 @@ export default function MissionaryLunchCalendar({ mode }: { mode: CalendarMode }
         <Modal
           title="Anotarse para almuerzo"
           open={isModalOpen}
-          onCancel={handleCloseModal}
+          onCancel={handleCloseLunchModal}
           footer={null}
           forceRender
+          centered={false}
+          width={520}
+          className="lunch-signup-modal"
+          style={{ top: 24 }}
           destroyOnHidden
         >
           <Form<LunchFormValues> form={form} layout="vertical" onFinish={handleSave}>
