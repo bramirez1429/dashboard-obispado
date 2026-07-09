@@ -2,6 +2,20 @@
 
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   Button,
   Card,
   Divider,
@@ -23,9 +37,11 @@ import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
 import type {
   MeetingMinute,
   MeetingMinuteHymn,
+  MeetingMinuteMessage,
   MeetingMinuteWardAndStakeBusiness,
   MeetingMinuteWardAndStakeBusinessValue,
 } from "@/types/meeting-minute";
+import SortableItem from "../nueva/SortableItem";
 
 type MinuteEditFormsProps = {
   minute: MeetingMinute;
@@ -35,6 +51,16 @@ type HymnCatalogEntry = {
   number: string | number;
   title: string;
   url?: string;
+};
+
+type EditableWardAndStakeBusiness = MeetingMinuteWardAndStakeBusiness & {
+  id?: string | number;
+  tempId?: string;
+};
+
+type EditableMinuteMessage = MeetingMinuteMessage & {
+  id?: string | number;
+  tempId?: string;
 };
 
 const hymnsByNumber = hymnsByNumberData as Record<string, HymnCatalogEntry>;
@@ -116,6 +142,58 @@ const emptyBusiness: MeetingMinuteWardAndStakeBusiness = {
   details: "",
 };
 
+const createTempId = (prefix: string) => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return `${prefix}-${crypto.randomUUID()}`;
+  }
+
+  return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const getWardBusinessSortableId = (
+  item: Partial<EditableWardAndStakeBusiness>,
+  index: number
+) => String(item.id || item.interviewId || item.tempId || `ward-${index}`);
+
+const getMessageSortableId = (
+  item: Partial<EditableMinuteMessage>,
+  index: number
+) => String(item.id || item.speechId || item.tempId || `message-${index}`);
+
+const withWardBusinessSortableIds = (
+  items: MeetingMinuteWardAndStakeBusiness[]
+): EditableWardAndStakeBusiness[] =>
+  items.map((item, index) => ({
+    ...item,
+    tempId: item.interviewId ? undefined : `ward-initial-${index}`,
+  }));
+
+const withMessageSortableIds = (
+  items: MeetingMinuteMessage[]
+): EditableMinuteMessage[] =>
+  items.map((item, index) => ({
+    ...item,
+    tempId: item.speechId ? undefined : `message-initial-${index}`,
+  }));
+
+const getBusinessPayload = (items?: EditableWardAndStakeBusiness[]) =>
+  (items?.length ? items : [{ ...emptyBusiness }]).map(
+    ({ subject, name, details, interviewId }) => ({
+      ...(interviewId ? { interviewId } : {}),
+      subject: subject || "",
+      name: name || "",
+      details: details || "",
+    })
+  );
+
+const getMessagesPayload = (items?: EditableMinuteMessage[]) =>
+  (items || []).map((message) => {
+    const payload = { ...message };
+    delete payload.tempId;
+
+    return payload;
+  });
+
 function getWardAndStakeBusinessSortRank(subject: string) {
   const normalizedSubject = subject.toLowerCase();
 
@@ -168,8 +246,13 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
     lastHymn: withCatalogHymnData(minute.lastHymn),
   };
   const businessInitialValues = {
-    wardAndStakeBusiness: normalizeWardAndStakeBusinessList(
-      minute.wardAndStakeBusiness
+    wardAndStakeBusiness: withWardBusinessSortableIds(
+      normalizeWardAndStakeBusinessList(minute.wardAndStakeBusiness)
+    ),
+  };
+  const messageInitialValues = {
+    messages: withMessageSortableIds(
+      minute.messages?.length ? minute.messages : [{} as MeetingMinuteMessage]
     ),
   };
   const mainSave = useModuleSave("Datos principales guardados");
@@ -179,6 +262,21 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
   const closingSave = useModuleSave("Cierre guardado");
   const [mainForm] = Form.useForm();
   const [hymnsForm] = Form.useForm();
+  const [businessForm] = Form.useForm();
+  const [messagesForm] = Form.useForm();
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 180,
+        tolerance: 8,
+      },
+    })
+  );
   const [presideOptions, setPresideOptions] = useState(initialPresideOptions);
   const [newPresideName, setNewPresideName] = useState("");
   const [leadOptions, setLeadOptions] = useState(initialLeadOptions);
@@ -280,6 +378,48 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
     hymnsForm.setFieldValue([fieldName, "number"], String(hymn?.number ?? hymnNumber));
     hymnsForm.setFieldValue([fieldName, "title"], hymn?.title ?? "");
     hymnsForm.setFieldValue([fieldName, "url"], hymn?.url ?? "");
+  };
+
+  const handleWardBusinessDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const currentItems: EditableWardAndStakeBusiness[] =
+      businessForm.getFieldValue("wardAndStakeBusiness") || [];
+
+    const oldIndex = currentItems.findIndex(
+      (item, index) => getWardBusinessSortableId(item, index) === String(active.id)
+    );
+    const newIndex = currentItems.findIndex(
+      (item, index) => getWardBusinessSortableId(item, index) === String(over.id)
+    );
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    businessForm.setFieldsValue({
+      wardAndStakeBusiness: arrayMove(currentItems, oldIndex, newIndex),
+    });
+    notifyEditing();
+  };
+
+  const handleMessagesDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const currentItems: EditableMinuteMessage[] =
+      messagesForm.getFieldValue("messages") || [];
+
+    const oldIndex = currentItems.findIndex(
+      (item, index) => getMessageSortableId(item, index) === String(active.id)
+    );
+    const newIndex = currentItems.findIndex(
+      (item, index) => getMessageSortableId(item, index) === String(over.id)
+    );
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    messagesForm.setFieldsValue({
+      messages: arrayMove(currentItems, oldIndex, newIndex),
+    });
+    notifyEditing();
   };
 
   return (
@@ -546,64 +686,101 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
 
       <Card size="small" title="Asuntos del barrio/estaca">
         <Form
+          form={businessForm}
           layout="vertical"
           initialValues={businessInitialValues}
           onValuesChange={notifyEditing}
           onFinish={(values) =>
             businessSave.save(minute.id, {
-              wardAndStakeBusiness: values.wardAndStakeBusiness || [
-                emptyBusiness,
-              ],
+              wardAndStakeBusiness: getBusinessPayload(
+                values.wardAndStakeBusiness
+              ),
             })
           }
         >
           <Form.List name="wardAndStakeBusiness">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: "100%" }}>
-                {fields.map((field, index) => (
-                  <Row gutter={8} key={field.key} align="middle">
-                    <Col xs={24} md={7}>
-                      <Form.Item
-                        label={index === 0 ? "Asunto" : "Asunto adicional"}
-                        name={[field.name, "subject"]}
-                        style={formItemStyle}
+                {(() => {
+                  const currentItems: EditableWardAndStakeBusiness[] =
+                    businessForm.getFieldValue("wardAndStakeBusiness") || [];
+                  const sortableIds = fields.map((_, index) =>
+                    getWardBusinessSortableId(currentItems[index] || {}, index)
+                  );
+
+                  return (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleWardBusinessDragEnd}
+                    >
+                      <SortableContext
+                        items={sortableIds}
+                        strategy={verticalListSortingStrategy}
                       >
-                        <Input size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} md={7}>
-                      <Form.Item
-                        label="Nombre"
-                        name={[field.name, "name"]}
-                        style={formItemStyle}
-                      >
-                        <Input size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={20} md={8}>
-                      <Form.Item
-                        label="Detalle"
-                        name={[field.name, "details"]}
-                        style={formItemStyle}
-                      >
-                        <Input.TextArea rows={2} size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={4} md={2}>
-                      <Button
-                        size="small"
-                        aria-label="Quitar asunto"
-                        disabled={fields.length <= 1}
-                        icon={<MinusCircleOutlined />}
-                        onClick={() => remove(field.name)}
-                      />
-                    </Col>
-                  </Row>
-                ))}
+                        {fields.map((field, index) => {
+                          const sortableId = sortableIds[index];
+
+                          return (
+                            <SortableItem key={sortableId} id={sortableId}>
+                              <Row gutter={8} align="middle">
+                                <Col xs={24} md={7}>
+                                  <Form.Item
+                                    label={
+                                      index === 0
+                                        ? "Asunto"
+                                        : "Asunto adicional"
+                                    }
+                                    name={[field.name, "subject"]}
+                                    style={formItemStyle}
+                                  >
+                                    <Input size="small" />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={24} md={7}>
+                                  <Form.Item
+                                    label="Nombre"
+                                    name={[field.name, "name"]}
+                                    style={formItemStyle}
+                                  >
+                                    <Input size="small" />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={20} md={8}>
+                                  <Form.Item
+                                    label="Detalle"
+                                    name={[field.name, "details"]}
+                                    style={formItemStyle}
+                                  >
+                                    <Input.TextArea rows={2} size="small" />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={4} md={2}>
+                                  <Button
+                                    size="small"
+                                    aria-label="Quitar asunto"
+                                    disabled={fields.length <= 1}
+                                    icon={<MinusCircleOutlined />}
+                                    onClick={() => remove(field.name)}
+                                  />
+                                </Col>
+                              </Row>
+                            </SortableItem>
+                          );
+                        })}
+                      </SortableContext>
+                    </DndContext>
+                  );
+                })()}
                 <Button
                   size="small"
                   icon={<PlusOutlined />}
-                  onClick={() => add(emptyBusiness)}
+                  onClick={() =>
+                    add({
+                      ...emptyBusiness,
+                      tempId: createTempId("ward"),
+                    })
+                  }
                 >
                   Agregar asunto
                 </Button>
@@ -624,44 +801,98 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
 
       <Card size="small" title="Discursos/mensajes">
         <Form
+          form={messagesForm}
           layout="vertical"
-          initialValues={{ messages: minute.messages?.length ? minute.messages : [{}] }}
+          initialValues={messageInitialValues}
           onValuesChange={notifyEditing}
           onFinish={(values) =>
-            messagesSave.save(minute.id, { messages: values.messages || [] })
+            messagesSave.save(minute.id, {
+              messages: getMessagesPayload(values.messages),
+            })
           }
         >
           <Form.List name="messages">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: "100%" }}>
-                {fields.map((field) => (
-                  <Row gutter={8} key={field.key} align="middle">
-                    <Col xs={24} md={8}>
-                      <Form.Item label="Nombre" name={[field.name, "name"]} style={formItemStyle}>
-                        <Input size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={24} md={4}>
-                      <Form.Item label="Tiempo" name={[field.name, "time"]} style={formItemStyle}>
-                        <InputNumber min={0} size="small" style={{ width: "100%" }} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={20} md={10}>
-                      <Form.Item label="Tema" name={[field.name, "topic"]} style={formItemStyle}>
-                        <Input size="small" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={4} md={2}>
-                      <Button
-                        size="small"
-                        aria-label="Quitar mensaje"
-                        icon={<MinusCircleOutlined />}
-                        onClick={() => remove(field.name)}
-                      />
-                    </Col>
-                  </Row>
-                ))}
-                <Button size="small" icon={<PlusOutlined />} onClick={() => add()}>
+                {(() => {
+                  const currentItems: EditableMinuteMessage[] =
+                    messagesForm.getFieldValue("messages") || [];
+                  const sortableIds = fields.map((_, index) =>
+                    getMessageSortableId(currentItems[index] || {}, index)
+                  );
+
+                  return (
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleMessagesDragEnd}
+                    >
+                      <SortableContext
+                        items={sortableIds}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {fields.map((field, index) => {
+                          const sortableId = sortableIds[index];
+
+                          return (
+                            <SortableItem key={sortableId} id={sortableId}>
+                              <Row gutter={8} align="middle">
+                                <Col xs={24} md={8}>
+                                  <Form.Item
+                                    label="Nombre"
+                                    name={[field.name, "name"]}
+                                    style={formItemStyle}
+                                  >
+                                    <Input size="small" />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={24} md={4}>
+                                  <Form.Item
+                                    label="Tiempo"
+                                    name={[field.name, "time"]}
+                                    style={formItemStyle}
+                                  >
+                                    <InputNumber
+                                      min={0}
+                                      size="small"
+                                      style={{ width: "100%" }}
+                                    />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={20} md={10}>
+                                  <Form.Item
+                                    label="Tema"
+                                    name={[field.name, "topic"]}
+                                    style={formItemStyle}
+                                  >
+                                    <Input size="small" />
+                                  </Form.Item>
+                                </Col>
+                                <Col xs={4} md={2}>
+                                  <Button
+                                    size="small"
+                                    aria-label="Quitar mensaje"
+                                    icon={<MinusCircleOutlined />}
+                                    onClick={() => remove(field.name)}
+                                  />
+                                </Col>
+                              </Row>
+                            </SortableItem>
+                          );
+                        })}
+                      </SortableContext>
+                    </DndContext>
+                  );
+                })()}
+                <Button
+                  size="small"
+                  icon={<PlusOutlined />}
+                  onClick={() =>
+                    add({
+                      tempId: createTempId("message"),
+                    })
+                  }
+                >
                   Agregar mensaje
                 </Button>
               </Space>

@@ -1,0 +1,83 @@
+.item {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 12px;
+  will-change: transform;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease,
+    box-shadow 180ms ease;
+}
+
+.dragging {
+  transform-origin: center;
+  filter: drop-shadow(0 12px 24px rgba(15, 35, 60, 0.14));
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.dragging .content {
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.dragHandle {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  border: 1px solid #e6edf5;
+  border-radius: 10px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9aa6b2;
+  font: inherit;
+  font-size: 15px;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.dragHandle:hover {
+  border-color: #cbd9e8;
+  background: #eef4fb;
+  color: #5f7285;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.dragging .dragHandle {
+  border-color: #b8d7f2;
+  background: #eaf4ff;
+  color: #1f5f99;
+}
+
+@media (max-width: 768px) {
+  .item {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .dragHandle {
+    width: 30px;
+    min-width: 30px;
+    font-size: 15px;
+  }
+}
