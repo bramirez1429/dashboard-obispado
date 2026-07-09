@@ -2,6 +2,20 @@
 
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   Button,
   Col,
   Divider,
@@ -13,6 +27,7 @@ import {
   type InputRef,
 } from "antd";
 import { useRef, useState } from "react";
+import SortableItem from "./SortableItem";
 import styles from "./WardStakeAffairsList.module.css";
 
 type AddableSelectProps = {
@@ -21,6 +36,22 @@ type AddableSelectProps = {
   placeholder?: string;
   initialOptions: string[];
 };
+
+type WardStakeAffair = {
+  id?: string | number;
+  interviewId?: string | number;
+  tempId?: string;
+  type?: string;
+  customType?: string;
+  name?: string;
+  calling?: string;
+  customCalling?: string;
+};
+
+const getWardBusinessSortableId = (
+  item: WardStakeAffair,
+  index: number
+) => String(item.id || item.interviewId || item.tempId || `ward-${index}`);
 
 const affairOptions = ["Sostenimiento", "Relevo"];
 
@@ -116,12 +147,69 @@ const AddableSelect = ({
   );
 };
 
-const WardStakeAffairsList = () => (
-  <Form.List name="wardStakeAffairs">
-    {(fields, { add, remove }) => (
-      <Space className={styles.list} orientation="vertical" size={12}>
-        {fields.map((field) => (
-          <div className={styles.item} key={field.key}>
+const WardStakeAffairsList = () => {
+  const form = Form.useFormInstance();
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 180,
+        tolerance: 8,
+      },
+    })
+  );
+
+  const handleWardBusinessDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const currentItems: WardStakeAffair[] =
+      form.getFieldValue("wardStakeAffairs") || [];
+    const oldIndex = currentItems.findIndex(
+      (item, index) =>
+        getWardBusinessSortableId(item, index) === String(active.id)
+    );
+    const newIndex = currentItems.findIndex(
+      (item, index) =>
+        getWardBusinessSortableId(item, index) === String(over.id)
+    );
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    form.setFieldsValue({
+      wardStakeAffairs: arrayMove(currentItems, oldIndex, newIndex),
+    });
+  };
+
+  return (
+    <Form.List name="wardStakeAffairs">
+      {(fields, { add, remove }) => {
+        const currentItems: WardStakeAffair[] =
+          form.getFieldValue("wardStakeAffairs") || [];
+        const sortableIds = fields.map((_, index) =>
+          getWardBusinessSortableId(currentItems[index] || {}, index)
+        );
+
+        return (
+          <Space className={styles.list} orientation="vertical" size={12}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleWardBusinessDragEnd}
+            >
+              <SortableContext
+                items={sortableIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {fields.map((field, index) => {
+                  const sortableId = sortableIds[index];
+
+                  return (
+                    <SortableItem key={sortableId} id={sortableId}>
+                      <div className={styles.item}>
             <Form.Item name={[field.name, "interviewId"]} hidden>
               <Input />
             </Form.Item>
@@ -159,19 +247,27 @@ const WardStakeAffairsList = () => (
                 />
               </Col>
             </Row>
-          </div>
-        ))}
+                      </div>
+                    </SortableItem>
+                  );
+                })}
+              </SortableContext>
+            </DndContext>
 
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => add(emptyAffair)}
-          type="dashed"
-        >
-          Agregar asunto
-        </Button>
-      </Space>
-    )}
-  </Form.List>
-);
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() =>
+                add({ ...emptyAffair, tempId: crypto.randomUUID() })
+              }
+              type="dashed"
+            >
+              Agregar asunto
+            </Button>
+          </Space>
+        );
+      }}
+    </Form.List>
+  );
+};
 
 export default WardStakeAffairsList;

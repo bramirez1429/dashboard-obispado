@@ -6,6 +6,20 @@ import {
   PlusOutlined,
 } from "@ant-design/icons";
 import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   Button,
   Card,
   Col,
@@ -40,6 +54,7 @@ import {
   type CreateMinuteValues,
 } from "../components/actions";
 import WardStakeAffairsList from "./WardStakeAffairsList";
+import SortableItem from "./SortableItem";
 import styles from "./page.module.css";
 import dayjs from "dayjs";
 
@@ -59,6 +74,7 @@ type NewMinuteFormValues = {
   closingPrayer?: string;
   messages?: {
     speechId?: string | number;
+    tempId?: string;
     name?: string;
     time?: number;
     topic?: string;
@@ -72,6 +88,11 @@ type NewMinuteFormValues = {
     customCalling?: string;
   }[];
 };
+
+type MinuteMessage = NonNullable<NewMinuteFormValues["messages"]>[number];
+
+const getMessageSortableId = (item: MinuteMessage, index: number) =>
+  String(item.speechId || item.tempId || `message-${index}`);
 
 type HymnCatalogEntry = {
   number: number | string;
@@ -365,6 +386,39 @@ const NewMinutePage = () => {
   );
   const [newAuthorityName, setNewAuthorityName] = useState("");
   const router = useRouter();
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 180,
+        tolerance: 8,
+      },
+    })
+  );
+
+  const handleMessagesDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const currentItems: NonNullable<NewMinuteFormValues["messages"]> =
+      form.getFieldValue("messages") || [];
+    const oldIndex = currentItems.findIndex(
+      (item, index) =>
+        getMessageSortableId(item, index) === String(active.id)
+    );
+    const newIndex = currentItems.findIndex(
+      (item, index) => getMessageSortableId(item, index) === String(over.id)
+    );
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    form.setFieldsValue({
+      messages: arrayMove(currentItems, oldIndex, newIndex),
+    });
+  };
 
   const syncAcceptedSpeechesForDate = useCallback(
     async (minuteDate?: Dayjs | string | null) => {
@@ -890,18 +944,37 @@ const NewMinutePage = () => {
               Discursos
             </Title>
             <Form.List name="messages">
-              {(fields, { add, remove }) => (
-                <Space
-                  className={styles.speakerList}
-                  orientation="vertical"
-                  size={12}
-                >
-                  {fields.map((field) => (
-                    <Row
+              {(fields, { add, remove }) => {
+                const currentItems: MinuteMessage[] =
+                  form.getFieldValue("messages") || [];
+                const sortableIds = fields.map((_, index) =>
+                  getMessageSortableId(currentItems[index] || {}, index)
+                );
+
+                return (
+                  <Space
+                    className={styles.speakerList}
+                    orientation="vertical"
+                    size={12}
+                  >
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleMessagesDragEnd}
+                    >
+                      <SortableContext
+                        items={sortableIds}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {fields.map((field, index) => {
+                          const sortableId = sortableIds[index];
+
+                          return (
+                            <SortableItem key={sortableId} id={sortableId}>
+                              <Row
                       align="top"
                       className={styles.speakerRow}
                       gutter={[12, 0]}
-                      key={field.key}
                     >
                       <Form.Item name={[field.name, "speechId"]} hidden>
                         <Input />
@@ -958,19 +1031,29 @@ const NewMinutePage = () => {
                           onClick={() => remove(field.name)}
                         />
                       </Col>
-                    </Row>
-                  ))}
-                  <Button
-                    icon={<PlusOutlined />}
-                    onClick={() =>
-                      add({ name: "", time: undefined, topic: "" })
-                    }
-                    type="dashed"
-                  >
-                    Agregar discursante
-                  </Button>
-                </Space>
-              )}
+                              </Row>
+                            </SortableItem>
+                          );
+                        })}
+                      </SortableContext>
+                    </DndContext>
+                    <Button
+                      icon={<PlusOutlined />}
+                      onClick={() =>
+                        add({
+                          tempId: crypto.randomUUID(),
+                          name: "",
+                          time: undefined,
+                          topic: "",
+                        })
+                      }
+                      type="dashed"
+                    >
+                      Agregar discursante
+                    </Button>
+                  </Space>
+                );
+              }}
             </Form.List>
           </section>
 
