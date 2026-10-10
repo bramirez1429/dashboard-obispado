@@ -34,6 +34,7 @@ import hymnsByNumberData from "@/data/hymns-by-number.json";
 import meetingMinuteAuthoritiesData from "@/data/meeting-minute-authorities.json";
 import meetingMinuteLeadsData from "@/data/meeting-minute-leads.json";
 import meetingMinutePresidesData from "@/data/meeting-minute-presides.json";
+import { isFastingTestimoniesDate } from "@/lib/fasting-testimonies";
 import type {
   MeetingMinute,
   MeetingMinuteHymn,
@@ -586,6 +587,22 @@ export default function MinuteEditForms({ minute }: MinuteEditFormsProps) {
           </Button>
         </Form>
       </Card>
+
+      {isFastingTestimoniesDate(minute.date) ? (
+        <Card size="small" title="Testimonios agendados">
+          {minute.testimonies?.length ? (
+            <ol style={{ margin: 0, paddingInlineStart: 20 }}>
+              {minute.testimonies.map((testimony, index) => (
+                <li key={`${testimony.person_name}-${index}`}>
+                  {testimony.person_name}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <span>No hay testimonios agendados.</span>
+          )}
+        </Card>
+      ) : null}
 
       <Card size="small" title="Himnos y oraciones">
         <Form

@@ -36,6 +36,8 @@ export async function PUT(
   }
 
   revalidatePath("/reunion-sacramental");
+  revalidatePath("/dashboard/minuta");
+  revalidatePath(`/dashboard/minuta/editar/${id}`);
 
   return NextResponse.json({ success: true, data });
 }

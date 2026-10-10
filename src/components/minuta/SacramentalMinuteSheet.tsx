@@ -14,6 +14,7 @@ import type {
   MeetingMinuteWardAndStakeBusiness,
   MeetingMinuteWardAndStakeBusinessValue,
 } from "@/types/meeting-minute";
+import { isFastingTestimoniesDate } from "@/lib/fasting-testimonies";
 
 dayjs.extend(customParseFormat);
 
@@ -305,11 +306,37 @@ function rowsToMessages(rows: string[][]): MeetingMinuteMessage[] {
     .filter((item) => item.name || item.time || item.topic);
 }
 
-function messagesToRows(messages: MeetingMinuteMessage[]) {
+function messagesToRows(
+  messages: MeetingMinuteMessage[],
+  testimonies: { person_name?: string | null }[] = []
+) {
   const rows = Array.from({ length: 5 }, () => ["", "", ""]);
 
   messages.slice(0, 5).forEach((item, index) => {
     rows[index] = [item.name, item.time ? String(item.time) : "", item.topic];
+  });
+
+  const uniqueTestimonyNames = testimonies.reduce<string[]>((names, testimony) => {
+    const name = testimony.person_name?.trim() || "";
+
+    if (name && !names.some((item) => item.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+      names.push(name);
+    }
+
+    return names;
+  }, []);
+
+  uniqueTestimonyNames.forEach((name) => {
+    const availableRow = rows.findIndex(
+      ([rowName, time, topic]) => !rowName && !time && !topic
+    );
+
+    if (availableRow === -1) {
+      rows.push([name, "", ""]);
+      return;
+    }
+
+    rows[availableRow] = [name, "", ""];
   });
 
   return rows;
@@ -357,12 +384,14 @@ type SacramentalMinuteSheetProps = {
   initialDate?: string;
   initialMinute?: MeetingMinute;
   readOnly?: boolean;
+  includeScheduledTestimonies?: boolean;
 };
 
 export function SacramentalMinuteSheet({
   initialDate,
   initialMinute,
   readOnly = false,
+  includeScheduledTestimonies = false,
 }: SacramentalMinuteSheetProps) {
   const [minuteId, setMinuteId] = useState<string | number | undefined>(
     initialMinute?.id
@@ -397,7 +426,13 @@ export function SacramentalMinuteSheet({
       initialMinute?.sacramentalHymn || emptyHymn
     );
   const [messageRows, setMessageRows] = useState(
-    messagesToRows(initialMinute?.messages || [])
+    messagesToRows(
+      initialMinute?.messages || [],
+      includeScheduledTestimonies && initialMinute?.date &&
+        isFastingTestimoniesDate(initialMinute.date)
+        ? initialMinute.testimonies || []
+        : []
+    )
   );
   const [lastHymn, setLastHymn] = useState<MeetingMinuteHymn>(
     initialMinute?.lastHymn || emptyHymn

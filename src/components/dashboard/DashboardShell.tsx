@@ -14,7 +14,7 @@ import {
   SafetyCertificateOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Space } from "antd";
+import { Layout, Menu } from "antd";
 import Title from "antd/es/typography/Title";
 import Text from "antd/es/typography/Text";
 
@@ -98,6 +98,7 @@ function selectedKey(pathname: string) {
 
 export function DashboardShell({
   children,
+  userFullName,
   isAdmin,
   isCollaborator,
   canAccessCalendar,
@@ -227,13 +228,11 @@ export function DashboardShell({
 
       <Layout className="dashboard-main">
         <Content className="dashboard-content">
-          <div className="dashboard-content-actions">
-            <Space orientation="horizontal">
-              <div className="dashboard-user-header">
-             
-                <LogoutButton />
-              </div>
-            </Space>
+          <div className="dashboard-topbar-row">
+            <div className="dashboard-floating-topbar">
+              <span className="dashboard-user-name">{userFullName}</span>
+              <LogoutButton />
+            </div>
           </div>
           {shouldRedirectCollaborator ? null : children}
         </Content>

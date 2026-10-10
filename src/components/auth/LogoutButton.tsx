@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
+import { Button, Tooltip } from "antd";
+import { PoweroffOutlined } from "@ant-design/icons";
 import { signOut } from "next-auth/react";
 
 const LogoutButton = () => {
@@ -12,15 +12,16 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button
-      className="no-print"
-      danger
-      size="small"
-      icon={<LogoutOutlined />}
-      onClick={handleLogout}
-    >
-      Cerrar sesión
-    </Button>
+    <Tooltip title="Cerrar sesión" placement="bottom">
+      <Button
+        className="no-print"
+        type="text"
+        shape="circle"
+        icon={<PoweroffOutlined />}
+        onClick={handleLogout}
+        aria-label="Cerrar sesión"
+      />
+    </Tooltip>
   );
 };
 

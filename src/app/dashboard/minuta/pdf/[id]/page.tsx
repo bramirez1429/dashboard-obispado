@@ -66,6 +66,7 @@ function normalizeMinute(minute: MeetingMinute): MeetingMinute {
     wardAndStakeBusiness: sortWardAndStakeBusinessForPdf(wardAndStakeBusiness),
     sacramentalHymn: minute.sacramentalHymn || emptyHymn,
     messages: minute.messages || [],
+    testimonies: minute.testimonies || [],
     lastHymn: minute.lastHymn || emptyHymn,
     closingPrayer: minute.closingPrayer || "",
   };
@@ -329,7 +330,11 @@ export default async function MinutePdfPage({
         <PrintMinuteButton />
       </div>
       <section className="minute-pdf-print-area">
-        <SacramentalMinuteSheet initialMinute={minute} readOnly />
+        <SacramentalMinuteSheet
+          initialMinute={minute}
+          includeScheduledTestimonies
+          readOnly
+        />
       </section>
     </main>
   );
