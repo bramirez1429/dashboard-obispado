@@ -22,6 +22,10 @@ export type MeetingMinuteMessage = {
   topic: string;
 };
 
+export type MeetingMinuteTestimony = {
+  person_name: string;
+};
+
 export type MeetingMinute = {
   id?: string | number;
   attendance: number;
@@ -39,4 +43,5 @@ export type MeetingMinute = {
   messages: MeetingMinuteMessage[];
   lastHymn: MeetingMinuteHymn;
   closingPrayer: string;
+  testimonies?: MeetingMinuteTestimony[];
 };

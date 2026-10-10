@@ -50,6 +50,7 @@
 }
 
 .buttons {
+  max-width: 100%;
   margin-top: 14px;
   margin-left: 48px;
 }
@@ -93,6 +94,10 @@
 }
 
 @media (max-width: 768px) {
+  .buttons {
+    margin-left: 0;
+  }
+
   .card {
     flex-direction: column;
   }

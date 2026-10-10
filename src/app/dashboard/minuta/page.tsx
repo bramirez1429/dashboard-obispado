@@ -20,7 +20,7 @@ const getModernMinutes = async (): Promise<ModernMinuteCard[]> => {
   const { supabase } = await import("@/lib/supabase/client");
   const { data, error } = await supabase
     .from("Meeting_minutes")
-    .select("id, date, leads, presides, attendance");
+    .select("id, date, leads, presides, attendance, testimonies");
 
   if (error || !data) {
     return [];
@@ -33,6 +33,7 @@ const getModernMinutes = async (): Promise<ModernMinuteCard[]> => {
       leads?: string | null;
       presides?: string | null;
       attendance?: number | null;
+      testimonies?: { person_name?: string | null }[] | null;
     }[]
   )
     .filter(
@@ -42,6 +43,7 @@ const getModernMinutes = async (): Promise<ModernMinuteCard[]> => {
         leads?: string | null;
         presides?: string | null;
         attendance?: number | null;
+        testimonies?: { person_name?: string | null }[] | null;
       } => minute.id !== undefined && typeof minute.date === "string"
     )
     .sort(
@@ -54,6 +56,7 @@ const getModernMinutes = async (): Promise<ModernMinuteCard[]> => {
       leads: minute.leads?.trim() || "-",
       presides: minute.presides?.trim() || "-",
       attendance: minute.attendance,
+      testimonies: minute.testimonies || [],
     }));
 };
 

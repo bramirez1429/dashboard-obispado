@@ -15,6 +15,7 @@ export default async function DashboardLayout({
 
   const fullName =
     `${session?.user?.name || ""} ${session?.user?.lastname || ""}`.trim() ||
+    session?.user?.username ||
     "Usuario";
   const calling = session?.user?.callings || "Sin llamamiento asignado";
   const role = session?.user?.role;
