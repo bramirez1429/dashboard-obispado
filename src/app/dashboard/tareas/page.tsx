@@ -24,7 +24,27 @@ import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
-import { supabase } from "@/lib/supabase/client";
+type TaskApiResponse<T> = {
+  success: boolean;
+  data?: T;
+  canWrite?: boolean;
+  error?: string;
+};
+
+async function taskRequest<T>(url: string, options?: RequestInit): Promise<TaskApiResponse<T>> {
+  const response = await fetch(url, {
+    ...options,
+    cache: "no-store",
+    credentials: "same-origin",
+  });
+
+  const payload = (await response.json().catch(() => null)) as TaskApiResponse<T> | null;
+  if (!response.ok || !payload?.success) {
+    throw new Error(payload?.error || "No se pudo completar la operación");
+  }
+
+  return payload;
+}
 
 type TaskRow = {
   id: string | number;
@@ -160,6 +180,7 @@ function parseDate(date: string | null) {
 export default function TareasPage() {
   const [tasks, setTasks] = useState<TaskRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [canWrite, setCanWrite] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSavingNewTask, setIsSavingNewTask] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<TaskRow["id"] | null>(null);
@@ -172,20 +193,16 @@ export default function TareasPage() {
   const [newTaskForm] = Form.useForm<TaskFormValues>();
   const [editForm] = Form.useForm<TaskFormValues>();
 
-  const fetchTasks = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("Bishorpc_tasks")
-      .select(
-        "id, task_name, responsible_name, category, created_date, delivery_date, completed"
-      )
-      .order("id", { ascending: false });
-
-    if (error) {
-      message.error("No se pudieron cargar las tareas");
+  const fetchTasks = useCallback(async (): Promise<TaskRow[]> => {
+    try {
+      const response = await taskRequest<TaskRow[]>("/api/tasks");
+      setCanWrite(response.canWrite === true);
+      return response.data ?? [];
+    } catch (error) {
+      setCanWrite(false);
+      message.error(error instanceof Error ? error.message : "No se pudieron cargar las tareas");
       return [];
     }
-
-    return (data || []) as TaskRow[];
   }, []);
 
   const loadTasks = useCallback(async () => {
@@ -215,33 +232,31 @@ export default function TareasPage() {
 
   const handleCreateTask = async (values: TaskFormValues) => {
     setIsSavingNewTask(true);
+    try {
+      const result = await taskRequest<TaskRow>("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          task_name: values.task_name,
+          responsible_name: values.responsible_name,
+          category: values.category,
+          created_date: formatSupabaseDate(values.created_date),
+          delivery_date: formatSupabaseDate(values.delivery_date),
+        }),
+      });
 
-    const { data, error } = await supabase
-      .from("Bishorpc_tasks")
-      .insert({
-        task_name: values.task_name,
-        responsible_name: values.responsible_name,
-        category: values.category,
-        created_date: formatSupabaseDate(values.created_date),
-        delivery_date: formatSupabaseDate(values.delivery_date),
-        completed: false,
-      })
-      .select()
-      .single();
-
-    setIsSavingNewTask(false);
-
-    if (error) {
-      console.error("Error creando tarea:", error);
-      message.error(error.message || "No se pudo crear la tarea");
-      return;
+      if (result.data) {
+        setTasks((currentTasks) => [result.data!, ...currentTasks]);
+      }
+      message.success("Tarea creada correctamente");
+      setIsModalOpen(false);
+      newTaskForm.resetFields();
+      await loadTasks();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "No se pudo crear la tarea");
+    } finally {
+      setIsSavingNewTask(false);
     }
-
-    setTasks((currentTasks) => [data as TaskRow, ...currentTasks]);
-    message.success("Tarea creada correctamente");
-    setIsModalOpen(false);
-    newTaskForm.resetFields();
-    await loadTasks();
   };
 
   const startEditing = (task: TaskRow) => {
@@ -264,49 +279,45 @@ export default function TareasPage() {
   const handleSaveTask = async (taskId: TaskRow["id"]) => {
     const values = await editForm.validateFields();
     setSavingTaskId(taskId);
+    try {
+      await taskRequest<TaskRow>("/api/tasks/" + encodeURIComponent(String(taskId)), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          task_name: values.task_name,
+          responsible_name: values.responsible_name,
+          category: values.category,
+          created_date: formatSupabaseDate(values.created_date),
+          delivery_date: formatSupabaseDate(values.delivery_date),
+          completed: Boolean(values.completed),
+        }),
+      });
 
-    const { error } = await supabase
-      .from("Bishorpc_tasks")
-      .update({
-        task_name: values.task_name,
-        responsible_name: values.responsible_name,
-        category: values.category,
-        created_date: formatSupabaseDate(values.created_date),
-        delivery_date: formatSupabaseDate(values.delivery_date),
-        completed: Boolean(values.completed),
-      })
-      .eq("id", taskId);
-
-    setSavingTaskId(null);
-
-    if (error) {
-      message.error("No se pudo guardar la tarea");
-      return;
+      message.success("Tarea guardada correctamente");
+      setEditingTaskId(null);
+      editForm.resetFields();
+      await loadTasks();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "No se pudo guardar la tarea");
+    } finally {
+      setSavingTaskId(null);
     }
-
-    message.success("Tarea guardada correctamente");
-    setEditingTaskId(null);
-    editForm.resetFields();
-    await loadTasks();
   };
 
   const handleDeleteTask = async (taskId: TaskRow["id"]) => {
     setDeletingTaskId(taskId);
+    try {
+      await taskRequest<null>("/api/tasks/" + encodeURIComponent(String(taskId)), {
+        method: "DELETE",
+      });
 
-    const { error } = await supabase
-      .from("Bishorpc_tasks")
-      .delete()
-      .eq("id", taskId);
-
-    setDeletingTaskId(null);
-
-    if (error) {
-      message.error("No se pudo borrar la tarea");
-      return;
+      message.success("Tarea borrada correctamente");
+      await loadTasks();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "No se pudo borrar la tarea");
+    } finally {
+      setDeletingTaskId(null);
     }
-
-    message.success("Tarea borrada correctamente");
-    await loadTasks();
   };
 
   const columns: ColumnsType<TaskRow> = [
@@ -488,20 +499,22 @@ export default function TareasPage() {
               Gestioná tareas, responsables, fechas de entrega y estado.
             </Paragraph>
           </div>
-          <Button
-            type="primary"
-            size="large"
-            icon={<PlusOutlined />}
-            onClick={() => setIsModalOpen(true)}
-          >
-            Nueva tarea
-          </Button>
+          {canWrite ? (
+            <Button
+              type="primary"
+              size="large"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalOpen(true)}
+            >
+              Nueva tarea
+            </Button>
+          ) : null}
         </Space>
 
         <Form form={editForm} component={false}>
           <Table
             rowKey="id"
-            columns={columns}
+            columns={canWrite ? columns : columns.filter((column) => column.key !== "actions")}
             dataSource={tasks}
             loading={isLoading}
             pagination={{ pageSize: 10 }}
