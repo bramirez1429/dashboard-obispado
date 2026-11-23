@@ -393,20 +393,19 @@ export default function MissionaryLunchCalendar({
         setIsDeleting(true);
 
         try {
-          const { error } = await supabase
-            .from("Missionary_lunches")
-            .update({
-              status: "available",
-              person_name: null,
-              lunch_time: null,
-              companionship: null,
-              chacabuco_1_elders: null,
-              chacabuco_2_elders: null,
-            })
-            .eq("lunch_date", selectedDateKey);
+          const response = await fetch("/api/missionary-lunches", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lunch_date: selectedDateKey }),
+            cache: "no-store",
+          });
+          const result = (await response.json()) as {
+            success?: boolean;
+            error?: string;
+          };
 
-          if (error) {
-            message.error(error.message || "No se pudo borrar el registro.");
+          if (!response.ok || !result.success) {
+            message.error(result.error || "No se pudo borrar el registro.");
             return;
           }
 
@@ -415,6 +414,8 @@ export default function MissionaryLunchCalendar({
           const freshLunches = await loadLunches();
           const updatedLunch = freshLunches.find((item) => item.lunch_date === selectedDateKey) ?? null;
           setOccupiedLunch(updatedLunch);
+        } catch {
+          message.error("No se pudo borrar el registro.");
         } finally {
           Modal.destroyAll();
           setIsDeleting(false);
