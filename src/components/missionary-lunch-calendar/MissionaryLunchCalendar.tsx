@@ -646,16 +646,22 @@ export default function MissionaryLunchCalendar({
     try {
       const chacabuco1 = values.chacabuco_1_elders?.trim() || DEFAULT_CHACABUCO_1_ELDERS;
       const chacabuco2 = values.chacabuco_2_elders?.trim() || DEFAULT_CHACABUCO_2_ELDERS;
-      const { error } = await supabase
-        .from("Missionary_lunches")
-        .update({
+      const response = await fetch("/api/missionary-lunches", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           chacabuco_1_elders: chacabuco1,
           chacabuco_2_elders: chacabuco2,
-        })
-        .not("id", "is", null);
+        }),
+        cache: "no-store",
+      });
+      const result = (await response.json()) as {
+        success?: boolean;
+        error?: string;
+      };
 
-      if (error) {
-        message.error(error.message || "No se pudieron actualizar los nombres.");
+      if (!response.ok || !result.success) {
+        message.error(result.error || "No se pudieron actualizar los nombres.");
         return;
       }
 
@@ -664,6 +670,8 @@ export default function MissionaryLunchCalendar({
       message.success("Nombres de misioneros actualizados.");
       handleCloseMissionariesModal();
       await loadLunches();
+    } catch {
+      message.error("No se pudieron actualizar los nombres.");
     } finally {
       setIsSavingMissionaries(false);
     }
